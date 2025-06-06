@@ -14,7 +14,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from models.sqlite import get_db, engine, Base
-from models.sqlite.models import Questions, Difficulty
+from models.sqlite.models import Questions, Difficulty, Subject
 
 def populate_questions():
     """Populate the questions table with random questions from each subject."""
@@ -119,6 +119,39 @@ def populate_questions():
         ("Which dynasty built the Great Wall of China?", ["Han Dynasty", "Tang Dynasty", "Ming Dynasty", "Qing Dynasty"], "Ming Dynasty")
     ]
     
+    geography_questions = [
+        ("What is the capital of France?", ["London", "Berlin", "Paris", "Madrid"], "Paris"),
+        ("Which continent is the largest by area?", ["Africa", "Asia", "North America", "Europe"], "Asia"),
+        ("What is the longest river in the world?", ["Amazon", "Nile", "Mississippi", "Yangtze"], "Nile"),
+        ("Which mountain range contains Mount Everest?", ["Andes", "Alps", "Himalayas", "Rockies"], "Himalayas"),
+        ("What is the smallest country in the world?", ["Monaco", "Vatican City", "San Marino", "Liechtenstein"], "Vatican City"),
+        ("Which ocean is the largest?", ["Atlantic", "Pacific", "Indian", "Arctic"], "Pacific"),
+        ("What is the capital of Australia?", ["Sydney", "Melbourne", "Canberra", "Perth"], "Canberra"),
+        ("Which desert is the largest in the world?", ["Sahara", "Arabian", "Gobi", "Antarctica"], "Antarctica"),
+        ("What is the deepest ocean trench?", ["Puerto Rico Trench", "Mariana Trench", "Japan Trench", "Peru-Chile Trench"], "Mariana Trench"),
+        ("Which country has the most time zones?", ["Russia", "United States", "China", "Canada"], "Russia"),
+        ("What is the highest waterfall in the world?", ["Niagara Falls", "Victoria Falls", "Angel Falls", "Iguazu Falls"], "Angel Falls"),
+        ("Which island is the largest in the world?", ["Australia", "Greenland", "New Guinea", "Borneo"], "Greenland"),
+        ("What is the capital of Canada?", ["Toronto", "Vancouver", "Montreal", "Ottawa"], "Ottawa"),
+        ("Which sea is the saltiest?", ["Red Sea", "Dead Sea", "Mediterranean Sea", "Black Sea"], "Dead Sea"),
+        ("What is the southernmost continent?", ["South America", "Africa", "Australia", "Antarctica"], "Antarctica"),
+        ("Which river flows through London?", ["Seine", "Thames", "Danube", "Rhine"], "Thames"),
+        ("What is the largest lake in Africa?", ["Lake Chad", "Lake Tanganyika", "Lake Victoria", "Lake Malawi"], "Lake Victoria"),
+        ("Which country is both in Europe and Asia?", ["Turkey", "Russia", "Kazakhstan", "Georgia"], "Turkey"),
+        ("What is the capital of Brazil?", ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"], "Brasília"),
+        ("Which mountain is the highest in Africa?", ["Mount Kenya", "Mount Kilimanjaro", "Mount Elgon", "Drakensberg"], "Mount Kilimanjaro"),
+        ("What is the longest mountain range in the world?", ["Himalayas", "Andes", "Rocky Mountains", "Alps"], "Andes"),
+        ("Which strait separates Europe and Africa?", ["Strait of Gibraltar", "Bosphorus", "Strait of Hormuz", "Strait of Malacca"], "Strait of Gibraltar"),
+        ("What is the capital of India?", ["Mumbai", "Kolkata", "New Delhi", "Bangalore"], "New Delhi"),
+        ("Which peninsula is the largest in the world?", ["Iberian Peninsula", "Arabian Peninsula", "Indian Peninsula", "Scandinavian Peninsula"], "Arabian Peninsula"),
+        ("What is the driest desert in the world?", ["Sahara", "Atacama", "Mojave", "Kalahari"], "Atacama"),
+        ("Which country has the longest coastline?", ["Russia", "Canada", "Norway", "Australia"], "Canada"),
+        ("What is the capital of Egypt?", ["Alexandria", "Cairo", "Luxor", "Aswan"], "Cairo"),
+        ("Which volcano destroyed Pompeii?", ["Mount Etna", "Mount Vesuvius", "Stromboli", "Mount Olympus"], "Mount Vesuvius"),
+        ("What is the largest country in South America?", ["Argentina", "Brazil", "Peru", "Colombia"], "Brazil"),
+        ("Which city is known as the 'Pearl of the Orient'?", ["Singapore", "Hong Kong", "Bangkok", "Manila"], "Hong Kong")
+    ]
+    
     science_questions = [
         ("What is the chemical symbol for water?", ["H2O", "CO2", "NaCl", "O2"], "H2O"),
         ("How many bones are in the adult human body?", ["196", "206", "216", "226"], "206"),
@@ -152,12 +185,13 @@ def populate_questions():
         ("What type of energy is stored in food?", ["Kinetic", "Potential", "Chemical", "Thermal"], "Chemical")
     ]
     
-    # Combine all questions with their subjects
+    # Combine all questions with their subjects using Subject enum
     all_questions = [
-        ("English", english_questions),
-        ("Math", math_questions), 
-        ("History", history_questions),
-        ("Science", science_questions)
+        (Subject.ENGLISH, english_questions),
+        (Subject.MATH, math_questions), 
+        (Subject.HISTORY, history_questions),
+        (Subject.SCIENCE, science_questions),
+        (Subject.GEOGRAPHY, geography_questions)
     ]
     
     # Create all tables
@@ -169,8 +203,8 @@ def populate_questions():
     try:
         questions_added = 0
         
-        for subject_name, questions_list in all_questions:
-            print(f"\n📚 Adding {subject_name} questions...")
+        for subject_enum, questions_list in all_questions:
+            print(f"\n📚 Adding {subject_enum.value.title()} questions...")
             for idx, (question_text, options, answer) in enumerate(questions_list):
                 # Assign difficulty levels in a balanced way: 10 easy, 10 medium, 10 hard per subject
                 if idx < 10:
@@ -181,7 +215,7 @@ def populate_questions():
                     difficulty = Difficulty.HARD
                 
                 question = Questions(
-                    subject=subject_name,
+                    subject=subject_enum,
                     question=question_text,
                     options=json.dumps(options),
                     answer=answer,
@@ -200,12 +234,12 @@ def populate_questions():
         print(f"\n📊 Database Summary:")
         print(f"Total questions in database: {total_questions}")
         
-        for subject in ["English", "Math", "History", "Science"]:
+        for subject in [Subject.ENGLISH, Subject.MATH, Subject.HISTORY, Subject.SCIENCE, Subject.GEOGRAPHY]:
             count = db.query(Questions).filter(Questions.subject == subject).count()
             easy_count = db.query(Questions).filter(Questions.subject == subject, Questions.difficulty == Difficulty.EASY).count()
             medium_count = db.query(Questions).filter(Questions.subject == subject, Questions.difficulty == Difficulty.MEDIUM).count()
             hard_count = db.query(Questions).filter(Questions.subject == subject, Questions.difficulty == Difficulty.HARD).count()
-            print(f"  {subject}: {count} questions (Easy: {easy_count}, Medium: {medium_count}, Hard: {hard_count})")
+            print(f"  {subject.value.title()}: {count} questions (Easy: {easy_count}, Medium: {medium_count}, Hard: {hard_count})")
             
     except Exception as e:
         print(f"❌ Error occurred: {e}")

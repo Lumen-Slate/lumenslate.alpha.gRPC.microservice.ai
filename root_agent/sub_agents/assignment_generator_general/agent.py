@@ -40,7 +40,7 @@ assignment_generator_general = LlmAgent(
         - Parse the teacher's request to identify subjects, question counts, and difficulty levels
         - For each subject mentioned, create an entry with:
             * type: "assignment_generator_general" (always this exact value)
-            * subject: the subject name (standardize to: "English", "Math", "Science", "History")
+            * subject: the subject name (standardize to: "English", "Math", "Science", "History", "Geography")
             * number_of_questions: the number of questions requested for that subject
             * difficulty: the difficulty level if specified ("easy", "medium", "hard"), or null if not mentioned
         - If multiple subjects are mentioned, create multiple entries in the list
@@ -51,6 +51,7 @@ assignment_generator_general = LlmAgent(
             * Language Arts/Literature/Reading → "English" 
             * Biology/Chemistry/Physics → "Science"
             * Social Studies/World History → "History"
+            * Geography/Geo → "Geography"
         - If a teacher says something like "I need 5 math questions and 8 science questions", 
           create two separate entries
         - If they say "I need 15 questions from math and english", split evenly or use context
