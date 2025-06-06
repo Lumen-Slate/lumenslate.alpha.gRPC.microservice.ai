@@ -76,4 +76,6 @@ assignment_generator_general = LlmAgent(
     """,
     output_schema=QuestionsResponse,
     output_key="questions_requested",
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True,
 )
