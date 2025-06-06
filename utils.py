@@ -89,6 +89,16 @@ def get_questions_general(questions_data):
                         "questions": [],
                         "message": f"No questions available for {subject}"
                     }
+                elif num_questions > len(available_questions):
+                    # If more questions requested than available
+                    subject_data = {
+                        "subject": subject,
+                        "requested_count": num_questions,
+                        "available_count": len(available_questions),
+                        "returned_count": 0,
+                        "questions": [],
+                        "message": f"Only {len(available_questions)} questions are available in the database for {subject}, but {num_questions} were requested"
+                    }
                 else:
                     # Randomly sampling the requested number of questions
                     selected_questions = random.sample(
@@ -124,13 +134,17 @@ def get_questions_general(questions_data):
             response_message = f"**Assignment Questions Generated**\n\n"
             
             for subject_info in response_data["subjects"]:
-                response_message += f"**{subject_info['subject']}** ({subject_info['returned_count']} questions):\n"
-                
-                for i, question in enumerate(subject_info['questions'], 1):
-                    response_message += f"\n{i}. {question['question']}\n"
-                    for j, option in enumerate(question['options'], 1):
-                        response_message += f"   {chr(96+j)}) {option}\n"
-                    response_message += f"   **Answer:** {question['answer']}\n"
+                if subject_info['returned_count'] == 0 and 'message' in subject_info:
+                    # Handle case where no questions were returned due to error/insufficient questions
+                    response_message += f"**{subject_info['subject']}**: {subject_info['message']}\n"
+                else:
+                    response_message += f"**{subject_info['subject']}** ({subject_info['returned_count']} questions):\n"
+                    
+                    for i, question in enumerate(subject_info['questions'], 1):
+                        response_message += f"\n{i}. {question['question']}\n"
+                        for j, option in enumerate(question['options'], 1):
+                            response_message += f"   {chr(96+j)}) {option}\n"
+                        response_message += f"   **Answer:** {question['answer']}\n"
                 
                 response_message += "\n" + "="*50 + "\n"
             
