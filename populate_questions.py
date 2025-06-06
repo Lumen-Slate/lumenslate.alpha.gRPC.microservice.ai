@@ -14,7 +14,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from models.sqlite import get_db, engine, Base
-from models.sqlite.models import Questions
+from models.sqlite.models import Questions, Difficulty
 
 def populate_questions():
     """Populate the questions table with random questions from each subject."""
@@ -171,17 +171,26 @@ def populate_questions():
         
         for subject_name, questions_list in all_questions:
             print(f"\n📚 Adding {subject_name} questions...")
-            for question_text, options, answer in questions_list:
+            for idx, (question_text, options, answer) in enumerate(questions_list):
+                # Assign difficulty levels in a balanced way: 10 easy, 10 medium, 10 hard per subject
+                if idx < 10:
+                    difficulty = Difficulty.EASY
+                elif idx < 20:
+                    difficulty = Difficulty.MEDIUM
+                else:
+                    difficulty = Difficulty.HARD
+                
                 question = Questions(
                     subject=subject_name,
                     question=question_text,
                     options=json.dumps(options),
-                    answer=answer
+                    answer=answer,
+                    difficulty=difficulty
                 )
                 
                 db.add(question)
                 questions_added += 1
-                print(f"  ✓ Added: {question_text[:60]}...")
+                print(f"  ✓ Added ({difficulty.value}): {question_text[:60]}...")
         
         db.commit()
         print(f"\n🎉 Successfully added {questions_added} questions to the database!")
@@ -193,7 +202,10 @@ def populate_questions():
         
         for subject in ["English", "Math", "History", "Science"]:
             count = db.query(Questions).filter(Questions.subject == subject).count()
-            print(f"  {subject}: {count} questions")
+            easy_count = db.query(Questions).filter(Questions.subject == subject, Questions.difficulty == Difficulty.EASY).count()
+            medium_count = db.query(Questions).filter(Questions.subject == subject, Questions.difficulty == Difficulty.MEDIUM).count()
+            hard_count = db.query(Questions).filter(Questions.subject == subject, Questions.difficulty == Difficulty.HARD).count()
+            print(f"  {subject}: {count} questions (Easy: {easy_count}, Medium: {medium_count}, Hard: {hard_count})")
             
     except Exception as e:
         print(f"❌ Error occurred: {e}")

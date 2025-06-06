@@ -1,5 +1,5 @@
 from models.sqlite import get_db
-from models.sqlite.models import UnalteredHistory, Role, Questions
+from models.sqlite.models import UnalteredHistory, Role, Questions, Difficulty
 from datetime import datetime
 import logging
 import os
@@ -73,11 +73,21 @@ def get_questions_general(questions_data):
                 subject = request.get('subject')
                 num_questions = request.get('number_of_questions', 10)
                 request_type = request.get('type')
+                difficulty = request.get('difficulty')  # Optional difficulty filter
                 
                 # Querying database for questions from this subject
-                available_questions = db.query(Questions).filter(
-                    Questions.subject == subject
-                ).all()
+                query = db.query(Questions).filter(Questions.subject == subject)
+                
+                # Add difficulty filter if specified
+                if difficulty:
+                    try:
+                        difficulty_enum = Difficulty(difficulty.lower())
+                        query = query.filter(Questions.difficulty == difficulty_enum)
+                    except ValueError:
+                        # Invalid difficulty value, ignore filter
+                        pass
+                
+                available_questions = query.all()
                 
                 if not available_questions:
                     # If no questions available for this subject
@@ -113,7 +123,8 @@ def get_questions_general(questions_data):
                             "question_id": q.question_id,
                             "question": q.question,
                             "options": json.loads(q.options),
-                            "answer": q.answer
+                            "answer": q.answer,
+                            "difficulty": q.difficulty.value
                         })
                     
                     subject_data = {
@@ -141,7 +152,7 @@ def get_questions_general(questions_data):
                     response_message += f"**{subject_info['subject']}** ({subject_info['returned_count']} questions):\n"
                     
                     for i, question in enumerate(subject_info['questions'], 1):
-                        response_message += f"\n{i}. {question['question']}\n"
+                        response_message += f"\n{i}. {question['question']} *({question['difficulty']})*\n"
                         for j, option in enumerate(question['options'], 1):
                             response_message += f"   {chr(96+j)}) {option}\n"
                         response_message += f"   **Answer:** {question['answer']}\n"

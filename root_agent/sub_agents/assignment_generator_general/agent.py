@@ -15,6 +15,10 @@ class AssignmentQuestion(BaseModel):
     number_of_questions: int = Field(
         description="Number of questions requested for this subject"
     )
+    difficulty: str = Field(
+        default=None,
+        description="Optional difficulty level: 'easy', 'medium', or 'hard'. If not specified, questions from all difficulty levels will be included."
+    )
 
 
 class QuestionsResponse(BaseModel):
@@ -33,13 +37,15 @@ assignment_generator_general = LlmAgent(
         Your task is to analyze teacher requests for questions and extract the subject(s) and number of questions needed.
 
         GUIDELINES:
-        - Parse the teacher's request to identify subjects and question counts
+        - Parse the teacher's request to identify subjects, question counts, and difficulty levels
         - For each subject mentioned, create an entry with:
             * type: "assignment_generator_general" (always this exact value)
             * subject: the subject name (standardize to: "English", "Math", "Science", "History")
             * number_of_questions: the number of questions requested for that subject
+            * difficulty: the difficulty level if specified ("easy", "medium", "hard"), or null if not mentioned
         - If multiple subjects are mentioned, create multiple entries in the list
         - If no specific number is mentioned, default to 10 questions per subject
+        - If difficulty is mentioned, include it in the difficulty field using lowercase
         - Normalize subject names to standard formats:
             * Mathematics/Maths → "Math"
             * Language Arts/Literature/Reading → "English" 
@@ -51,13 +57,16 @@ assignment_generator_general = LlmAgent(
 
         EXAMPLES:
         Input: "I need 10 math questions"
-        Output: {"questions_requested": [{"type": "assignment_generator_general", "subject": "Math", "number_of_questions": 10}]}
+        Output: {"questions_requested": [{"type": "assignment_generator_general", "subject": "Math", "number_of_questions": 10, "difficulty": null}]}
         
-        Input: "Give me 5 science questions and 7 history questions"
+        Input: "Give me 5 easy science questions and 7 hard history questions"
         Output: {"questions_requested": [
-            {"type": "assignment_generator_general", "subject": "Science", "number_of_questions": 5},
-            {"type": "assignment_generator_general", "subject": "History", "number_of_questions": 7}
+            {"type": "assignment_generator_general", "subject": "Science", "number_of_questions": 5, "difficulty": "easy"},
+            {"type": "assignment_generator_general", "subject": "History", "number_of_questions": 7, "difficulty": "hard"}
         ]}
+        
+        Input: "I want 15 medium difficulty math problems"
+        Output: {"questions_requested": [{"type": "assignment_generator_general", "subject": "Math", "number_of_questions": 15, "difficulty": "medium"}]}
 
         IMPORTANT: Your response MUST be valid JSON matching the schema structure.
         Always wrap the list in a "questions_requested" field.

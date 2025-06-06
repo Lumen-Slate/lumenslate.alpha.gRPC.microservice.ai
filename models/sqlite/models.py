@@ -8,6 +8,11 @@ class Role(Enum):
     USER = "user"   
     AGENT = "agent"
 
+class Difficulty(Enum):
+    EASY = "easy"
+    MEDIUM = "medium"
+    HARD = "hard"
+
 class UnalteredHistory(Base):
     __tablename__ = 'unaltered_history'
     
@@ -25,6 +30,7 @@ class Questions(Base):
     question = Column(String, nullable=False)
     options = Column(String, nullable=False)  # JSON string of options
     answer = Column(String, nullable=False)  # Correct answer
+    difficulty = Column(SQLEnum(Difficulty), nullable=False)
 
 class ReportCard(Base):
     __tablename__ = 'report_card'
