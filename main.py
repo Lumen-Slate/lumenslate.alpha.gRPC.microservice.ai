@@ -10,7 +10,6 @@ from config.logging_config import logger
 from config.settings import settings
 
 # Routers
-from app.routes.ping import router as ping_router
 from app.routes.context_generator import router as context_generator_router
 from app.routes.mcq_variation_generator import router as mcq_variation_generator_router
 from app.routes.msq_variation_generator import router as msq_variation_generator_router
@@ -60,6 +59,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 🧠 Register routers
+app.include_router(context_generator_router, prefix="",
+                   tags=["Context Generator"])
+app.include_router(mcq_variation_generator_router,
+                   prefix="", tags=["MCQ Variation Generator"])
+app.include_router(msq_variation_generator_router,
+                   prefix="", tags=["MSQ Variation Generator"])
+app.include_router(variable_detector_router, prefix="",
+                   tags=["Variable Detector"])
+app.include_router(variable_randomizer_router, prefix="",
+                   tags=["Variable Randomizer"])
+app.include_router(question_segmentation_router, prefix="",
+                   tags=["Question Segmentation"])
 
 # ─────────────────────────────────────────────────────────────────────────────
 
