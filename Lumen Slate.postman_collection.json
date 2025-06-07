@@ -1,0 +1,807 @@
+{
+	"info": {
+		"_postman_id": "7e7f3bb7-580a-4509-b9ff-9f28bfa89488",
+		"name": "Lumen Slate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32315525",
+		"_collection_link": "https://crimson-capsule-249854.postman.co/workspace/My-Workspace~abfc4b32-b2f1-4e15-8d54-4a1376f3e469/collection/32315525-7e7f3bb7-580a-4509-b9ff-9f28bfa89488?action=share&source=collection_link&creator=32315525"
+	},
+	"item": [
+		{
+			"name": "AI microservice",
+			"item": [
+				{
+					"name": "context generator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"Given a square of side 4. find its area\",\n    \"keywords\": [\"Mickey mouse\", \"Goofy\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ai-microservice-1013699328111.asia-south1.run.app/generate-context",
+							"protocol": "https",
+							"host": [
+								"ai-microservice-1013699328111",
+								"asia-south1",
+								"run",
+								"app"
+							],
+							"path": [
+								"generate-context"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mcq variation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"What is the capital of France?\",\n  \"options\": [\"Paris\", \"London\", \"Berlin\", \"Madrid\"],\n  \"answer_index\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/generate-mcq-variations",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"generate-mcq-variations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "msq variations generator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Which animals are mammals?\",\n  \"options\": [\"Dog\", \"Shark\", \"Cat\", \"Eagle\"],\n  \"answer_indices\": [0, 2]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/generate-msq-variations",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"generate-msq-variations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "variable detector",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Calculate the area of a rectangle width 5. The length is repeated twice in the question. Consider the length to be double as the width\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/detect-variables",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"detect-variables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "variable randomizer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"Calculate the area of a rectangle with width 5 and length 15\",\n    \"user_prompt\": \"randomize width between 4 to 10 and length should be 4, or 12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/extract-and-randomize",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"extract-and-randomize"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "segmnt generator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"What is the capital of France and what is its population?\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/segment-question",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"segment-question"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MCQ",
+			"item": [
+				{
+					"name": "Create MCQ",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bankId\": \"a46089dc-4990-4f62-a00d-145e92b56794\",\n  \"question\": \"What is the speed of light?\",\n  \"variable\": [\n    {\n      \"id\": \"v1\",\n      \"name\": \"Speed\",\n      \"namePosition\": {\n        \"en\": [\n          0,\n          1\n        ]\n      },\n      \"valuePosition\": {\n        \"en\": [\n          2,\n          3\n        ]\n      },\n      \"unit\": \"m/s\",\n      \"unitPosition\": {\n        \"en\": [\n          4,\n          5\n        ]\n      },\n      \"variableType\": \"constant\"\n    }\n  ],\n  \"points\": 5,\n  \"options\": [\n    \"3x10^8 m/s\",\n    \"2x10^8 m/s\",\n    \"1.5x10^8 m/s\",\n    \"None\"\n  ],\n  \"answerIndex\": 0\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/mcqs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"mcqs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All MCQs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/mcqs?bankId=bank-101&limit=10&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"mcqs"
+							],
+							"query": [
+								{
+									"key": "bankId",
+									"value": "bank-101"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get MCQ by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/mcqs/mcq-001",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"mcqs",
+								"mcq-001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update MCQ",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bankId\": \"bank-101\",\n  \"question\": \"What is the correct speed of light?\",\n  \"variable\": [],\n  \"points\": 10,\n  \"options\": [\n    \"3x10^8\",\n    \"2x10^8\",\n    \"1.5x10^8\",\n    \"None of these\"\n  ],\n  \"answerIndex\": 0\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/mcqs/mcq-001",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"mcqs",
+								"mcq-001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch MCQ",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"points\": 15\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/mcqs/mcq-001",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"mcqs",
+								"mcq-001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete MCQ",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/mcqs/mcq-001",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"mcqs",
+								"mcq-001"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Question Bank",
+			"item": [
+				{
+					"name": "Create QuestionBank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, chapter, and topic\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('chapter');",
+									"    pm.expect(responseData).to.have.property('topic');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should be a non-empty string\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Chapter and topic are non-empty strings\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.chapter).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Chapter should not be empty\");",
+									"  pm.expect(responseData.topic).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Topic should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"qb-001\",\n  \"chapter\": \"Algebra\",\n  \"topic\": \"Linear Equations\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/questionbanks",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"questionbanks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All QuestionBanks (Filtered)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, chapter, and topic\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(item) {",
+									"        pm.expect(item.id).to.exist;",
+									"        pm.expect(item.chapter).to.exist;",
+									"        pm.expect(item.topic).to.exist;",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id, chapter, and topic are non-empty strings\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(item => {",
+									"    pm.expect(item.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"    pm.expect(item.chapter).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Chapter should not be empty\");",
+									"    pm.expect(item.topic).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Topic should not be empty\");",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Limit and offset parameters are correctly applied to the response\", function () {",
+									"    const limit = 10;",
+									"    const offset = 0;",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    pm.expect(responseData).to.have.lengthOf.at.most(limit);",
+									"    pm.expect(responseData).to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"    pm.expect(responseData[0].id).to.exist;",
+									"    pm.expect(responseData[0].chapter).to.exist;",
+									"    pm.expect(responseData[0].topic).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/questionbanks?chapter=Algebra&topic=Linear Equations&limit=10&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"questionbanks"
+							],
+							"query": [
+								{
+									"key": "chapter",
+									"value": "Algebra"
+								},
+								{
+									"key": "topic",
+									"value": "Linear Equations"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get QuestionBank by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, chapter, and topic\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('id');",
+									"  pm.expect(responseData).to.have.property('chapter');",
+									"  pm.expect(responseData).to.have.property('topic');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Chapter and topic are non-empty strings\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.chapter).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Chapter should not be empty\");",
+									"  pm.expect(responseData.topic).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Topic should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/questionbanks/qb-001",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"questionbanks",
+								"qb-001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update QuestionBank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, chapter, and topic\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('id');",
+									"  pm.expect(responseData).to.have.property('chapter');",
+									"  pm.expect(responseData).to.have.property('topic');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should be a non-empty string\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Chapter and topic are non-empty strings\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.chapter).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Chapter should not be empty\");",
+									"    pm.expect(responseData.topic).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Topic should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"chapter\": \"Geometry\",\n  \"topic\": \"Triangles\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/questionbanks/qb-001",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"questionbanks",
+								"qb-001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch QuestionBank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required field 'message'\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the structure of the response JSON\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"topic\": \"Quadratic Equations\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/questionbanks/qb-001",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"questionbanks",
+								"qb-001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete QuestionBank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"No unexpected fields in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(Object.keys(responseData)).to.have.lengthOf(1, \"Response should only contain 'message' field\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/questionbanks/qb-001",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"questionbanks",
+								"qb-001"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/ping",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
