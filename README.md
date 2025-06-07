@@ -28,9 +28,17 @@ python main.py
 
 ## API Endpoints
 
-| Method | Endpoint | Description                     |
-| ------ | -------- | ------------------------------- |
-| GET    | `/ping`  | Returns `{ "message": "ping" }` |
+Please import the endpoints on your postman desktop app, by importing Lumen_Slate.postman_collection.json
+
+| Method | Endpoint | Description |
+| ------ | -------- | ----------- |
+| GET    | `/ping`  | Returns `{ "message": "pong" }` |
+| POST   | `/generate-context` | Generates context using the Gemini-2.0-Flash model |
+| POST   | `/generate-mcq-variations` | Generates variations of a given MCQ question using the Gemini-2.0-Flash model |
+| POST   | `/generate-msq-variations` | Generates variations of a given MSQ question using the Gemini-2.0-Flash model |
+| POST   | `/segment-question` | Segments a given question into smaller, meaningful parts using the Gemini-2.0-Flash model |
+| POST   | `/detect-variables` | Identifies variables in a given question using the Gemini-2.0-Flash model |
+| POST   | `/extract-and-randomize` | Extracts filters and values for variables from the question and user-defined prompt, then randomizes the variables |
 
 ## OpenAPI Documentation
 
