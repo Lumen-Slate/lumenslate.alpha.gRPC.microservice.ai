@@ -1,0 +1,32 @@
+# .gitignore
+# Byte-compiled / cached files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+venv/
+myenv/
+
+# Logs
+logs/
+ai_microservice.log
+
+# Environment variables
+.env
+
+# Dependencies
+*.lock
+
+# IDE and Editor specific files
+.vscode/
+.idea/
+*.swp
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# OS-generated files
+.DS_Store
+Thumbs.db
