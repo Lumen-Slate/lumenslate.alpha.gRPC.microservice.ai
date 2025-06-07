@@ -6,7 +6,7 @@ This is a simple AI microservice built with FastAPI.
 
 ## Features
 
-- A single `/ping` endpoint that returns `{ "message": "ping" }`.
+- A single `/ping` endpoint that returns `{ "message": "pong" }`.
 - Environment-based settings for `dev`, `test`, and `prod`.
 - Logging configuration to track service events.
 - Structured project directory for scalability.
