@@ -71,7 +71,6 @@ assignment_generator_general = LlmAgent(
 
         IMPORTANT: Your response MUST be valid JSON matching the schema structure.
         Always wrap the list in a "questions_requested" field.
-
         DO NOT include any explanations or additional text outside the JSON response.
     """,
     output_schema=QuestionsResponse,
