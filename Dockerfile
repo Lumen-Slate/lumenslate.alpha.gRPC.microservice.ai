@@ -1,11 +1,21 @@
-FROM python:3.13-slim
+# ---- Base Image ----
+FROM python:3.11-slim-bookworm
 
+# ---- Set Environment Variables ----
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# ---- Set Work Directory ----
 WORKDIR /app
 
+# ---- Install Dependencies ----
 COPY requirements.txt .
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
-
+# ---- Copy Project ----
 COPY . .
 
-CMD ["sh", "-c", "exec uvicorn main:api --host 0.0.0.0 --port ${PORT:-5000}"]
+ENV PORT 8080
+
+CMD exec uvicorn main:app --host 0.0.0.0 --port ${PORT}
