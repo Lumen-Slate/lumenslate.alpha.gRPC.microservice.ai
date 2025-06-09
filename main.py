@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware 
-from models.pydantic.models import AgentInput
+from app.models.pydantic.models import AgentInput
 from google.adk.sessions import DatabaseSessionService
 from google.adk.runners import Runner
-from root_agent.agent import root_agent
+from app.agents.root_agent.agent import root_agent
 from google.genai import types
-from utils import add_to_history, get_questions_general
+from app.utils.utils import add_to_history, get_questions_general
 import json
 
 try:
@@ -24,7 +24,7 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
-db_url = "sqlite:///./my_agent_data.db"
+db_url = "sqlite:///./app/data/my_agent_data.db"
 session_service = DatabaseSessionService(db_url=db_url)
 
 APP_NAME = "LUMEN_SLATE"
@@ -38,7 +38,7 @@ async def main(agent_input: AgentInput):
             "message_history": [],
         }
 
-        existing_sessions = session_service.list_sessions(
+        existing_sessions = await session_service.list_sessions(
         app_name=APP_NAME,
         user_id=agent_input.user_id,
         )
@@ -47,7 +47,7 @@ async def main(agent_input: AgentInput):
             SESSION_ID = existing_sessions.sessions[0].id
             print(f"Continuing existing session: {SESSION_ID}")
         else:
-            new_session = session_service.create_session(
+            new_session = await session_service.create_session(
                 app_name=APP_NAME,
                 user_id=agent_input.user_id,
                 state=initial_state,
