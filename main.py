@@ -38,7 +38,7 @@ async def main(agent_input: AgentInput):
             "message_history": [],
         }
 
-        existing_sessions = session_service.list_sessions(
+        existing_sessions = await session_service.list_sessions(
         app_name=APP_NAME,
         user_id=agent_input.user_id,
         )
@@ -47,7 +47,7 @@ async def main(agent_input: AgentInput):
             SESSION_ID = existing_sessions.sessions[0].id
             print(f"Continuing existing session: {SESSION_ID}")
         else:
-            new_session = session_service.create_session(
+            new_session = await session_service.create_session(
                 app_name=APP_NAME,
                 user_id=agent_input.user_id,
                 state=initial_state,

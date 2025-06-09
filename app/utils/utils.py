@@ -1,9 +1,9 @@
-from models.sqlite import get_db
-from models.sqlite.models import UnalteredHistory, Role, Questions, Difficulty, Subject
+from ..models.sqlite import get_db
+from ..models.sqlite.models import UnalteredHistory, Role, Questions, Difficulty, Subject
 from datetime import datetime
 import logging
 import os
-import google.generativeai as genai
+from google import genai
 import time
 import json
 import random
@@ -11,8 +11,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-model = genai.GenerativeModel("gemini-2.0-flash")
+client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_subject_enum(subject_string):
     """Convert subject string to Subject enum, handling various formats"""
@@ -50,7 +49,9 @@ def create_summary(messages):
     Do NOT say anything else or extra, just provide the summary.
     The summary should be in a single paragraph and should not exceed 100 words.
     """
-    response = model.generate_content(input)
+    response = client.models.generate_content(
+        model='gemini-2.0-flash', contents=input
+    )
     return response.text.strip() if response and response.text else None
 
 def get_questions_general(questions_data):
