@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware 
-from models.pydantic.models import AgentInput
+from app.models.pydantic.models import AgentInput
 from google.adk.sessions import DatabaseSessionService
 from google.adk.runners import Runner
-from root_agent.agent import root_agent
+from app.agents.root_agent.agent import root_agent
 from google.genai import types
-from utils import add_to_history, get_questions_general
+from app.utils.utils import add_to_history, get_questions_general
 import json
 
 try:

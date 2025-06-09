@@ -13,8 +13,8 @@ import os
 # Add the current directory to Python path to import models
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from models.sqlite import get_db, engine, Base
-from models.sqlite.models import Questions, Difficulty, Subject
+from app.models.sqlite import get_db, engine, Base
+from app.models.sqlite.models import Questions, Difficulty, Subject
 
 def populate_questions():
     """Populate the questions table with random questions from each subject."""
