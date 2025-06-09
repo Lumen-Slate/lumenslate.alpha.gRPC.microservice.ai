@@ -11,7 +11,7 @@ except ImportError:
     pass
 
 # Main Agent Database Configuration - should use Neon DB in production
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./app/data/my_agent_data.db")
+DATABASE_URL = "sqlite:///app/data/sqlite.db"
 
 if "postgresql://" in DATABASE_URL:
     try:
