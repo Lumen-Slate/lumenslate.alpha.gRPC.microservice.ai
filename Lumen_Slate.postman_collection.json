@@ -1,0 +1,4246 @@
+{
+	"info": {
+		"_postman_id": "7f0edc75-b865-4009-bcee-b043725ff8ff",
+		"name": "Lumen_Slate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43786789",
+		"_collection_link": "https://shubhams-team-1428.postman.co/workspace/LumenSlate~ce1f7729-00f8-4939-a781-1d6ba807f083/collection/43786789-7f0edc75-b865-4009-bcee-b043725ff8ff?action=share&source=collection_link&creator=43786789"
+	},
+	"item": [
+		{
+			"name": "AI Microservice",
+			"item": [
+				{
+					"name": "context generator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"Given a square of side 4. find its area\",\n    \"keywords\": [\"Mickey mouse\", \"Goofy\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/generate-context",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"generate-context"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mcq variation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"What is the capital of France?\",\n  \"options\": [\"Paris\", \"London\", \"Berlin\", \"Madrid\"],\n  \"answer_index\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/generate-mcq-variations",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"generate-mcq-variations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "msq variations generator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Which animals are mammals?\",\n  \"options\": [\"Dog\", \"Shark\", \"Cat\", \"Eagle\"],\n  \"answer_indices\": [0, 2]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/generate-msq-variations",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"generate-msq-variations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "variable detector",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Calculate the area of a rectangle width 5. The length is repeated twice in the question. Consider the length to be double as the width\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/detect-variables",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"detect-variables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "variable randomizer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"Calculate the area of a rectangle with width 5 and length 15\",\n    \"user_prompt\": \"randomize width between 4 to 10 and length should be 4, or 12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://0.0.0.0:8000/extract-and-randomize",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000",
+							"path": [
+								"extract-and-randomize"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Assignment API",
+			"item": [
+				{
+					"name": "Create Assignment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id).to.exist;",
+									"    pm.expect(responseData.title).to.exist;",
+									"    pm.expect(responseData.body).to.exist;",
+									"    pm.expect(responseData.dueDate).to.exist;",
+									"    pm.expect(responseData.createdAt).to.exist;",
+									"    pm.expect(responseData.points).to.exist;",
+									"    pm.expect(responseData.commentIds).to.exist;",
+									"    pm.expect(responseData.mcqs).to.exist;",
+									"    pm.expect(responseData.msqs).to.exist;",
+									"    pm.expect(responseData.nats).to.exist;",
+									"    pm.expect(responseData.subjectives).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Points is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.points).to.be.a('number');",
+									"    pm.expect(responseData.points).to.be.at.least(0, \"Points should be a non-negative integer\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Mcqs array contains expected elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.mcqs).to.be.an('array');",
+									"    ",
+									"    responseData.mcqs.forEach(function(mcq) {",
+									"        pm.expect(mcq).to.have.property('question').that.is.a('string');",
+									"        pm.expect(mcq).to.have.property('options').that.is.an('array');",
+									"        pm.expect(mcq).to.have.property('answer').that.is.a('number');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Msqs array contains expected elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.msqs).to.be.an('array');",
+									"    responseData.msqs.forEach(function(msq) {",
+									"        pm.expect(msq).to.have.property('question').that.is.a('string');",
+									"        pm.expect(msq).to.have.property('options').that.is.an('array');",
+									"        pm.expect(msq).to.have.property('answers').that.is.an('array');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Full Quiz - All Question Types\",\n  \"body\": \"This is a test assignment containing all supported question types.\",\n  \"dueDate\": \"2025-05-15T00:00:00Z\",\n  \"createdAt\": \"2025-04-05T00:00:00Z\",\n  \"points\": 100,\n  \"commentIds\": [\"c1\", \"c2\"],\n  \"mcqs\": [\n    {\n      \"question\": \"What is the capital of France?\",\n      \"options\": [\"Paris\", \"London\", \"Berlin\", \"Madrid\"],\n      \"answer\": 0\n    }\n  ],\n  \"msqs\": [\n    {\n      \"question\": \"Select all prime numbers:\",\n      \"options\": [\"2\", \"4\", \"5\", \"6\"],\n      \"answers\": [0, 2]\n    }\n  ],\n  \"nats\": [\n    {\n      \"question\": \"What is the square root of 144?\",\n      \"answer\": \"12\"\n    }\n  ],\n  \"subjectives\": [\n    {\n      \"question\": \"Explain the theory of relativity in brief.\"\n    }\n  ]\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8080/assignments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Assignments (with filters)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response body is null\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData).to.equal(null);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Presence of required query parameters\", function () {",
+									"    const queryParameters = pm.request.url.query.toObject();",
+									"    ",
+									"    pm.expect(queryParameters).to.have.property('points');",
+									"    pm.expect(queryParameters).to.have.property('dueDate');",
+									"    pm.expect(queryParameters).to.have.property('limit');",
+									"    pm.expect(queryParameters).to.have.property('offset');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure the dueDate is in a valid date-time format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.dueDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/assignments?points=10&dueDate=2025-05-01T00:00:00Z&limit=10&offset=0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"assignments"
+							],
+							"query": [
+								{
+									"key": "points",
+									"value": "10"
+								},
+								{
+									"key": "dueDate",
+									"value": "2025-05-01T00:00:00Z"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Assignment by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 404\", function () {",
+									"    pm.expect(pm.response.code).to.equal(404);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.error).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Error message is not empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.error).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response does not contain sensitive information\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.error).to.exist;",
+									"    pm.expect(responseData).to.not.have.any.keys('password', 'token', 'ssn', 'creditCardNumber');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/assignments/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"assignments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "fb001672-9e00-476d-9a6a-81ca5983a9b5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Assignment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.id).to.exist;",
+									"  pm.expect(responseData.title).to.exist;",
+									"  pm.expect(responseData.body).to.exist;",
+									"  pm.expect(responseData.dueDate).to.exist;",
+									"  pm.expect(responseData.createdAt).to.exist;",
+									"  pm.expect(responseData.points).to.exist;",
+									"  pm.expect(responseData.commentIds).to.exist;",
+									"  pm.expect(responseData.mcqs).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Points is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.points).to.be.a('number');",
+									"    pm.expect(responseData.points).to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Mcqs array is present and contains expected number of elements\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.mcqs).to.exist.and.to.be.an('array');",
+									"  pm.expect(responseData.mcqs).to.have.lengthOf(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Assignment\",\n  \"body\": \"Updated content\",\n  \"dueDate\": \"2025-06-01T00:00:00Z\",\n  \"createdAt\": \"2025-04-05T00:00:00Z\",\n  \"points\": 20,\n  \"commentIds\": [\n    \"comment1\"\n  ],\n  \"mcqs\": [\n    {\n      \"question\": \"Updated MCQ?\",\n      \"options\": [\n        \"One\",\n        \"Two\"\n      ],\n      \"answer\": 1\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/assignments/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"assignments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "fb001672-9e00-476d-9a6a-81ca5983a9b5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Assignment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required field 'message'\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/assignments/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"assignments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "fb001672-9e00-476d-9a6a-81ca5983a9b5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Classroom API",
+			"item": [
+				{
+					"name": "Create Classroom",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('id');",
+									"  pm.expect(responseData).to.have.property('subject');",
+									"  pm.expect(responseData).to.have.property('teacherId');",
+									"  pm.expect(responseData).to.have.property('assignmentIds');",
+									"  pm.expect(responseData).to.have.property('credits');",
+									"});",
+									"",
+									"",
+									"pm.test(\"AssignmentIds array is present and contains expected number of elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.assignmentIds).to.exist.and.to.be.an('array');",
+									"    pm.expect(responseData.assignmentIds).to.have.lengthOf(1);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"});",
+									"",
+									"pm.test(\"TeacherId is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.teacherId).to.be.a('string').and.to.have.lengthOf.at.least(1, \"TeacherId should not be empty\");",
+									"});",
+									"",
+									"pm.test(\"Credits is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.credits).to.be.a('number').and.to.be.at.least(0, \"Credits should be a non-negative integer\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Subject is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.subject).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Subject should not be empty\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subject\": \"Mathematics\",\n  \"teacherId\": \"teacher-001\",\n  \"assignmentIds\": [\n    \"assign-1\",\n    \"assign-2\"\n  ],\n  \"credits\": 5,\n   \"tags\": [\"mechanics\", \"thermodynamics\"]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/classrooms",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"classrooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Classrooms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(classroom) {",
+									"        pm.expect(classroom).to.have.property('id');",
+									"        pm.expect(classroom).to.have.property('subject');",
+									"        pm.expect(classroom).to.have.property('teacherId');",
+									"        pm.expect(classroom).to.have.property('assignmentIds');",
+									"        pm.expect(classroom).to.have.property('credits');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"TeacherId is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(classroom) {",
+									"    pm.expect(classroom.teacherId).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"AssignmentIds is an array with at least one element\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(item) {",
+									"    pm.expect(item.assignmentIds).to.be.an('array').and.to.have.lengthOf.at.least(1);",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Credits is a non-negative integer\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(classroom) {",
+									"    pm.expect(classroom.credits).to.be.a('number').and.to.satisfy((credits) => credits >= 0);",
+									"  });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/classrooms",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"classrooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Classroom by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('id');",
+									"  pm.expect(responseData).to.have.property('subject');",
+									"  pm.expect(responseData).to.have.property('teacherId');",
+									"  pm.expect(responseData).to.have.property('assignmentIds');",
+									"  pm.expect(responseData).to.have.property('credits');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TeacherId is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.teacherId).to.be.a('string').and.to.have.lengthOf.at.least(1, \"TeacherId should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"AssignmentIds array should not be empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.assignmentIds).to.be.an('array').that.is.not.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Credits is a non-negative integer\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.credits).to.be.a('number');",
+									"  pm.expect(responseData.credits).to.be.at.least(0);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/classrooms/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"classrooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "62279dba-8cd0-438d-8d4c-1a3cae08ecaa"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Classroom",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('subject');",
+									"    pm.expect(responseData).to.have.property('teacherId');",
+									"    pm.expect(responseData).to.have.property('assignmentIds');",
+									"    pm.expect(responseData).to.have.property('credits');",
+									"});",
+									"",
+									"",
+									"pm.test(\"TeacherId should be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.teacherId).to.be.a('string').and.to.have.lengthOf.at.least(1, \"TeacherId should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"AssignmentIds is an array with at least one element\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.assignmentIds).to.be.an('array').and.to.have.lengthOf.at.least(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subject\": \"Advanced Math\",\n  \"teacherId\": \"teacher-002\",\n  \"assignmentIds\": [\n    \"assign-3\"\n  ],\n  \"credits\": 6,\n  \"tags\": [\"mechanics\", \"thermodynamics\"]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/classrooms/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"classrooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "62279dba-8cd0-438d-8d4c-1a3cae08ecaa"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Classroom",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response contains the required field 'message'\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"credits\": 7\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/classrooms/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"classrooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61178f82-2d20-496a-a415-23cf5460cb7d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Classroom",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required content type of application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify that the specified classroom 'class-101' has been successfully deleted\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/classrooms/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"classrooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61178f82-2d20-496a-a415-23cf5460cb7d"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment API",
+			"item": [
+				{
+					"name": "Create Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.to.have.status(201));",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id and commentBody\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('commentBody');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be an empty string\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"CommentBody is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.commentBody).to.be.a('string').and.to.have.lengthOf.at.least(1, \"CommentBody should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"comment-001\",\n  \"commentBody\": \"This is a test comment\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/comments",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Each comment object has the required fields - id and commentBody\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(comment) {",
+									"        pm.expect(comment).to.be.an('object');",
+									"        pm.expect(comment.id).to.exist.and.to.be.a('string');",
+									"        pm.expect(comment.commentBody).to.exist.and.to.be.a('string');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    responseData.forEach(function(comment) {",
+									"        pm.expect(comment.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should be a non-empty string\");",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"CommentBody is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  responseData.forEach(function(comment) {",
+									"    pm.expect(comment.commentBody).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"  });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/comments",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comment By ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id and commentBody\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('commentBody');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"CommentBody is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.commentBody).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/comments/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "a3d3a145-250b-41bb-b5b7-f11920a530e6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id and commentBody\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('commentBody');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"CommentBody is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.commentBody).to.be.a('string').and.to.have.lengthOf.at.least(1, \"CommentBody should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"commentBody\": \"Updated comment text\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/comments/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "a3d3a145-250b-41bb-b5b7-f11920a530e6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"commentBody\": \"Partially updated comment\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/comments/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "a3d3a145-250b-41bb-b5b7-f11920a530e6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required Content-Type header set to application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a valid response for successful deletion\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/comments/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "a3d3a145-250b-41bb-b5b7-f11920a530e6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Questions API",
+			"item": [
+				{
+					"name": "MCQs API",
+					"item": [
+						{
+							"name": "Create MCQ",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"What is the capital of Italy?\",\n    \"variableIds\": [\n        \"v1\"\n    ],\n    \"points\": 3,\n    \"options\": [\n        \"Rome\",\n        \"Paris\",\n        \"Madrid\",\n        \"Berlin\"\n    ],\n    \"answerIndex\": 0\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/mcqs",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"mcqs"
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"bankId\": \"bank1\",\n    \"question\": \"What is the capital of Italy?\",\n    \"variableIds\": [\n        \"v1\"\n    ],\n    \"points\": 3,\n    \"options\": [\n        \"Rome\",\n        \"Paris\",\n        \"Madrid\",\n        \"Berlin\"\n    ],\n    \"answerIndex\": 0\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Bulk Create MCQs",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Which planet is known as the Red Planet?\",\n        \"variableIds\": [\n            \"v1\"\n        ],\n        \"points\": 2,\n        \"options\": [\n            \"Earth\",\n            \"Mars\",\n            \"Jupiter\",\n            \"Saturn\"\n        ],\n        \"answerIndex\": 1\n    },\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Which language is used for Android development?\",\n        \"variableIds\": [\n            \"v2\"\n        ],\n        \"points\": 3,\n        \"options\": [\n            \"Swift\",\n            \"Kotlin\",\n            \"JavaScript\",\n            \"Python\"\n        ],\n        \"answerIndex\": 1\n    }\n]"
+								},
+								"url": {
+									"raw": "http://localhost:8080/mcqs/bulk",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"mcqs",
+										"bulk"
+									]
+								},
+								"description": "Sample Payload:\n```json\n[\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Which planet is known as the Red Planet?\",\n        \"variableIds\": [\n            \"v1\"\n        ],\n        \"points\": 2,\n        \"options\": [\n            \"Earth\",\n            \"Mars\",\n            \"Jupiter\",\n            \"Saturn\"\n        ],\n        \"answerIndex\": 1\n    },\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Which language is used for Android development?\",\n        \"variableIds\": [\n            \"v2\"\n        ],\n        \"points\": 3,\n        \"options\": [\n            \"Swift\",\n            \"Kotlin\",\n            \"JavaScript\",\n            \"Python\"\n        ],\n        \"answerIndex\": 1\n    }\n]\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get All MCQs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/mcqs",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"mcqs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get MCQ by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/mcqs/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"mcqs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6baddbb2-bba3-4553-9be9-97ab90330b3e"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update MCQ",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Updated question?\",\n    \"variableIds\": [\n        \"v3\"\n    ],\n    \"points\": 4,\n    \"options\": [\n        \"Option A\",\n        \"Option B\",\n        \"Option C\",\n        \"Option D\"\n    ],\n    \"answerIndex\": 2\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/mcqs/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"mcqs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6baddbb2-bba3-4553-9be9-97ab90330b3e"
+										}
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"bankId\": \"bank1\",\n    \"question\": \"Updated question?\",\n    \"variableIds\": [\n        \"v3\"\n    ],\n    \"points\": 4,\n    \"options\": [\n        \"Option A\",\n        \"Option B\",\n        \"Option C\",\n        \"Option D\"\n    ],\n    \"answerIndex\": 2\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Patch MCQ",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"points\": 6\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/mcqs/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"mcqs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6baddbb2-bba3-4553-9be9-97ab90330b3e"
+										}
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"points\": 6\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete MCQ",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/mcqs/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"mcqs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6baddbb2-bba3-4553-9be9-97ab90330b3e"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "MSQs API",
+					"item": [
+						{
+							"name": "Create MSQ",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Which of the following are fruits?\",\n    \"variableIds\": [\n        \"v1\"\n    ],\n    \"points\": 4,\n    \"options\": [\n        \"Apple\",\n        \"Carrot\",\n        \"Banana\",\n        \"Potato\"\n    ],\n    \"answerIndices\": [\n        0,\n        2\n    ]\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/msqs",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"msqs"
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"bankId\": \"bank1\",\n    \"question\": \"Which of the following are fruits?\",\n    \"variableIds\": [\n        \"v1\"\n    ],\n    \"points\": 4,\n    \"options\": [\n        \"Apple\",\n        \"Carrot\",\n        \"Banana\",\n        \"Potato\"\n    ],\n    \"answerIndices\": [\n        0,\n        2\n    ]\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Bulk Create MSQs",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Select even numbers.\",\n        \"variableIds\": [\n            \"v2\"\n        ],\n        \"points\": 3,\n        \"options\": [\n            \"1\",\n            \"2\",\n            \"3\",\n            \"4\"\n        ],\n        \"answerIndices\": [\n            1,\n            3\n        ]\n    },\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"Which are programming languages?\",\n        \"variableIds\": [\n            \"v3\"\n        ],\n        \"points\": 5,\n        \"options\": [\n            \"Python\",\n            \"Elephant\",\n            \"Go\",\n            \"Tiger\"\n        ],\n        \"answerIndices\": [\n            0,\n            2\n        ]\n    }\n]"
+								},
+								"url": {
+									"raw": "http://localhost:8080/msqs/bulk",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"msqs",
+										"bulk"
+									]
+								},
+								"description": "Sample Payload:\n```json\n[\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Select even numbers.\",\n        \"variableIds\": [\n            \"v2\"\n        ],\n        \"points\": 3,\n        \"options\": [\n            \"1\",\n            \"2\",\n            \"3\",\n            \"4\"\n        ],\n        \"answerIndices\": [\n            1,\n            3\n        ]\n    },\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"Which are programming languages?\",\n        \"variableIds\": [\n            \"v3\"\n        ],\n        \"points\": 5,\n        \"options\": [\n            \"Python\",\n            \"Elephant\",\n            \"Go\",\n            \"Tiger\"\n        ],\n        \"answerIndices\": [\n            0,\n            2\n        ]\n    }\n]\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get All MSQs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/msqs",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"msqs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get MSQ by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/msqs/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"msqs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "151338ad-db2b-4f4f-b602-ebe8ec957023"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update MSQ",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Updated question text?\",\n    \"variableIds\": [\n        \"v1\",\n        \"v4\"\n    ],\n    \"points\": 5,\n    \"options\": [\n        \"Option A\",\n        \"Option B\",\n        \"Option C\",\n        \"Option D\"\n    ],\n    \"answerIndices\": [\n        0,\n        3\n    ]\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/msqs/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"msqs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "151338ad-db2b-4f4f-b602-ebe8ec957023"
+										}
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"bankId\": \"bank1\",\n    \"question\": \"Updated question text?\",\n    \"variableIds\": [\n        \"v1\",\n        \"v4\"\n    ],\n    \"points\": 5,\n    \"options\": [\n        \"Option A\",\n        \"Option B\",\n        \"Option C\",\n        \"Option D\"\n    ],\n    \"answerIndices\": [\n        0,\n        3\n    ]\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Patch MSQ",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"points\": 10\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/msqs/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"msqs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "151338ad-db2b-4f4f-b602-ebe8ec957023"
+										}
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"points\": 10\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete MSQ",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/msqs/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"msqs",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "151338ad-db2b-4f4f-b602-ebe8ec957023"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "NATs API",
+					"item": [
+						{
+							"name": "Create NAT",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"What is the square root of 64?\",\n    \"variable\": [],\n    \"points\": 2,\n    \"answer\": 8\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/nats",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"nats"
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"bankId\": \"bank1\",\n    \"question\": \"What is the square root of 64?\",\n    \"variable\": [],\n    \"points\": 2,\n    \"answer\": 8\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Bulk Create NATs",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Enter the value of Pi (approx):\",\n        \"variable\": [],\n        \"points\": 3,\n        \"answer\": 3.14\n    },\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"How many degrees are there in a right angle?\",\n        \"variable\": [],\n        \"points\": 2,\n        \"answer\": 90\n    }\n]"
+								},
+								"url": {
+									"raw": "http://localhost:8080/nats/bulk",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"nats",
+										"bulk"
+									]
+								},
+								"description": "Sample Payload:\n```json\n[\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Enter the value of Pi (approx):\",\n        \"variable\": [],\n        \"points\": 3,\n        \"answer\": 3.14\n    },\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"How many degrees are there in a right angle?\",\n        \"variable\": [],\n        \"points\": 2,\n        \"answer\": 90\n    }\n]\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get All NATs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/nats",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"nats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get NAT by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/nats/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"nats",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "36357a6f-8ba3-4cf4-878b-f9e8b9703d16"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update NAT",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Updated question text?\",\n    \"variable\": [],\n    \"points\": 4,\n    \"answer\": 42\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/nats/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"nats",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "36357a6f-8ba3-4cf4-878b-f9e8b9703d16"
+										}
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"bankId\": \"bank1\",\n    \"question\": \"Updated question text?\",\n    \"variable\": [],\n    \"points\": 4,\n    \"answer\": 42\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Patch NAT",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"points\": 6\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/nats/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"nats",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "36357a6f-8ba3-4cf4-878b-f9e8b9703d16"
+										}
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"points\": 6\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete NAT",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/nats/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"nats",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "36357a6f-8ba3-4cf4-878b-f9e8b9703d16"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Subjectives API",
+					"item": [
+						{
+							"name": "Create Subjective",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Explain the theory of relativity.\",\n    \"variable\": [],\n    \"points\": 10,\n    \"idealAnswer\": \"Relativity is a theory developed by Einstein...\",\n    \"gradingCriteria\": [\n        \"Mentioned Einstein\",\n        \"Covered time dilation\",\n        \"Clear explanation\"\n    ]\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/subjectives",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subjectives"
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"bankId\": \"bank1\",\n    \"question\": \"Explain the theory of relativity.\",\n    \"variable\": [],\n    \"points\": 10,\n    \"idealAnswer\": \"Relativity is a theory developed by Einstein...\",\n    \"gradingCriteria\": [\n        \"Mentioned Einstein\",\n        \"Covered time dilation\",\n        \"Clear explanation\"\n    ]\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Bulk Create Subjectives",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"Describe the process of photosynthesis.\",\n        \"variable\": [],\n        \"points\": 8,\n        \"idealAnswer\": \"Photosynthesis is the process by which green plants...\",\n        \"gradingCriteria\": [\n            \"Mentioned chlorophyll\",\n            \"Included chemical equation\"\n        ]\n    },\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"Explain the water cycle.\",\n        \"variable\": [],\n        \"points\": 6,\n        \"gradingCriteria\": [\n            \"Evaporation\",\n            \"Condensation\",\n            \"Precipitation\"\n        ]\n    }\n]"
+								},
+								"url": {
+									"raw": "http://localhost:8080/subjectives/bulk",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subjectives",
+										"bulk"
+									]
+								},
+								"description": "Sample Payload:\n```json\n[\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"Describe the process of photosynthesis.\",\n        \"variable\": [],\n        \"points\": 8,\n        \"idealAnswer\": \"Photosynthesis is the process by which green plants...\",\n        \"gradingCriteria\": [\n            \"Mentioned chlorophyll\",\n            \"Included chemical equation\"\n        ]\n    },\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"Explain the water cycle.\",\n        \"variable\": [],\n        \"points\": 6,\n        \"gradingCriteria\": [\n            \"Evaporation\",\n            \"Condensation\",\n            \"Precipitation\"\n        ]\n    }\n]\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Subjectives",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/subjectives",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subjectives"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Subjective by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/subjectives/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subjectives",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "06cc6e00-8305-44ca-b065-912eb289ff03"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Subjective",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bankId\": \"bank3\",\n    \"question\": \"Updated subjective question?\",\n    \"variable\": [],\n    \"points\": 7,\n    \"idealAnswer\": \"Updated ideal answer\",\n    \"gradingCriteria\": [\n        \"New criteria 1\",\n        \"New criteria 2\"\n    ]\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/subjectives/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subjectives",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "06cc6e00-8305-44ca-b065-912eb289ff03"
+										}
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"bankId\": \"bank3\",\n    \"question\": \"Updated subjective question?\",\n    \"variable\": [],\n    \"points\": 7,\n    \"idealAnswer\": \"Updated ideal answer\",\n    \"gradingCriteria\": [\n        \"New criteria 1\",\n        \"New criteria 2\"\n    ]\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Patch Subjective",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"points\": 9\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/subjectives/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subjectives",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "06cc6e00-8305-44ca-b065-912eb289ff03"
+										}
+									]
+								},
+								"description": "Sample Payload:\n```json\n{\n    \"points\": 9\n}\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Subjective",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/subjectives/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"subjectives",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "06cc6e00-8305-44ca-b065-912eb289ff03"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Threads API",
+			"item": [
+				{
+					"name": "Create Thread",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('title');",
+									"    pm.expect(responseData).to.have.property('body');",
+									"    pm.expect(responseData).to.have.property('attachments');",
+									"    pm.expect(responseData).to.have.property('studentId');",
+									"    pm.expect(responseData).to.have.property('commentIds');",
+									"});",
+									"",
+									"",
+									"pm.test(\"ID is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"ID should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Attachments array must contain at least one element\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.attachments).to.be.an('array').and.to.have.lengthOf.at.least(1, \"Attachments array must contain at least one element\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"CommentIds array is present and not empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.commentIds).to.exist.and.to.be.an('array').that.is.not.empty;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Sample Post\",\n  \"body\": \"This is the body of the post.\",\n  \"attachments\": [\n    \"link1\",\n    \"link2\"\n  ],\n  \"studentId\": \"student-123\",\n  \"commentIds\": [\n    \"comment-1\",\n    \"comment-2\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Threads",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(post) {",
+									"        pm.expect(post).to.include.all.keys('id', 'title', 'body', 'attachments', 'studentId', 'commentIds');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"ID is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(post) {",
+									"        pm.expect(post.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"ID should not be empty\");",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Attachments array should not be empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(post) {",
+									"    pm.expect(post.attachments).to.be.an('array').and.to.have.lengthOf.at.least(1, \"Attachments array should not be empty\");",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Student ID is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(post) {",
+									"        pm.expect(post.studentId).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Student ID should not be empty\");",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Thread By ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.include.all.keys('id', 'title', 'body', 'attachments', 'studentId', 'commentIds');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Attachments array should not be empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.attachments).to.be.an('array').and.to.have.lengthOf.at.least(1, \"Attachments array should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"CommentIds array should not be empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.commentIds).to.be.an('array').and.to.have.lengthOf.at.least(1, \"CommentIds array should not be empty\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/posts/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "bc9d3831-cbac-4999-9e87-014a6fa972b7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Thread",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('id');",
+									"  pm.expect(responseData).to.have.property('title');",
+									"  pm.expect(responseData).to.have.property('body');",
+									"  pm.expect(responseData).to.have.property('attachments');",
+									"  pm.expect(responseData).to.have.property('studentId');",
+									"  pm.expect(responseData).to.have.property('commentIds');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Attachments array should not be empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.attachments).to.be.an('array').that.is.not.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"CommentIds array is not empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.commentIds).to.exist.and.to.be.an('array').that.is.not.empty;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Post\",\n  \"body\": \"Updated body text.\",\n  \"attachments\": [\n    \"link3\"\n  ],\n  \"studentId\": \"student-123\",\n  \"commentIds\": [\n    \"comment-3\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/posts/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "bc9d3831-cbac-4999-9e87-014a6fa972b7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Thread",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field contains the expected content\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.exist;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Patched Title\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/posts/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "bc9d3831-cbac-4999-9e87-014a6fa972b7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Thread",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required Content-Type header with value application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response body is a JSON object\", function () {",
+									"  pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response body does not contain unexpected fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(Object.keys(responseData)).to.have.lengthOf(1);",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/posts/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "bc9d3831-cbac-4999-9e87-014a6fa972b7"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Question Bank API",
+			"item": [
+				{
+					"name": "Create QuestionBank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, chapter, and topic\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('chapter');",
+									"    pm.expect(responseData).to.have.property('topic');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should be a non-empty string\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Chapter and topic are non-empty strings\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.chapter).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Chapter should not be empty\");",
+									"  pm.expect(responseData.topic).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Topic should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Algebra\",\n  \"topic\": \"Linear Equations\",\n  \"teacherId\": \"647d5ca7-be6e-4aaf-9b87-4dd69e52aa7f\",\n    \"tags\": [\"calculus\", \"limits\", \"continuity\"]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/question-banks",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"question-banks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All QuestionBanks (Filtered)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, chapter, and topic\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(item) {",
+									"        pm.expect(item.id).to.exist;",
+									"        pm.expect(item.chapter).to.exist;",
+									"        pm.expect(item.topic).to.exist;",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id, chapter, and topic are non-empty strings\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(item => {",
+									"    pm.expect(item.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"    pm.expect(item.chapter).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Chapter should not be empty\");",
+									"    pm.expect(item.topic).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Topic should not be empty\");",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Limit and offset parameters are correctly applied to the response\", function () {",
+									"    const limit = 10;",
+									"    const offset = 0;",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    pm.expect(responseData).to.have.lengthOf.at.most(limit);",
+									"    pm.expect(responseData).to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"    pm.expect(responseData[0].id).to.exist;",
+									"    pm.expect(responseData[0].chapter).to.exist;",
+									"    pm.expect(responseData[0].topic).to.exist;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/question-banks?chapter=Algebra&topic=Linear Equations&limit=10&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"question-banks"
+							],
+							"query": [
+								{
+									"key": "chapter",
+									"value": "Algebra"
+								},
+								{
+									"key": "topic",
+									"value": "Linear Equations"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get QuestionBank by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, chapter, and topic\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('id');",
+									"  pm.expect(responseData).to.have.property('chapter');",
+									"  pm.expect(responseData).to.have.property('topic');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Chapter and topic are non-empty strings\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.chapter).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Chapter should not be empty\");",
+									"  pm.expect(responseData.topic).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Topic should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/question-banks/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"question-banks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ad58d2b1-99c0-469d-bd00-ca141f864d90"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update QuestionBank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, chapter, and topic\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('id');",
+									"  pm.expect(responseData).to.have.property('chapter');",
+									"  pm.expect(responseData).to.have.property('topic');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should be a non-empty string\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Chapter and topic are non-empty strings\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.chapter).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Chapter should not be empty\");",
+									"    pm.expect(responseData.topic).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Topic should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"chapter\": \"Geometry\",\n  \"topic\": \"Triangles\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/question-banks/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"question-banks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ad58d2b1-99c0-469d-bd00-ca141f864d90"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch QuestionBank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required field 'message'\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the structure of the response JSON\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"topic\": \"Quadratic Equations\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/question-banks/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"question-banks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ad58d2b1-99c0-469d-bd00-ca141f864d90"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete QuestionBank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"No unexpected fields in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(Object.keys(responseData)).to.have.lengthOf(1, \"Response should only contain 'message' field\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/question-banks/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"question-banks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ad58d2b1-99c0-469d-bd00-ca141f864d90"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student API",
+			"item": [
+				{
+					"name": "Create Student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('name');",
+									"    pm.expect(responseData).to.have.property('email');",
+									"    pm.expect(responseData).to.have.property('rollNo');",
+									"    pm.expect(responseData).to.have.property('classIds');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.email).to.be.a('string');",
+									"    pm.expect(responseData.email).to.match(/^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)*(\\.[a-z]{2,})$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Roll number is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.rollNo).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Roll number should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"ClassIds is an array with at least one element\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.classIds).to.be.an('array').and.to.have.lengthOf.at.least(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"rollNo\": \"12345\",\n  \"classIds\": [\n    \"class-001\",\n    \"class-002\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/students",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Students with Filters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, name, email, rollNo, and classIds\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(student) {",
+									"        pm.expect(student).to.have.property('id');",
+									"        pm.expect(student).to.have.property('name');",
+									"        pm.expect(student).to.have.property('email');",
+									"        pm.expect(student).to.have.property('rollNo');",
+									"        pm.expect(student).to.have.property('classIds');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  responseData.forEach(function(student) {",
+									"    pm.expect(student.email).to.be.a('string').and.to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"ClassIds array is present and contains expected number of elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(student) {",
+									"        pm.expect(student.classIds).to.be.an('array').that.is.not.empty;",
+									"        pm.expect(student.classIds.length).to.equal(1);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/students?limit=10&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"students"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "john@example.com",
+									"disabled": true
+								},
+								{
+									"key": "rollNo",
+									"value": "12345",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Student by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id).to.exist;",
+									"    pm.expect(responseData.name).to.exist;",
+									"    pm.expect(responseData.email).to.exist;",
+									"    pm.expect(responseData.rollNo).to.exist;",
+									"    pm.expect(responseData.classIds).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.email).to.be.a('string').and.to.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Roll number is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.rollNo).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Roll number should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"ClassIds is an array with at least one element\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.classIds).to.be.an('array').and.to.have.lengthOf.at.least(1, \"ClassIds should have at least one element\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/students/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"students",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61921930-cf04-4aa7-af38-3967ad33d8ac"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('name');",
+									"    pm.expect(responseData).to.have.property('email');",
+									"    pm.expect(responseData).to.have.property('rollNo');",
+									"    pm.expect(responseData).to.have.property('classIds');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.email).to.match(/^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Roll number is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.rollNo).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Roll number should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"ClassIds array is present and contains at least one element\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.classIds).to.be.an('array').and.to.have.lengthOf.at.least(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"rollNo\": \"67890\",\n  \"classIds\": [\n    \"class-003\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/students/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"students",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61921930-cf04-4aa7-af38-3967ad33d8ac"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response message is present and non-empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist.and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message indicates success of patch operation\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.message).to.include(\"success\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Johnny\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/students/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"students",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61921930-cf04-4aa7-af38-3967ad33d8ac"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify that the student with ID 'student-001' is deleted from the system\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.message).to.exist;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/students/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"students",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61921930-cf04-4aa7-af38-3967ad33d8ac"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Submissions API",
+			"item": [
+				{
+					"name": "Create Submission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"studentId\": \"student-001\",\n  \"assignmentId\": \"assign-001\",\n  \"mcqAnswers\": {\n    \"q1\": \"A\"\n  },\n  \"msqAnswers\": {\n    \"q2\": [\n      \"B\",\n      \"C\"\n    ]\n  },\n  \"natAnswers\": {\n    \"q3\": 42\n  },\n  \"subjectiveAnswers\": {\n    \"q4\": \"This is my answer.\"\n  }\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/submissions",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"submissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Submissions with Filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/submissions",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"submissions"
+							],
+							"query": [
+								{
+									"key": "studentId",
+									"value": "student-001",
+									"disabled": true
+								},
+								{
+									"key": "assignmentId",
+									"value": "assign-001",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Submission by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/submissions/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"submissions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "722bcf5d-a319-4fcd-80aa-f31215ddaee6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Submission",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"studentId\": \"student-001\",\n  \"assignmentId\": \"assign-001\",\n  \"mcqAnswers\": {\n    \"q1\": \"B\"\n  },\n  \"msqAnswers\": {\n    \"q2\": [\n      \"A\",\n      \"D\"\n    ]\n  },\n  \"natAnswers\": {\n    \"q3\": 36\n  },\n  \"subjectiveAnswers\": {\n    \"q4\": \"Updated answer.\"\n  }\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/submissions/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"submissions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "722bcf5d-a319-4fcd-80aa-f31215ddaee6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Submission",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subjectiveAnswers\": {\n    \"q4\": \"Patched answer\"\n  }\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/submissions/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"submissions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "722bcf5d-a319-4fcd-80aa-f31215ddaee6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Submission",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/submissions/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"submissions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "722bcf5d-a319-4fcd-80aa-f31215ddaee6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Teachers API",
+			"item": [
+				{
+					"name": "Create Teacher",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Alice Smith\",\n  \"email\": \"alice@school.com\",\n  \"phone\": \"1234567890\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/teachers",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Teachers with Filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/teachers?limit=10&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "alice@school.com",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "1234567890",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Teacher by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/teachers/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "647d5ca7-be6e-4aaf-9b87-4dd69e52aa7f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Teacher",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Alice Johnson\",\n  \"email\": \"alicej@school.com\",\n  \"phone\": \"0987654321\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/teachers/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "647d5ca7-be6e-4aaf-9b87-4dd69e52aa7f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Teacher",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"1112223333\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/teachers/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "647d5ca7-be6e-4aaf-9b87-4dd69e52aa7f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Teacher",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/teachers/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"teachers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "647d5ca7-be6e-4aaf-9b87-4dd69e52aa7f"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Variable API",
+			"item": [
+				{
+					"name": "Create Variable",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Speed\",\n    \"namePositions\": [10, 20],\n    \"value\": \"10 m/s\",\n    \"valuePositions\": [30, 40],\n    \"variableType\": \"physical\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/variables",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"variables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Variables with Filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/variables?variableType=physical&limit=10&offset=0",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"variables"
+							],
+							"query": [
+								{
+									"key": "variableType",
+									"value": "physical"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Variable by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/variables/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"variables",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1d7e1900-403e-4fcd-8453-49b9dabd690e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Variable",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Velocity\",\n  \"namePosition\": {\n    \"en\": [\n      15,\n      25\n    ]\n  },\n  \"valuePosition\": {\n    \"en\": [\n      35,\n      45\n    ]\n  },\n  \"unit\": \"km/h\",\n  \"unitPosition\": {\n    \"en\": [\n      55,\n      65\n    ]\n  },\n  \"variableType\": \"derived\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/variables/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"variables",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1d7e1900-403e-4fcd-8453-49b9dabd690e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Variable",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"unit\": \"cm/s\"\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/variables/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"variables",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1d7e1900-403e-4fcd-8453-49b9dabd690e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Variable",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/variables/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"variables",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1d7e1900-403e-4fcd-8453-49b9dabd690e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Create Variables",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"name\": \"Speed\",\r\n    \"namePositions\": [10, 20],\r\n    \"value\": \"10 m/s\",\r\n    \"valuePositions\": [30, 40],\r\n    \"variableType\": \"physical\"\r\n  },\r\n  {\r\n    \"name\": \"Acceleration\",\r\n    \"namePositions\": [15, 25],\r\n    \"value\": \"5 m/s²\",\r\n    \"valuePositions\": [35, 45],\r\n    \"variableType\": \"physical\"\r\n  },\r\n  {\r\n    \"name\": \"Force\",\r\n    \"namePositions\": [20, 30],\r\n    \"value\": \"50 N\",\r\n    \"valuePositions\": [40, 50],\r\n    \"variableType\": \"physical\"\r\n  }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/variables/bulk",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"variables",
+								"bulk"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
