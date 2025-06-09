@@ -24,7 +24,7 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
-db_url = "sqlite:///./my_agent_data.db"
+db_url = "sqlite:///./app/data/my_agent_data.db"
 session_service = DatabaseSessionService(db_url=db_url)
 
 APP_NAME = "LUMEN_SLATE"
