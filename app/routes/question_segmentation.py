@@ -72,6 +72,6 @@ def segment_question(request: QuestionSegmentationRequest):
         # Extract the response content
         segmented_text = response.content.strip()
 
-        return QuestionSegmentationResponse(segmented_question=segmented_text)
+        return QuestionSegmentationResponse(segmentedQuestion=segmented_text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
