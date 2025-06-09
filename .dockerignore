@@ -1,0 +1,22 @@
+# Ignore Python cache files
+__pycache__/
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+
+# Ignore virtual environment (if created locally)
+.venv
+
+# Ignore version control
+.git
+.gitignore
+
+# Ignore IDE/editor files
+.vscode/
+.idea/
+*.swp
+
+
+
