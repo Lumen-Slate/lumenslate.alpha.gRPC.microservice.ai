@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Vertex AI settings
-PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
+PROJECT_ID = os.environ.get("GOOGLE_PROJECT_ID")
 LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION")
 
 # RAG settings

@@ -26,7 +26,7 @@ from app.protos import ai_service_pb2_grpc
 from app.config.logging_config import logger
 
 # GIN Backend configuration for corpus management
-GIN_BACKEND_URL = os.getenv("GIN_BACKEND_URL", "http://localhost:8080")
+GIN_BACKEND_URL = os.getenv("GIN_BACKEND_URL", "https://lumenslate-backend-756147067348.asia-south1.run.app")
 
 class AIService(ai_service_pb2_grpc.AIServiceServicer):
     def __init__(self, logger=None):

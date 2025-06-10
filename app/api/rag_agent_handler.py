@@ -1,7 +1,7 @@
 import os
-import requests
 from datetime import datetime
 from app.config.logging_config import logger
+from dotenv import load_dotenv
 
 # Agent dependencies
 from google.adk.sessions import DatabaseSessionService
@@ -12,49 +12,15 @@ from app.utils.history_manager import add_to_rag_history
 
 # ─────────────────────────────────────────────────────────────────────────────
 
+load_dotenv()
+
 # Agent configuration
 default_db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "sqlite.db")
 db_url = os.getenv("RAG_DATABASE_URL", f"sqlite:///{default_db_path}")
 session_service = DatabaseSessionService(db_url=db_url)
 APP_NAME = "LUMEN_SLATE_RAG"
 
-# Configuration for direct HTTP calls to GIN backend
-GIN_BACKEND_URL = os.getenv("GIN_BACKEND_URL", "https://lumenslate-backend-756147067348.asia-south1.run.app")
-
 # ─────────────────────────────────────────────────────────────────────────────
-
-async def create_corpus_for_teacher(teacher_id):
-    """Create a corpus for the teacher using direct HTTP calls to GIN backend"""
-    try:
-        url = f"{GIN_BACKEND_URL}/ai/rag-agent/create-corpus"
-        
-        payload = {
-            "corpusName": teacher_id
-        }
-        
-        response = requests.post(url, json=payload, timeout=30)
-        
-        if response.status_code == 200:
-            result = response.json()
-            if result.get("status") == "success":
-                logger.info(f"Corpus created/verified for teacher: {teacher_id}")
-                return True
-            else:
-                logger.warning(f"Failed to create corpus for teacher {teacher_id}: {result.get('message', 'Unknown error')}")
-                return False
-        elif response.status_code == 409:  # Conflict - corpus already exists
-            logger.info(f"Corpus already exists for teacher: {teacher_id}")
-            return True
-        else:
-            logger.error(f"HTTP error during corpus creation for teacher {teacher_id}: {response.status_code} - {response.text}")
-            return False
-            
-    except requests.exceptions.RequestException as e:
-        logger.error(f"HTTP request error during corpus creation for teacher {teacher_id}: {e}")
-        return False
-    except Exception as e:
-        logger.error(f"Unexpected error during corpus creation for teacher {teacher_id}: {str(e)}")
-        return False
 
 def create_agent_response(message="", teacherId="", agentName="", agentResponse="", 
                          sessionId="", createdAt="", updatedAt="", responseTime="", 
@@ -96,10 +62,8 @@ async def rag_agent_handler(request):
                 role="agent"
             )
 
-        # Create/verify corpus for the teacher before processing
-        corpus_created = await create_corpus_for_teacher(request.teacherId)
-        if not corpus_created:
-            logger.warning(f"Could not create/verify corpus for teacher {request.teacherId}, proceeding anyway")
+        # Note: Corpus creation/verification is now handled by the gin backend
+        # before the request reaches this handler
 
         initial_state = {
             "user_id": request.teacherId,
@@ -135,7 +99,7 @@ async def rag_agent_handler(request):
         async for event in runner.run_async(user_id=request.teacherId, session_id=SESSION_ID, new_message=content):
             if event.is_final_response() and event.content and event.content.parts:
                 agent_message = event.content.parts[0].text.strip()
-                logger.info(f"Agent message: {agent_message}")
+                # logger.info(f"Agent message: {agent_message}")
                 if not agent_message:
                     agent_message = "No response generated"
 

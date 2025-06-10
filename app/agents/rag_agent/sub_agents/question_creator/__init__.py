@@ -30,7 +30,7 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_file
 print("Google Cloud credentials loaded successfully with Vertex AI and Generative AI scopes")
 
 # Get Vertex AI configuration from environment
-PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
+PROJECT_ID = os.environ.get("GOOGLE_PROJECT_ID")
 LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION")
 
 # Initialize Vertex AI at package load time
