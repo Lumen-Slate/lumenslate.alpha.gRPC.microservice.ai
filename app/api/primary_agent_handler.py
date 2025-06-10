@@ -16,7 +16,7 @@ from app.utils.multimodal_handler import MultimodalHandler
 
 
 # Agent configuration
-db_url = os.getenv("DATABASE_URL")
+db_url = 'sqlite:///app/data/sqlite.db'
 session_service = DatabaseSessionService(db_url=db_url)
 APP_NAME = "LUMEN_SLATE"
 
