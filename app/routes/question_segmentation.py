@@ -1,4 +1,3 @@
-from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -14,9 +13,6 @@ if "GOOGLE_API_KEY" not in os.environ:
     raise EnvironmentError(
         "GOOGLE_API_KEY is not set in the environment variables."
     )
-
-# Initialize the router
-router = APIRouter()
 
 # Define the request model
 
@@ -44,34 +40,18 @@ prompt_template = PromptTemplate.from_template(
 )
 
 
-@router.post(
-    "/segment-question",
-    summary="Segment a question into smaller parts",
-    description="Segments a given question into smaller, meaningful parts using the Gemini-2.0-Flash model.",
-    response_model=QuestionSegmentationResponse,
-    response_description="A JSON object containing the segmented parts of the question as a single text.",
-)
-def segment_question(request: QuestionSegmentationRequest):
+def segment_question_logic(question: str) -> str:
     """
-    Handles the POST request for segmenting a question into smaller parts.
+    Segments the given question into smaller parts using the Gemini-2.0-Flash model.
 
     Args:
-        request (QuestionSegmentationRequest): The request body containing the question.
+        question (str): The question to segment.
 
     Returns:
-        QuestionSegmentationResponse: A JSON object containing the segmented parts of the question as a single text.
+        str: The segmented parts of the question as a single text.
     """
-    try:
-        # Format the prompt using the question
-        formatted_prompt = prompt_template.format(question=request.question)
-        # Create a HumanMessage with the formatted prompt
-        message = HumanMessage(content=formatted_prompt)
-        # Invoke the LLM
-        response = llm.invoke([message])
-
-        # Extract the response content
-        segmented_text = response.content.strip()
-
-        return QuestionSegmentationResponse(segmentedQuestion=segmented_text)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    formatted_prompt = prompt_template.format(question=question)
+    message = HumanMessage(content=formatted_prompt)
+    response = llm.invoke([message])
+    segmented_text = response.content.strip()
+    return segmented_text

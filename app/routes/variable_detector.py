@@ -1,5 +1,4 @@
 from app.prompts.variable_detector_prompt import VARIABLE_DETECTOR_PROMPT
-from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -14,8 +13,6 @@ load_dotenv()
 if "GOOGLE_API_KEY" not in os.environ:
     raise EnvironmentError(
         "GOOGLE_API_KEY is not set in the environment variables.")
-
-router = APIRouter()
 
 # Define the request model
 
@@ -53,33 +50,23 @@ prompt_template = PromptTemplate.from_template(
     template=VARIABLE_DETECTOR_PROMPT)
 
 
-@router.post(
-    "/detect-variables",
-    summary="Detect variables in a question",
-    description="Identifies variables in a given question using the Gemini-2.0-Flash model.",
-    response_model=VariableDetectorResponse,
-    response_description="A JSON object containing the detected variables.",
-)
-def detect_variables(request: VariableDetectorRequest):
+def detect_variables_logic(question: str) -> VariableDetectorResponse:
     """
-    Handles the POST request for detecting variables in a question.
+    Core logic for detecting variables in a question.
 
     Args:
-        request (VariableDetectorRequest): The request body containing the question.
+        question (str): The question to analyze for variables.
 
     Returns:
         VariableDetectorResponse: A JSON object containing the detected variables.
     """
-    try:
-        # Split the question into a list of strings separated by whitespace
-        question_as_list = request.question.split()
-        # Format the prompt using the template
-        formatted_prompt = prompt_template.format(question=question_as_list)
-        # Create a HumanMessage with the formatted prompt
-        message = HumanMessage(content=formatted_prompt)
-        # Invoke the LLM with structured output
-        response = structured_llm.invoke([message])
+    # Split the question into a list of strings separated by whitespace
+    question_as_list = question.split()
+    # Format the prompt using the template
+    formatted_prompt = prompt_template.format(question=question_as_list)
+    # Create a HumanMessage with the formatted prompt
+    message = HumanMessage(content=formatted_prompt)
+    # Invoke the LLM with structured output
+    response = structured_llm.invoke([message])
 
-        return response
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return response
