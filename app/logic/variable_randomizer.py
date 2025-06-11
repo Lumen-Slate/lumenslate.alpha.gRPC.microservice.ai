@@ -63,18 +63,18 @@ def extract_and_randomize_logic(question: str, user_prompt: str) -> FilterAndRan
     """
     # Format the prompt using the question and user prompt
     formatted_prompt = prompt_template.format(
-        question=question, user_prompt=user_prompt
+        question=question, userPrompt=user_prompt
     )
     # Create a HumanMessage with the formatted prompt
     message = HumanMessage(content=formatted_prompt)
     # Invoke the LLM with structured output
     response = structured_llm.invoke([message])
 
-    # Randomize variables based on extracted filters
     randomized_variables = []
     for variable in response.variables:
         name = variable.name
-        filters = variable.filters
+        # Ensure filters is present, else use default
+        filters = variable.filters if hasattr(variable, "filters") and variable.filters is not None else VariableFilter()
         randomized_value = None
 
         if filters.range:
@@ -83,10 +83,8 @@ def extract_and_randomize_logic(question: str, user_prompt: str) -> FilterAndRan
         elif filters.options:
             randomized_value = random.choice(filters.options)
         else:
-            # Keep the original value if no filters
             randomized_value = variable.value
 
-        # Append the full variable structure to the response
         randomized_variables.append(Variable(
             name=name,
             value=randomized_value,
