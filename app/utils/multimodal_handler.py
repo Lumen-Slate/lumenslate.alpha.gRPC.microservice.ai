@@ -7,7 +7,25 @@ import tempfile
 
 load_dotenv()
 
-client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+# Check if using Vertex AI or Google AI Studio
+USE_VERTEXAI = os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "FALSE").upper() == "TRUE"
+
+if USE_VERTEXAI:
+    import vertexai
+    from vertexai.generative_models import GenerativeModel, Part
+    
+    # Initialize Vertex AI
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+    location = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
+    vertexai.init(project=project_id, location=location)
+    
+    # Create Vertex AI model
+    model = GenerativeModel('gemini-2.0-flash')
+    client = None  # Not using genai client for Vertex AI
+else:
+    # Use Google AI Studio client
+    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+    model = None  # Not using Vertex AI model
 
 VALID_IMAGE_TYPES = {'.jpg', '.jpeg', '.png', '.webp'}
 
@@ -15,84 +33,151 @@ VALID_AUDIO_TYPES = {'.wav', '.mp3', '.aiff', '.aac', '.ogg', '.flac'}
 
 VALID_TEXT_TYPES = {'.pdf'}
 
-async def ImageHandler(agent_input) -> str:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
-        audio_bytes = await agent_input.file.read()
-        tmp.write(audio_bytes)
-        tmp_file_path = tmp.name
+def get_mime_type(file_extension):
+    """Get the appropriate MIME type based on file extension."""
+    mime_map = {
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg', 
+        '.png': 'image/png',
+        '.webp': 'image/webp',
+        '.wav': 'audio/wav',
+        '.mp3': 'audio/mpeg',
+        '.aiff': 'audio/aiff',
+        '.aac': 'audio/aac',
+        '.ogg': 'audio/ogg',
+        '.flac': 'audio/flac',
+        '.pdf': 'application/pdf'
+    }
+    return mime_map.get(file_extension.lower(), 'application/octet-stream')
+
+async def ImageHandler(agent_input, file_extension='.jpg') -> str:
+    image_bytes = await agent_input.file.read()
 
     try:
-        # Now uploading using the file path
-        file = client.files.upload(file=tmp_file_path)
-        response = client.models.generate_content(
-            model='gemini-2.0-flash',
-            contents=[
-                'Extract all the text from the image and return the text only.',
-                file
-            ],
-        )
+        if USE_VERTEXAI:
+            # Use Vertex AI approach
+            mime_type = get_mime_type(file_extension)
+            image_part = Part.from_data(
+                data=image_bytes,
+                mime_type=mime_type
+            )
+            
+            response = model.generate_content([
+                "Extract all the text from the image and return the text only.",
+                image_part
+            ])
+            
+            response_text = response.text if hasattr(response, 'text') else str(response)
+        else:
+            # Use Google AI Studio approach with temporary file
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+                tmp.write(image_bytes)
+                tmp_file_path = tmp.name
 
-        return clean_text(response.text) if response and hasattr(response, "text") else "Could not generate transcription."
+            try:
+                file = client.files.upload(file=tmp_file_path)
+                response = client.models.generate_content(
+                    model='gemini-2.0-flash',
+                    contents=[
+                        'Extract all the text from the image and return the text only.',
+                        file
+                    ],
+                )
+                response_text = response.text if hasattr(response, 'text') else str(response)
+            finally:
+                os.remove(tmp_file_path)
+
+        logger.info(f"Image transcription successful")
+        return clean_text(response_text) if response_text else "Could not generate transcription."
     except Exception as e:
+        logger.error(f"Error during image transcription: {str(e)}")
         return f"Error during transcription: {str(e)}"
-    finally:
-        # Cleaning up the temporary file
-        import os
-        os.remove(tmp_file_path)
 
 
-async def AudioHandler(agent_input) -> str:
-    # Save upload to a temporary file first
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
-        audio_bytes = await agent_input.file.read()
-        tmp.write(audio_bytes)
-        tmp_file_path = tmp.name
+async def AudioHandler(agent_input, file_extension='.wav') -> str:
+    audio_bytes = await agent_input.file.read()
 
     try:
-        # Now uploading using the file path
-        file = client.files.upload(file=tmp_file_path)
-        response = client.models.generate_content(
-            model='gemini-2.0-flash',
-            contents=[
-                'Transcribe the audio into text and return the text only.',
-                file
-            ],
-        )
+        if USE_VERTEXAI:
+            # Use Vertex AI approach
+            mime_type = get_mime_type(file_extension)
+            audio_part = Part.from_data(
+                data=audio_bytes,
+                mime_type=mime_type
+            )
+            
+            response = model.generate_content([
+                "Transcribe the audio into text and return the text only.",
+                audio_part
+            ])
+            
+            response_text = response.text if hasattr(response, 'text') else str(response)
+        else:
+            # Use Google AI Studio approach with temporary file
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+                tmp.write(audio_bytes)
+                tmp_file_path = tmp.name
 
-        return clean_text(response.text) if response and hasattr(response, "text") else "Could not generate transcription."
+            try:
+                file = client.files.upload(file=tmp_file_path)
+                response = client.models.generate_content(
+                    model='gemini-2.0-flash',
+                    contents=[
+                        'Transcribe the audio into text and return the text only.',
+                        file
+                    ],
+                )
+                response_text = response.text if hasattr(response, 'text') else str(response)
+            finally:
+                os.remove(tmp_file_path)
+
+        return clean_text(response_text) if response_text else "Could not generate transcription."
     except Exception as e:
+        logger.error(f"Error during audio transcription: {str(e)}")
         return f"Error during transcription: {str(e)}"
-    finally:
-        # Cleaning up the temporary file
-        import os
-        os.remove(tmp_file_path)
 
 
-async def PDFHandler(agent_input) -> str:
-    # Save upload to a temporary file first
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-        pdf_bytes = await agent_input.file.read()
-        tmp.write(pdf_bytes)
-        tmp_file_path = tmp.name
+async def PDFHandler(agent_input, file_extension='.pdf') -> str:
+    pdf_bytes = await agent_input.file.read()
 
     try:
-        # Now uploading using the file path
-        file = client.files.upload(file=tmp_file_path)
-        response = client.models.generate_content(
-            model='gemini-2.0-flash',
-            contents=[
-                'Extract all the text content from the PDF document and return the text only.',
-                file
-            ],
-        )
+        if USE_VERTEXAI:
+            # Use Vertex AI approach
+            mime_type = get_mime_type(file_extension)
+            pdf_part = Part.from_data(
+                data=pdf_bytes,
+                mime_type=mime_type
+            )
+            
+            response = model.generate_content([
+                "Extract all the text content from the PDF document and return the text only.",
+                pdf_part
+            ])
+            
+            response_text = response.text if hasattr(response, 'text') else str(response)
+        else:
+            # Use Google AI Studio approach with temporary file
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+                tmp.write(pdf_bytes)
+                tmp_file_path = tmp.name
 
-        return clean_text(response.text) if response and hasattr(response, "text") else "Could not extract text from PDF."
+            try:
+                file = client.files.upload(file=tmp_file_path)
+                response = client.models.generate_content(
+                    model='gemini-2.0-flash',
+                    contents=[
+                        'Extract all the text content from the PDF document and return the text only.',
+                        file
+                    ],
+                )
+                response_text = response.text if hasattr(response, 'text') else str(response)
+            finally:
+                os.remove(tmp_file_path)
+
+        return clean_text(response_text) if response_text else "Could not extract text from PDF."
     except Exception as e:
+        logger.error(f"Error during PDF text extraction: {str(e)}")
         return f"Error during PDF text extraction: {str(e)}"
-    finally:
-        # Cleaning up the temporary file
-        import os
-        os.remove(tmp_file_path)
 
 
 async def MultimodalHandler(agent_input) -> str:
@@ -112,19 +197,19 @@ async def MultimodalHandler(agent_input) -> str:
 
     # Checking if it's a valid image type
     if file_extension in VALID_IMAGE_TYPES:
-        image_description = await ImageHandler(agent_input)
+        image_description = await ImageHandler(agent_input, file_extension)
         grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "image_description": {image_description}}}'
         return grand_query
     
     # Checking if it's a valid audio type
     elif file_extension in VALID_AUDIO_TYPES:
-        audio_description =  await AudioHandler(agent_input)
+        audio_description = await AudioHandler(agent_input, file_extension)
         grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "audio_description": {audio_description}}}'
         return grand_query
     
     # Checking if it's a valid text type
     elif file_extension in VALID_TEXT_TYPES:
-        pdf_content = await PDFHandler(agent_input)
+        pdf_content = await PDFHandler(agent_input, file_extension)
         grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "pdf_content": {pdf_content}}}'
         return grand_query
     

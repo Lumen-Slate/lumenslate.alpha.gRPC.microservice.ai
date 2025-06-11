@@ -102,7 +102,7 @@ async def add_to_history(message: str, role: str, teacherId: str, sessionId: str
     except Exception as e:
         if db_session:
             db_session.rollback()
-        logger.error(f"Error adding to history: {e}")
+        logging.error(f"Error adding to history: {e}")
         raise e
     finally:
         if db_session:

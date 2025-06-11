@@ -14,6 +14,48 @@ from app.utils.multimodal_handler import MultimodalHandler
 
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _detect_file_type_from_content(file_bytes):
+    """
+    Detect file type from file content by examining file headers/magic numbers.
+    Returns the appropriate file extension based on the actual file content.
+    """
+    if not file_bytes or len(file_bytes) < 4:
+        return ".unknown"
+    
+    # Get the first few bytes for magic number detection
+    header = file_bytes[:16]
+    
+    # Image formats
+    if header.startswith(b'\xFF\xD8\xFF'):  # JPEG
+        return ".jpg"
+    elif header.startswith(b'\x89PNG\r\n\x1a\n'):  # PNG
+        return ".png"
+    elif header.startswith(b'RIFF') and b'WEBP' in header[:12]:  # WEBP
+        return ".webp"
+    
+    # Audio formats
+    elif header.startswith(b'RIFF') and b'WAVE' in header[:12]:  # WAV
+        return ".wav"
+    elif header.startswith(b'ID3') or header.startswith(b'\xFF\xFB') or header.startswith(b'\xFF\xF3') or header.startswith(b'\xFF\xF2'):  # MP3
+        return ".mp3"
+    elif header.startswith(b'FORM') and b'AIFF' in header[:12]:  # AIFF
+        return ".aiff"
+    elif header.startswith(b'\xFF\xF1') or header.startswith(b'\xFF\xF9'):  # AAC
+        return ".aac"
+    elif header.startswith(b'OggS'):  # OGG
+        return ".ogg"
+    elif header.startswith(b'fLaC'):  # FLAC
+        return ".flac"
+    
+    # PDF format
+    elif header.startswith(b'%PDF'):  # PDF
+        return ".pdf"
+    
+    # If we can't detect the type, return unknown
+    return ".unknown"
+
+# ─────────────────────────────────────────────────────────────────────────────
+
 
 # Agent configuration
 db_url = 'sqlite:///app/data/sqlite.db'
@@ -99,11 +141,9 @@ async def primary_agent_handler(request):
                     def read_sync(self):
                         return self.data
                 
-                # Determine filename from fileType
-                file_extension = request.fileType.lower() if request.fileType else ".unknown"
-                if not file_extension.startswith('.'):
-                    file_extension = '.' + file_extension
-                
+                # Determine file type from file content (ignore frontend fileType field)
+                file_extension = _detect_file_type_from_content(file_bytes)
+                logger.info(f"File type detection: detected extension '{file_extension}' for file of {len(file_bytes)} bytes (frontend provided: '{request.fileType}')")
                 filename = f"uploaded_file{file_extension}"
                 file_obj = FilelikeObject(file_bytes, filename)
                 
@@ -131,12 +171,13 @@ async def primary_agent_handler(request):
             if grand_query is None:
                 supported_image_types = ".jpg, .jpeg, .png, .webp"
                 supported_audio_types = ".wav, .mp3, .aiff, .aac, .ogg, .flac"
-                error_message = f"Unsupported file type. Supported file types are:\nImages: {supported_image_types}\nAudio: {supported_audio_types}"
+                supported_text_types = ".pdf"
+                error_message = f"Unsupported file type detected. The system automatically detects file types from content. Supported file types are:\nImages: {supported_image_types}\nAudio: {supported_audio_types}\nText: {supported_text_types}"
                 
                 return create_agent_response(
-                    message="Unsupported file type",
+                    message="Unsupported file type detected",
                     teacherId=request.teacherId,
-                    agentName="root_agent",
+                    agentName="general_chat_agent",
                     agentResponse=error_message,
                     sessionId=sessionId,
                     role="agent"
