@@ -208,7 +208,7 @@ def serve():
         )
 
         ai_service_pb2_grpc.add_AIServiceServicer_to_server(AIService(), server)
-        server.add_insecure_port("0.0.0.0:50051")
+        server.add_insecure_port("0.0.0.0:8080")  # Changed port to 8080
 
         # === Shutdown handler ===
         def shutdown_handler(signum, _):
@@ -222,7 +222,7 @@ def serve():
         signal.signal(signal.SIGTERM, shutdown_handler)
 
         # === Start the server ===
-        logger.info("✅ gRPC server starting on 0.0.0.0:50051")
+        logger.info("✅ gRPC server starting on 0.0.0.0:8080")
         server.start()
         logger.info("📡 gRPC server is running. Waiting for connections...")
 

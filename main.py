@@ -78,7 +78,10 @@ async def log_requests(request: Request, call_next):
     logger.info(f"Status code: {response.status_code}")
     return response
 
+# This application now only supports gRPC.
+# All REST API endpoints and FastAPI setup have been removed.
+# Use grpc_server.py as the main entry point for the gRPC server.
+
 if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
+    import app.grpc_server
+    app.grpc_server.serve()

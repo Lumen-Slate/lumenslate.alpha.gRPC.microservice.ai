@@ -1,5 +1,5 @@
 # ---- Base Image ----
-FROM python:3.11-slim-bookworm
+FROM python:3.12-alpine
 
 # ---- Set Environment Variables ----
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -16,6 +16,6 @@ RUN pip install --upgrade pip \
 # ---- Copy Project ----
 COPY . .
 
-ENV PORT 8080
+ENV PORT=8080
 
-CMD exec uvicorn main:app --host 0.0.0.0 --port ${PORT}
+CMD ["python3", "-m", "app.grpc_server"]
