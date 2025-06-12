@@ -1,6 +1,5 @@
 from google.adk.agents import Agent
-from google.adk.tools.agent_tool import AgentTool
-from app.utils.report_card_tools import get_subject_reports_by_student_id, get_report_cards_by_student_id
+from app.utils.report_card_tools import get_assignment_by_id, get_report_cards_by_student_id
 
 from .sub_agents.assessor.agent import assessor
 from .sub_agents.assignment_generator_general.agent import assignment_generator_general
@@ -51,6 +50,6 @@ root_agent = Agent(
     - assignment_generator_tailored: For student-specific tailored assignments (you provide the report card context)
     - report_card_generator: For comprehensive report card generation (you provide the subject reports context)
     """,
-    tools=[get_subject_reports_by_student_id, get_report_cards_by_student_id],
+    tools=[get_assignment_by_id, get_report_cards_by_student_id],
     sub_agents=[assessor, assignment_generator_general, assignment_generator_tailored, report_card_generator],
 )
