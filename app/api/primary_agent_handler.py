@@ -1,4 +1,6 @@
 import os
+import base64
+import io
 from datetime import datetime
 from app.config.logging_config import logger
 
@@ -79,16 +81,51 @@ async def primary_agent_handler(request):
             )
 
         # Checking if file is present and handle accordingly
-        if request.file and request.file:
-            # Create temporary object for MultimodalHandler compatibility
-            class TempAgentInput:
-                def __init__(self, teacherId, query, file):
-                    self.teacherId = teacherId
-                    self.query = query
-                    self.file = file
-            
-            temp_agent_input = TempAgentInput(request.teacherId, request.message, request.file)
-            grand_query = await MultimodalHandler(temp_agent_input)
+        if request.file and request.file.strip():
+            try:
+                # Decode base64 file content
+                file_bytes = base64.b64decode(request.file)
+                
+                # Create a file-like object with filename and read method
+                class FilelikeObject:
+                    def __init__(self, data, filename):
+                        self.data = data
+                        self.filename = filename
+                        self._io = io.BytesIO(data)
+                    
+                    async def read(self):
+                        return self.data
+                    
+                    def read_sync(self):
+                        return self.data
+                
+                # Determine filename from fileType
+                file_extension = request.fileType.lower() if request.fileType else ".unknown"
+                if not file_extension.startswith('.'):
+                    file_extension = '.' + file_extension
+                
+                filename = f"uploaded_file{file_extension}"
+                file_obj = FilelikeObject(file_bytes, filename)
+                
+                # Create temporary object for MultimodalHandler compatibility
+                class TempAgentInput:
+                    def __init__(self, teacherId, query, file):
+                        self.teacherId = teacherId
+                        self.query = query
+                        self.file = file
+                
+                temp_agent_input = TempAgentInput(request.teacherId, request.message, file_obj)
+                grand_query = await MultimodalHandler(temp_agent_input)
+            except Exception as e:
+                logger.error(f"Error processing base64 file: {str(e)}")
+                return create_agent_response(
+                    message="File processing error",
+                    teacherId=request.teacherId,
+                    agentName="root_agent",
+                    agentResponse=f"Error processing uploaded file: {str(e)}",
+                    sessionId=getattr(locals(), 'sessionId', ''),
+                    role="agent"
+                )
             
             # Handle unsupported file types
             if grand_query is None:
