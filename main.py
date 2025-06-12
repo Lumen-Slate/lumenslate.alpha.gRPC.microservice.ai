@@ -1,7 +1,3 @@
-"""
-This module initializes and configures the FastAPI application.
-"""
-
 import os
 import json
 from contextlib import asynccontextmanager
@@ -25,7 +21,9 @@ from google.adk.sessions import DatabaseSessionService
 from google.adk.runners import Runner
 from app.agents.root_agent.agent import root_agent
 from google.genai import types
-from app.utils.utils import add_to_history, get_questions_general
+from app.utils.history_manager import add_to_history
+from app.utils.question_retriever import get_questions_general
+from app.utils.multimodal_handler import MultimodalHandler
 
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -38,9 +36,9 @@ except Exception as e:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("🔄 Application startup")
+    logger.info("Application startup")
     yield
-    logger.info("🔻 Application shutdown")
+    logger.info("Application shutdown")
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -84,7 +82,7 @@ app.include_router(question_segmentation_router, prefix="", tags=["Question Segm
 
 # ─────────────────────────────────────────────────────────────────────────────
 
-# ✅ Agent endpoint
+# Agent endpoint
 db_url = "sqlite:///./app/data/my_agent_data.db"
 session_service = DatabaseSessionService(db_url=db_url)
 APP_NAME = "LUMEN_SLATE"
@@ -118,8 +116,16 @@ async def agent_handler(agent_input: AgentInput):
             session_service=session_service,
         )
 
-        user_message = agent_input.query.strip()
-        content = types.Content(role="user", parts=[types.Part(text=agent_input.query)])
+        # Checking if file is present and handle accordingly
+        if agent_input.file and agent_input.file.filename:
+            # Passing entire AgentInput to MultipartHandler
+            grand_query = await MultimodalHandler(agent_input)
+        else:
+            # Using original query if no file
+            grand_query = agent_input.query.strip()
+
+        user_message = grand_query
+        content = types.Content(role="user", parts=[types.Part(text=grand_query)])
 
         async for event in runner.run_async(user_id=agent_input.user_id, session_id=SESSION_ID, new_message=content):
             if event.is_final_response() and event.content and event.content.parts:
@@ -165,7 +171,7 @@ async def agent_handler(agent_input: AgentInput):
                     await add_to_history(user_message, 'user', agent_input.user_id, SESSION_ID, APP_NAME, session_service)
                     await add_to_history(agent_message, 'agent', agent_input.user_id, SESSION_ID, APP_NAME, session_service)
                 except Exception as e:
-                    logger.warning(f"⚠️ History logging failed: {e}")
+                    logger.warning(f"History logging failed: {e}")
 
                 return response
 
@@ -185,9 +191,9 @@ async def root():
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    logger.info(f"📥 {request.method} {request.url}")
+    logger.info(f"{request.method} {request.url}")
     response = await call_next(request)
-    logger.info(f"📤 Status code: {response.status_code}")
+    logger.info(f"Status code: {response.status_code}")
     return response
 
 if __name__ == "__main__":
