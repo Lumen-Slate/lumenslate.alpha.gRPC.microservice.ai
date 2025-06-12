@@ -22,7 +22,7 @@ class OrchestratedAgentService(BaseService):
             "role": request.role,
             "fileType": request.fileType,
             "file": bool(request.file),
-            "message": request.message[:100] + "..." if len(request.message) > 100 else request.message,
+            "message": request.message,
             "createdAt": request.createdAt,
             "updatedAt": request.updatedAt
         }
@@ -38,7 +38,7 @@ class OrchestratedAgentService(BaseService):
                 
                 # Safely log response without exposing sensitive data
                 safe_response_data = {
-                    "message": response["message"][:100] + "..." if len(response["message"]) > 100 else response["message"],
+                    "message": response["message"],
                     "teacherId": response["teacherId"],
                     "agentName": response["agentName"],
                     "sessionId": response["sessionId"],
@@ -76,7 +76,7 @@ class OrchestratedAgentService(BaseService):
             "teacherId": request.teacherId,
             "role": request.role,
             "file": bool(request.file),
-            "message": request.message[:100] + "..." if len(request.message) > 100 else request.message,  # Truncate long messages
+            "message": request.message,
             "createdAt": request.createdAt,
             "updatedAt": request.updatedAt
         }
@@ -92,7 +92,7 @@ class OrchestratedAgentService(BaseService):
                 
                 # Safely log response without exposing sensitive data
                 safe_response_data = {
-                    "message": response["message"][:100] + "..." if len(response["message"]) > 100 else response["message"],
+                    "message": response["message"],
                     "teacherId": response["teacherId"],
                     "agentName": response["agentName"],
                     "sessionId": response["sessionId"],
