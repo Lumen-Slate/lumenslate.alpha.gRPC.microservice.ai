@@ -59,6 +59,7 @@ rag_agent = Agent(
     ## Important Notes:
 
     - Always retrieve RAG information BEFORE delegating to question_creator
+    - ONCE YOU GET THE RAG INFORMATION, YOU MUST DELEGATE TO QUESTION CREATOR
     - Include the complete retrieved information in the delegation
     - The question_creator will use this pre-retrieved information instead of querying RAG itself
     - For non-question requests, delegate directly to general_chat_agent
