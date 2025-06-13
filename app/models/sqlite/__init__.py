@@ -57,31 +57,30 @@ def get_db():
         yield db
     finally:
         db.close()
+# # ─────────────────────────────────────────────────────────────────────────────
+# # RAG Agent Database Configuration (separate database)
+# # RAG Agent is ALWAYS SQLite - no external database needed
+# # ─────────────────────────────────────────────────────────────────────────────
 
-# ─────────────────────────────────────────────────────────────────────────────
-# RAG Agent Database Configuration (separate database)
-# RAG Agent is ALWAYS SQLite - no external database needed
-# ─────────────────────────────────────────────────────────────────────────────
+# RAG_DATABASE_URL = "sqlite:///./app/data/rag_agent_data.db"
 
-RAG_DATABASE_URL = "sqlite:///./app/data/rag_agent_data.db"
+# # Debug: Print RAG database URL
+# print(f"🔍 [DEBUG] RAG Database initialization - RAG_DATABASE_URL: {RAG_DATABASE_URL} (SQLite only)")
+# print("📝 [INFO] RAG Agent uses SQLite exclusively (as intended)")
 
-# Debug: Print RAG database URL
-print(f"🔍 [DEBUG] RAG Database initialization - RAG_DATABASE_URL: {RAG_DATABASE_URL} (SQLite only)")
-print("📝 [INFO] RAG Agent uses SQLite exclusively (as intended)")
+# # Creating RAG-specific SQLAlchemy engine
+# rag_engine = create_engine(RAG_DATABASE_URL)
 
-# Creating RAG-specific SQLAlchemy engine
-rag_engine = create_engine(RAG_DATABASE_URL)
+# # Creating RAG-specific SessionLocal class
+# RAGSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=rag_engine)
 
-# Creating RAG-specific SessionLocal class
-RAGSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=rag_engine)
+# # Create all tables for RAG database
+# Base.metadata.create_all(bind=rag_engine)
 
-# Create all tables for RAG database
-Base.metadata.create_all(bind=rag_engine)
-
-# Dependency to get RAG DB session
-def get_rag_db():
-    db = RAGSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# # Dependency to get RAG DB session
+# def get_rag_db():
+#     db = RAGSessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()

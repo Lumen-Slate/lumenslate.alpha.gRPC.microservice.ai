@@ -1,1 +1,1 @@
-this folder shall contain the sqlite database
+this folder shall contain an sqlite database for the main agent in case neon db connection fails

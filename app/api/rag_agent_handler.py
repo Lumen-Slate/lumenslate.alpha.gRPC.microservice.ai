@@ -4,20 +4,20 @@ from app.config.logging_config import logger
 from dotenv import load_dotenv
 
 # Agent dependencies
-from google.adk.sessions import DatabaseSessionService
+from google.adk.sessions import InMemorySessionService
 from google.adk.runners import Runner
 from app.agents.rag_agent.agent import rag_agent
 from google.genai import types
-from app.utils.history_manager import add_to_rag_history
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 
-load_dotenv()
+# load_dotenv()
 
 # Agent configuration
-default_db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "sqlite.db")
-db_url = os.getenv("RAG_DATABASE_URL", f"sqlite:///{default_db_path}")
-session_service = DatabaseSessionService(db_url=db_url)
+# default_db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "sqlite.db")
+# db_url = os.getenv("RAG_DATABASE_URL", f"sqlite:///{default_db_path}")
+session_service = InMemorySessionService()
 APP_NAME = "LUMEN_SLATE_RAG"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -116,12 +116,8 @@ async def rag_agent_handler(request):
                     role="agent"
                 )
 
-                # Storing message history
-                try:
-                    await add_to_rag_history(user_message, 'user', request.teacherId, SESSION_ID, APP_NAME, session_service)
-                    await add_to_rag_history(agent_message, 'agent', request.teacherId, SESSION_ID, APP_NAME, session_service)
-                except Exception as e:
-                    logger.warning(f"History logging failed: {e}")
+                # Note: History is managed by InMemorySessionService
+                # No additional database storage needed
 
                 return response
 
