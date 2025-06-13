@@ -70,10 +70,6 @@ def check_corpus_exists(corpus_name: str, tool_context: ToolContext) -> bool:
     Returns:
         bool: True if the corpus exists, False otherwise
     """
-    # Check state first if tool_context is provided
-    if tool_context.state.get(f"corpus_exists_{corpus_name}"):
-        return True
-
     try:
         # Get full resource name
         corpus_resource_name = get_corpus_resource_name(corpus_name)
@@ -85,11 +81,6 @@ def check_corpus_exists(corpus_name: str, tool_context: ToolContext) -> bool:
                 corpus.name == corpus_resource_name
                 or corpus.display_name == corpus_name
             ):
-                # Update state
-                tool_context.state[f"corpus_exists_{corpus_name}"] = True
-                # Also set this as the current corpus if no current corpus is set
-                if not tool_context.state.get("current_corpus"):
-                    tool_context.state["current_corpus"] = corpus_name
                 return True
 
         return False

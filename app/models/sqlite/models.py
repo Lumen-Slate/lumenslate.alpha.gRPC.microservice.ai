@@ -3,6 +3,8 @@ from . import Base
 from enum import Enum
 from sqlalchemy import DateTime
 from datetime import datetime, timezone
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql import func
 
 class Role(Enum):
     USER = "user"   
@@ -20,14 +22,18 @@ class Subject(Enum):
     GEOGRAPHY = "geography"
     ENGLISH = "english"
 
+# Model for storing unaltered history
 class UnalteredHistory(Base):
-    __tablename__ = 'unaltered_history'
+    __tablename__ = "unaltered_history"
     
-    message_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(String, nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    teacherId = Column(String, nullable=False)
     message = Column(String, nullable=False)
     role = Column(SQLEnum(Role), nullable=False)
-    timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+    def __repr__(self):
+        return f"<UnalteredHistory(id={self.id}, teacherId='{self.teacherId}', role='{self.role}', timestamp='{self.timestamp}')>"
 
 class Questions(Base):
     __tablename__ = 'questions'
@@ -90,4 +96,17 @@ class SubjectReport(Base):
     areas_for_improvement = Column(Text, nullable=True)
     recommended_resources = Column(Text, nullable=True)
     target_goals = Column(Text, nullable=True)
+
+# Model for storing context for RAG/retrieval-based systems
+class RAGContext(Base):
+    __tablename__ = "rag_context"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    teacherId = Column(String, nullable=False)
+    context_data = Column(Text, nullable=False)  # Could store embeddings, document refs, etc.
+    source = Column(String, nullable=True)  # Source of the context (document name, URL, etc.)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+    def __repr__(self):
+        return f"<RAGContext(id={self.id}, teacherId='{self.teacherId}', source='{self.source}', timestamp='{self.timestamp}')>"
 

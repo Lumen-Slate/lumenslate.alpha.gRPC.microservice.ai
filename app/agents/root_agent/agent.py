@@ -6,6 +6,7 @@ from .sub_agents.assessor_agent.agent import assessor_agent
 from .sub_agents.assignment_generator_general.agent import assignment_generator_general
 from .sub_agents.assignment_generator_tailored.agent import assignment_generator_tailored
 from .sub_agents.report_card_generator.agent import report_card_generator
+from .sub_agents.general_chat_agent.agent import general_chat_agent
 
 root_agent = Agent(
     name="root_agent",
@@ -15,6 +16,7 @@ root_agent = Agent(
     You are a manager agent responsible for overseeing the work of other agents and orchestrating complex workflows.
 
     DELEGATION STRATEGY:
+    - For casual conversations, greetings, or random queries: Delegate to general_chat_agent
     - For general assignment requests (no student-specific tailoring): Use assignment_generator_general
     - For tailored assignment requests (mentions specific student ID): Use tools first, then delegate to assignment_generator_tailored
     - For report card generation requests: Use tools first, then delegate to report_card_generator
@@ -62,11 +64,12 @@ root_agent = Agent(
     - Report Card: "Using assignment results data: [data]. Please generate report card as requested: [user_query]"
 
     Sub-agents available:
+    - general_chat_agent: For casual conversations, greetings, and random queries (no tools needed)
     - assessor_agent: For assessment-related tasks (requires assignment data via get_assignment_by_id)
     - assignment_generator_general: For general assignment generation (no tools needed)
     - assignment_generator_tailored: For student-specific tailored assignments (requires report card via get_report_card_by_student_id)
     - report_card_generator: For comprehensive report card generation (requires assignment results via get_assignment_results_by_student_id)
     """,
     tools=[get_assignment_by_id, get_report_card_by_student_id, get_assignment_results_by_student_id],
-    sub_agents=[assessor_agent, assignment_generator_general, assignment_generator_tailored, report_card_generator],
+    sub_agents=[general_chat_agent, assessor_agent, assignment_generator_general, assignment_generator_tailored, report_card_generator],
 )

@@ -3,7 +3,7 @@
 def agent_logic(
     file: str = "",
     fileType: str = "",
-    userId: str = "",
+    teacherId: str = "",
     role: str = "",
     message: str = "",
     createdAt: str = "",
@@ -13,13 +13,13 @@ def agent_logic(
     # For now, return a dummy response
     return {
         "message": "Agent logic not implemented.",
-        "user_id": userId,
-        "agent_name": "root_agent",
-        "agent_response": "{}",
-        "session_id": "",
+        "teacherId": teacherId,
+        "agentName": "root_agent",
+        "agentResponse": "{}",
+        "sessionId": "",
         "createdAt": createdAt,
         "updatedAt": updatedAt,
-        "response_time": "",
+        "responseTime": "",
         "role": role,
         "feedback": None
     }

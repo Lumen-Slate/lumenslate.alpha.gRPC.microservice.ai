@@ -29,7 +29,6 @@ class QuestionsResponse(BaseModel):
     )
 
 
-# --- Creating Assignment Generator Agent ---
 assignment_generator_general = LlmAgent(
     name="assignment_generator_general",
     model="gemini-2.0-flash",

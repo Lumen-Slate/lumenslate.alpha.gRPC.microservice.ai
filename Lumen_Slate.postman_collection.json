@@ -3,8 +3,8 @@
 		"_postman_id": "7f0edc75-b865-4009-bcee-b043725ff8ff",
 		"name": "Lumen_Slate",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "43786789",
-		"_collection_link": "https://shubhams-team-1428.postman.co/workspace/LumenSlate~ce1f7729-00f8-4939-a781-1d6ba807f083/collection/43786789-7f0edc75-b865-4009-bcee-b043725ff8ff?action=share&source=collection_link&creator=43786789"
+		"_exporter_id": "22368846",
+		"_collection_link": "https://shubhams-team-1428.postman.co/workspace/LumenSlate~ce1f7729-00f8-4939-a781-1d6ba807f083/collection/43786789-7f0edc75-b865-4009-bcee-b043725ff8ff?action=share&source=collection_link&creator=22368846"
 	},
 	"item": [
 		{
@@ -25,16 +25,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://0.0.0.0:8000/generate-context",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/ai/generate-context",
 							"host": [
-								"0",
-								"0",
-								"0",
-								"0"
+								"{{BaseUrl}}"
 							],
-							"port": "8000",
 							"path": [
+								"ai",
 								"generate-context"
 							]
 						}
@@ -56,16 +52,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://0.0.0.0:8000/generate-mcq-variations",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/ai/generate-mcq-variations",
 							"host": [
-								"0",
-								"0",
-								"0",
-								"0"
+								"{{BaseUrl}}"
 							],
-							"port": "8000",
 							"path": [
+								"ai",
 								"generate-mcq-variations"
 							]
 						}
@@ -87,16 +79,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://0.0.0.0:8000/generate-msq-variations",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/ai/generate-msq-variations",
 							"host": [
-								"0",
-								"0",
-								"0",
-								"0"
+								"{{BaseUrl}}"
 							],
-							"port": "8000",
 							"path": [
+								"ai",
 								"generate-msq-variations"
 							]
 						}
@@ -118,16 +106,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://0.0.0.0:8000/detect-variables",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/ai/detect-variables",
 							"host": [
-								"0",
-								"0",
-								"0",
-								"0"
+								"{{BaseUrl}}"
 							],
-							"port": "8000",
 							"path": [
+								"ai",
 								"detect-variables"
 							]
 						}
@@ -149,17 +133,214 @@
 							}
 						},
 						"url": {
-							"raw": "http://0.0.0.0:8000/extract-and-randomize",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}ai/extract-and-randomize",
 							"host": [
-								"0",
-								"0",
-								"0",
-								"0"
+								"{{BaseUrl}}ai"
 							],
-							"port": "8000",
 							"path": [
 								"extract-and-randomize"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RAG Agent",
+			"item": [
+				{
+					"name": "create rag corpus",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"corpusName\": \"my_test_corpus\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/ai/rag-agent/create-corpus",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ai",
+								"rag-agent",
+								"create-corpus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list corpus content",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"corpusName\": \"my_test_corpus\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/ai/rag-agent/list-corpus-content",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ai",
+								"rag-agent",
+								"list-corpus-content"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete corpus document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"corpusName\": \"my_test_corpus\",\n    \"fileDisplayName\": \"gdrive_file_123abc\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/ai/rag-agent/delete-corpus-document",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ai",
+								"rag-agent",
+								"delete-corpus-document"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add corpus document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"corpusName\": \"my_test_corpus\",\n    \"fileLink\": \"https://drive.google.com/file/d/1AbCdE2fGhI3jKlMnO4pQrS5tUvWxYz/view?usp=sharing\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/ai/rag-agent/add-corpus-document",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ai",
+								"rag-agent",
+								"add-corpus-document"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list all corpora",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/ai/rag-agent/list-all-corpora",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ai",
+								"rag-agent",
+								"list-all-corpora"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rag agent chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"teacherId\": \"123\",\n    \"message\": \"What is the capital of France? Explain based on the documents in my corpus.\",\n    \"file\": \"\",\n    \"role\": \"user\",\n    \"createdAt\": \"2024-01-15T10:30:00Z\",\n    \"updatedAt\": \"2024-01-15T10:30:00Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/ai/rag-agent",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ai",
+								"rag-agent"
 							]
 						}
 					},
@@ -251,12 +432,10 @@
 							"raw": "{\n  \"title\": \"Full Quiz - All Question Types\",\n  \"body\": \"This is a test assignment containing all supported question types.\",\n  \"dueDate\": \"2025-05-15T00:00:00Z\",\n  \"createdAt\": \"2025-04-05T00:00:00Z\",\n  \"points\": 100,\n  \"commentIds\": [\"c1\", \"c2\"],\n  \"mcqs\": [\n    {\n      \"question\": \"What is the capital of France?\",\n      \"options\": [\"Paris\", \"London\", \"Berlin\", \"Madrid\"],\n      \"answer\": 0\n    }\n  ],\n  \"msqs\": [\n    {\n      \"question\": \"Select all prime numbers:\",\n      \"options\": [\"2\", \"4\", \"5\", \"6\"],\n      \"answers\": [0, 2]\n    }\n  ],\n  \"nats\": [\n    {\n      \"question\": \"What is the square root of 144?\",\n      \"answer\": \"12\"\n    }\n  ],\n  \"subjectives\": [\n    {\n      \"question\": \"Explain the theory of relativity in brief.\"\n    }\n  ]\n}\n"
 						},
 						"url": {
-							"raw": "http://localhost:8080/assignments",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/assignments",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"assignments"
 							]
@@ -303,7 +482,8 @@
 									"    pm.expect(responseData.dueDate).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/);",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -311,12 +491,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/assignments?points=10&dueDate=2025-05-01T00:00:00Z&limit=10&offset=0",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/assignments?points=10&dueDate=2025-05-01T00:00:00Z&limit=10&offset=0",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"assignments"
 							],
@@ -391,12 +569,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/assignments/:id",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/assignments/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"assignments",
 								":id"
@@ -404,7 +580,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "fb001672-9e00-476d-9a6a-81ca5983a9b5"
+									"value": "a5c9a190-220b-453e-b048-1e895005c463"
 								}
 							]
 						}
@@ -478,12 +654,10 @@
 							"raw": "{\n  \"title\": \"Updated Assignment\",\n  \"body\": \"Updated content\",\n  \"dueDate\": \"2025-06-01T00:00:00Z\",\n  \"createdAt\": \"2025-04-05T00:00:00Z\",\n  \"points\": 20,\n  \"commentIds\": [\n    \"comment1\"\n  ],\n  \"mcqs\": [\n    {\n      \"question\": \"Updated MCQ?\",\n      \"options\": [\n        \"One\",\n        \"Two\"\n      ],\n      \"answer\": 1\n    }\n  ]\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/assignments/:id",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/assignments/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"assignments",
 								":id"
@@ -491,7 +665,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "fb001672-9e00-476d-9a6a-81ca5983a9b5"
+									"value": "a5c9a190-220b-453e-b048-1e895005c463"
 								}
 							]
 						}
@@ -543,12 +717,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/assignments/:id",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/assignments/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"assignments",
 								":id"
@@ -556,7 +728,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "fb001672-9e00-476d-9a6a-81ca5983a9b5"
+									"value": "a5c9a190-220b-453e-b048-1e895005c463"
 								}
 							]
 						}
@@ -642,11 +814,10 @@
 							"raw": "{\n  \"subject\": \"Mathematics\",\n  \"teacherId\": \"teacher-001\",\n  \"assignmentIds\": [\n    \"assign-1\",\n    \"assign-2\"\n  ],\n  \"credits\": 5,\n   \"tags\": [\"mechanics\", \"thermodynamics\"]\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/classrooms",
+							"raw": "{{BaseUrl}}/classrooms",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"classrooms"
 							]
@@ -709,7 +880,8 @@
 									"  });",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -717,11 +889,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/classrooms",
+							"raw": "{{BaseUrl}}/classrooms",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"classrooms"
 							]
@@ -786,11 +957,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/classrooms/:id",
+							"raw": "{{BaseUrl}}/classrooms/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"classrooms",
 								":id"
@@ -798,7 +968,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "62279dba-8cd0-438d-8d4c-1a3cae08ecaa"
+									"value": "ba919a01-45d2-472c-a406-680643d8b423"
 								}
 							]
 						}
@@ -867,11 +1037,10 @@
 							"raw": "{\n  \"subject\": \"Advanced Math\",\n  \"teacherId\": \"teacher-002\",\n  \"assignmentIds\": [\n    \"assign-3\"\n  ],\n  \"credits\": 6,\n  \"tags\": [\"mechanics\", \"thermodynamics\"]\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/classrooms/:id",
+							"raw": "{{BaseUrl}}/classrooms/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"classrooms",
 								":id"
@@ -879,7 +1048,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "62279dba-8cd0-438d-8d4c-1a3cae08ecaa"
+									"value": "ba919a01-45d2-472c-a406-680643d8b423"
 								}
 							]
 						}
@@ -938,11 +1107,10 @@
 							"raw": "{\n  \"credits\": 7\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/classrooms/:id",
+							"raw": "{{BaseUrl}}/classrooms/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"classrooms",
 								":id"
@@ -950,7 +1118,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "61178f82-2d20-496a-a415-23cf5460cb7d"
+									"value": "ba919a01-45d2-472c-a406-680643d8b423"
 								}
 							]
 						}
@@ -1005,11 +1173,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/classrooms/:id",
+							"raw": "{{BaseUrl}}/classrooms/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"classrooms",
 								":id"
@@ -1069,7 +1236,8 @@
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1086,11 +1254,10 @@
 							"raw": "{\n  \"id\": \"comment-001\",\n  \"commentBody\": \"This is a test comment\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/comments",
+							"raw": "{{BaseUrl}}/comments",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"comments"
 							]
@@ -1144,7 +1311,8 @@
 									"  });",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1152,11 +1320,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/comments",
+							"raw": "{{BaseUrl}}/comments",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"comments"
 							]
@@ -1214,19 +1381,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/comments/:id",
+							"raw": "{{BaseUrl}}comments/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}comments"
 							],
-							"port": "8080",
 							"path": [
-								"comments",
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "a3d3a145-250b-41bb-b5b7-f11920a530e6"
+									"value": "a14f538e-01ea-46bc-a561-060737184b1e"
 								}
 							]
 						}
@@ -1292,11 +1457,10 @@
 							"raw": "{\n  \"commentBody\": \"Updated comment text\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/comments/:id",
+							"raw": "{{BaseUrl}}/comments/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"comments",
 								":id"
@@ -1304,7 +1468,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "a3d3a145-250b-41bb-b5b7-f11920a530e6"
+									"value": "a14f538e-01ea-46bc-a561-060737184b1e"
 								}
 							]
 						}
@@ -1368,11 +1532,10 @@
 							"raw": "{\n  \"commentBody\": \"Partially updated comment\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/comments/:id",
+							"raw": "{{BaseUrl}}/comments/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"comments",
 								":id"
@@ -1380,7 +1543,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "a3d3a145-250b-41bb-b5b7-f11920a530e6"
+									"value": "a14f538e-01ea-46bc-a561-060737184b1e"
 								}
 							]
 						}
@@ -1433,11 +1596,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/comments/:id",
+							"raw": "{{BaseUrl}}/comments/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"comments",
 								":id"
@@ -1445,7 +1607,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "a3d3a145-250b-41bb-b5b7-f11920a530e6"
+									"value": "a14f538e-01ea-46bc-a561-060737184b1e"
 								}
 							]
 						}
@@ -1475,12 +1637,10 @@
 									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"What is the capital of Italy?\",\n    \"variableIds\": [\n        \"v1\"\n    ],\n    \"points\": 3,\n    \"options\": [\n        \"Rome\",\n        \"Paris\",\n        \"Madrid\",\n        \"Berlin\"\n    ],\n    \"answerIndex\": 0\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/mcqs",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/mcqs",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"mcqs"
 									]
@@ -1504,12 +1664,10 @@
 									"raw": "[\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Which planet is known as the Red Planet?\",\n        \"variableIds\": [\n            \"v1\"\n        ],\n        \"points\": 2,\n        \"options\": [\n            \"Earth\",\n            \"Mars\",\n            \"Jupiter\",\n            \"Saturn\"\n        ],\n        \"answerIndex\": 1\n    },\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Which language is used for Android development?\",\n        \"variableIds\": [\n            \"v2\"\n        ],\n        \"points\": 3,\n        \"options\": [\n            \"Swift\",\n            \"Kotlin\",\n            \"JavaScript\",\n            \"Python\"\n        ],\n        \"answerIndex\": 1\n    }\n]"
 								},
 								"url": {
-									"raw": "http://localhost:8080/mcqs/bulk",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/mcqs/bulk",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"mcqs",
 										"bulk"
@@ -1525,12 +1683,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/mcqs",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/mcqs",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"mcqs"
 									]
@@ -1544,12 +1700,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/mcqs/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/mcqs/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"mcqs",
 										":id"
@@ -1579,12 +1733,10 @@
 									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Updated question?\",\n    \"variableIds\": [\n        \"v3\"\n    ],\n    \"points\": 4,\n    \"options\": [\n        \"Option A\",\n        \"Option B\",\n        \"Option C\",\n        \"Option D\"\n    ],\n    \"answerIndex\": 2\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/mcqs/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/mcqs/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"mcqs",
 										":id"
@@ -1592,7 +1744,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "6baddbb2-bba3-4553-9be9-97ab90330b3e"
+											"value": "500eccd5-7941-45cd-a3a9-069577b64abe"
 										}
 									]
 								},
@@ -1615,12 +1767,10 @@
 									"raw": "{\n    \"points\": 6\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/mcqs/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/mcqs/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"mcqs",
 										":id"
@@ -1642,12 +1792,10 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/mcqs/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/mcqs/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"mcqs",
 										":id"
@@ -1682,12 +1830,10 @@
 									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Which of the following are fruits?\",\n    \"variableIds\": [\n        \"v1\"\n    ],\n    \"points\": 4,\n    \"options\": [\n        \"Apple\",\n        \"Carrot\",\n        \"Banana\",\n        \"Potato\"\n    ],\n    \"answerIndices\": [\n        0,\n        2\n    ]\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/msqs",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/msqs",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"msqs"
 									]
@@ -1711,12 +1857,10 @@
 									"raw": "[\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Select even numbers.\",\n        \"variableIds\": [\n            \"v2\"\n        ],\n        \"points\": 3,\n        \"options\": [\n            \"1\",\n            \"2\",\n            \"3\",\n            \"4\"\n        ],\n        \"answerIndices\": [\n            1,\n            3\n        ]\n    },\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"Which are programming languages?\",\n        \"variableIds\": [\n            \"v3\"\n        ],\n        \"points\": 5,\n        \"options\": [\n            \"Python\",\n            \"Elephant\",\n            \"Go\",\n            \"Tiger\"\n        ],\n        \"answerIndices\": [\n            0,\n            2\n        ]\n    }\n]"
 								},
 								"url": {
-									"raw": "http://localhost:8080/msqs/bulk",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/msqs/bulk",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"msqs",
 										"bulk"
@@ -1732,12 +1876,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/msqs",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/msqs",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"msqs"
 									]
@@ -1751,12 +1893,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/msqs/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/msqs/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"msqs",
 										":id"
@@ -1786,12 +1926,10 @@
 									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Updated question text?\",\n    \"variableIds\": [\n        \"v1\",\n        \"v4\"\n    ],\n    \"points\": 5,\n    \"options\": [\n        \"Option A\",\n        \"Option B\",\n        \"Option C\",\n        \"Option D\"\n    ],\n    \"answerIndices\": [\n        0,\n        3\n    ]\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/msqs/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/msqs/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"msqs",
 										":id"
@@ -1822,12 +1960,10 @@
 									"raw": "{\n    \"points\": 10\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/msqs/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/msqs/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"msqs",
 										":id"
@@ -1849,12 +1985,10 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/msqs/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/msqs/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"msqs",
 										":id"
@@ -1889,12 +2023,10 @@
 									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"What is the square root of 64?\",\n    \"variable\": [],\n    \"points\": 2,\n    \"answer\": 8\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/nats",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/nats",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"nats"
 									]
@@ -1918,12 +2050,10 @@
 									"raw": "[\n    {\n        \"bankId\": \"bank1\",\n        \"question\": \"Enter the value of Pi (approx):\",\n        \"variable\": [],\n        \"points\": 3,\n        \"answer\": 3.14\n    },\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"How many degrees are there in a right angle?\",\n        \"variable\": [],\n        \"points\": 2,\n        \"answer\": 90\n    }\n]"
 								},
 								"url": {
-									"raw": "http://localhost:8080/nats/bulk",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/nats/bulk",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"nats",
 										"bulk"
@@ -1939,12 +2069,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/nats",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/nats",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"nats"
 									]
@@ -1958,12 +2086,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/nats/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/nats/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"nats",
 										":id"
@@ -1993,12 +2119,10 @@
 									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Updated question text?\",\n    \"variable\": [],\n    \"points\": 4,\n    \"answer\": 42\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/nats/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/nats/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"nats",
 										":id"
@@ -2029,12 +2153,10 @@
 									"raw": "{\n    \"points\": 6\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/nats/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/nats/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"nats",
 										":id"
@@ -2056,12 +2178,10 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/nats/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/nats/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"nats",
 										":id"
@@ -2096,12 +2216,10 @@
 									"raw": "{\n    \"bankId\": \"bank1\",\n    \"question\": \"Explain the theory of relativity.\",\n    \"variable\": [],\n    \"points\": 10,\n    \"idealAnswer\": \"Relativity is a theory developed by Einstein...\",\n    \"gradingCriteria\": [\n        \"Mentioned Einstein\",\n        \"Covered time dilation\",\n        \"Clear explanation\"\n    ]\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/subjectives",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/subjectives",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"subjectives"
 									]
@@ -2125,12 +2243,10 @@
 									"raw": "[\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"Describe the process of photosynthesis.\",\n        \"variable\": [],\n        \"points\": 8,\n        \"idealAnswer\": \"Photosynthesis is the process by which green plants...\",\n        \"gradingCriteria\": [\n            \"Mentioned chlorophyll\",\n            \"Included chemical equation\"\n        ]\n    },\n    {\n        \"bankId\": \"bank2\",\n        \"question\": \"Explain the water cycle.\",\n        \"variable\": [],\n        \"points\": 6,\n        \"gradingCriteria\": [\n            \"Evaporation\",\n            \"Condensation\",\n            \"Precipitation\"\n        ]\n    }\n]"
 								},
 								"url": {
-									"raw": "http://localhost:8080/subjectives/bulk",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/subjectives/bulk",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"subjectives",
 										"bulk"
@@ -2146,12 +2262,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/subjectives",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/subjectives",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"subjectives"
 									]
@@ -2165,12 +2279,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/subjectives/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/subjectives/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"subjectives",
 										":id"
@@ -2200,12 +2312,10 @@
 									"raw": "{\n    \"bankId\": \"bank3\",\n    \"question\": \"Updated subjective question?\",\n    \"variable\": [],\n    \"points\": 7,\n    \"idealAnswer\": \"Updated ideal answer\",\n    \"gradingCriteria\": [\n        \"New criteria 1\",\n        \"New criteria 2\"\n    ]\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/subjectives/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/subjectives/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"subjectives",
 										":id"
@@ -2236,12 +2346,10 @@
 									"raw": "{\n    \"points\": 9\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/subjectives/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/subjectives/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"subjectives",
 										":id"
@@ -2263,12 +2371,10 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/subjectives/:id",
-									"protocol": "http",
+									"raw": "{{BaseUrl}}/subjectives/:id",
 									"host": [
-										"localhost"
+										"{{BaseUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"subjectives",
 										":id"
@@ -2355,11 +2461,10 @@
 							"raw": "{\n  \"title\": \"Sample Post\",\n  \"body\": \"This is the body of the post.\",\n  \"attachments\": [\n    \"link1\",\n    \"link2\"\n  ],\n  \"studentId\": \"student-123\",\n  \"commentIds\": [\n    \"comment-1\",\n    \"comment-2\"\n  ]\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/posts",
+							"raw": "{{BaseUrl}}/posts",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"posts"
 							]
@@ -2418,7 +2523,8 @@
 									"    });",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -2426,11 +2532,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/posts",
+							"raw": "{{BaseUrl}}/posts",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"posts"
 							]
@@ -2490,11 +2595,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/posts/:id",
+							"raw": "{{BaseUrl}}/posts/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"posts",
 								":id"
@@ -2574,11 +2678,10 @@
 							"raw": "{\n  \"title\": \"Updated Post\",\n  \"body\": \"Updated body text.\",\n  \"attachments\": [\n    \"link3\"\n  ],\n  \"studentId\": \"student-123\",\n  \"commentIds\": [\n    \"comment-3\"\n  ]\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/posts/:id",
+							"raw": "{{BaseUrl}}/posts/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"posts",
 								":id"
@@ -2647,11 +2750,10 @@
 							"raw": "{\n  \"title\": \"Patched Title\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/posts/:id",
+							"raw": "{{BaseUrl}}/posts/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"posts",
 								":id"
@@ -2713,11 +2815,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/posts/:id",
+							"raw": "{{BaseUrl}}/posts/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"posts",
 								":id"
@@ -2797,11 +2898,10 @@
 							"raw": "{\n  \"name\": \"Algebra\",\n  \"topic\": \"Linear Equations\",\n  \"teacherId\": \"647d5ca7-be6e-4aaf-9b87-4dd69e52aa7f\",\n    \"tags\": [\"calculus\", \"limits\", \"continuity\"]\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/question-banks",
+							"raw": "{{BaseUrl}}/question-banks",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"question-banks"
 							]
@@ -2872,11 +2972,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/question-banks?chapter=Algebra&topic=Linear Equations&limit=10&offset=0",
+							"raw": "{{BaseUrl}}/question-banks?chapter=Algebra&topic=Linear Equations&limit=10&offset=0",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"question-banks"
 							],
@@ -2954,11 +3053,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/question-banks/:id",
+							"raw": "{{BaseUrl}}/question-banks/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"question-banks",
 								":id"
@@ -3033,11 +3131,10 @@
 							"raw": "{\n  \"chapter\": \"Geometry\",\n  \"topic\": \"Triangles\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/question-banks/:id",
+							"raw": "{{BaseUrl}}/question-banks/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"question-banks",
 								":id"
@@ -3108,11 +3205,10 @@
 							"raw": "{\n  \"topic\": \"Quadratic Equations\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/question-banks/:id",
+							"raw": "{{BaseUrl}}/question-banks/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"question-banks",
 								":id"
@@ -3173,11 +3269,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/question-banks/:id",
+							"raw": "{{BaseUrl}}/question-banks/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"question-banks",
 								":id"
@@ -3261,11 +3356,10 @@
 							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"rollNo\": \"12345\",\n  \"classIds\": [\n    \"class-001\",\n    \"class-002\"\n  ]\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/students",
+							"raw": "{{BaseUrl}}/students",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"students"
 							]
@@ -3332,11 +3426,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/students?limit=10&offset=0",
+							"raw": "{{BaseUrl}}/students?limit=10&offset=0",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"students"
 							],
@@ -3419,11 +3512,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/students/:id",
+							"raw": "{{BaseUrl}}/students/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"students",
 								":id"
@@ -3502,11 +3594,10 @@
 							"raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"rollNo\": \"67890\",\n  \"classIds\": [\n    \"class-003\"\n  ]\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/students/:id",
+							"raw": "{{BaseUrl}}/students/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"students",
 								":id"
@@ -3579,11 +3670,10 @@
 							"raw": "{\n  \"name\": \"Johnny\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/students/:id",
+							"raw": "{{BaseUrl}}/students/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"students",
 								":id"
@@ -3643,11 +3733,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/students/:id",
+							"raw": "{{BaseUrl}}/students/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"students",
 								":id"
@@ -3682,11 +3771,10 @@
 							"raw": "{\n  \"studentId\": \"student-001\",\n  \"assignmentId\": \"assign-001\",\n  \"mcqAnswers\": {\n    \"q1\": \"A\"\n  },\n  \"msqAnswers\": {\n    \"q2\": [\n      \"B\",\n      \"C\"\n    ]\n  },\n  \"natAnswers\": {\n    \"q3\": 42\n  },\n  \"subjectiveAnswers\": {\n    \"q4\": \"This is my answer.\"\n  }\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/submissions",
+							"raw": "{{BaseUrl}}/submissions",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"submissions"
 							]
@@ -3700,11 +3788,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/submissions",
+							"raw": "{{BaseUrl}}/submissions",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"submissions"
 							],
@@ -3730,11 +3817,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/submissions/:id",
+							"raw": "{{BaseUrl}}/submissions/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"submissions",
 								":id"
@@ -3764,11 +3850,10 @@
 							"raw": "{\n  \"studentId\": \"student-001\",\n  \"assignmentId\": \"assign-001\",\n  \"mcqAnswers\": {\n    \"q1\": \"B\"\n  },\n  \"msqAnswers\": {\n    \"q2\": [\n      \"A\",\n      \"D\"\n    ]\n  },\n  \"natAnswers\": {\n    \"q3\": 36\n  },\n  \"subjectiveAnswers\": {\n    \"q4\": \"Updated answer.\"\n  }\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/submissions/:id",
+							"raw": "{{BaseUrl}}/submissions/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"submissions",
 								":id"
@@ -3798,11 +3883,10 @@
 							"raw": "{\n  \"subjectiveAnswers\": {\n    \"q4\": \"Patched answer\"\n  }\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/submissions/:id",
+							"raw": "{{BaseUrl}}/submissions/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"submissions",
 								":id"
@@ -3823,11 +3907,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/submissions/:id",
+							"raw": "{{BaseUrl}}/submissions/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"submissions",
 								":id"
@@ -3862,11 +3945,10 @@
 							"raw": "{\n  \"name\": \"Alice Smith\",\n  \"email\": \"alice@school.com\",\n  \"phone\": \"1234567890\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/teachers",
+							"raw": "{{BaseUrl}}/teachers",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"teachers"
 							]
@@ -3880,11 +3962,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/teachers?limit=10&offset=0",
+							"raw": "{{BaseUrl}}/teachers?limit=10&offset=0",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"teachers"
 							],
@@ -3918,11 +3999,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/teachers/:id",
+							"raw": "{{BaseUrl}}/teachers/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"teachers",
 								":id"
@@ -3952,11 +4032,10 @@
 							"raw": "{\n  \"name\": \"Alice Johnson\",\n  \"email\": \"alicej@school.com\",\n  \"phone\": \"0987654321\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/teachers/:id",
+							"raw": "{{BaseUrl}}/teachers/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"teachers",
 								":id"
@@ -3986,11 +4065,10 @@
 							"raw": "{\n  \"phone\": \"1112223333\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/teachers/:id",
+							"raw": "{{BaseUrl}}/teachers/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"teachers",
 								":id"
@@ -4011,11 +4089,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/teachers/:id",
+							"raw": "{{BaseUrl}}/teachers/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"teachers",
 								":id"
@@ -4050,11 +4127,10 @@
 							"raw": "{\n    \"name\": \"Speed\",\n    \"namePositions\": [10, 20],\n    \"value\": \"10 m/s\",\n    \"valuePositions\": [30, 40],\n    \"variableType\": \"physical\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/variables",
+							"raw": "{{BaseUrl}}/variables",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"variables"
 							]
@@ -4068,11 +4144,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/variables?variableType=physical&limit=10&offset=0",
+							"raw": "{{BaseUrl}}/variables?variableType=physical&limit=10&offset=0",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"variables"
 							],
@@ -4100,11 +4175,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/variables/:id",
+							"raw": "{{BaseUrl}}/variables/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"variables",
 								":id"
@@ -4134,11 +4208,10 @@
 							"raw": "{\n  \"name\": \"Velocity\",\n  \"namePosition\": {\n    \"en\": [\n      15,\n      25\n    ]\n  },\n  \"valuePosition\": {\n    \"en\": [\n      35,\n      45\n    ]\n  },\n  \"unit\": \"km/h\",\n  \"unitPosition\": {\n    \"en\": [\n      55,\n      65\n    ]\n  },\n  \"variableType\": \"derived\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/variables/:id",
+							"raw": "{{BaseUrl}}/variables/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"variables",
 								":id"
@@ -4168,11 +4241,10 @@
 							"raw": "{\n  \"unit\": \"cm/s\"\n}"
 						},
 						"url": {
-							"raw": "localhost:8080/variables/:id",
+							"raw": "{{BaseUrl}}/variables/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"variables",
 								":id"
@@ -4193,11 +4265,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/variables/:id",
+							"raw": "{{BaseUrl}}/variables/:id",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"variables",
 								":id"
@@ -4227,11 +4298,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/variables/bulk",
+							"raw": "{{BaseUrl}}/variables/bulk",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"variables",
 								"bulk"

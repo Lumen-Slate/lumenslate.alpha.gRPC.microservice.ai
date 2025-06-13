@@ -14,8 +14,8 @@ def serve():
     load_and_check_env()
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), "protos"))
 
-    # Use Cloud Run-provided PORT or fallback to 8080
-    port = os.getenv("PORT", "8080")
+    # Use Cloud Run-provided PORT or fallback to 50051 for gRPC
+    port = os.getenv("PORT", "50051")
 
     try:
         server = grpc.server(

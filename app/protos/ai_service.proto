@@ -10,6 +10,19 @@ service AIService {
     rpc GenerateMSQVariations (MSQRequest) returns (MSQVariation);
     rpc FilterAndRandomize (FilterAndRandomizerRequest) returns (FilterAndRandomizerResponse);
     rpc Agent (AgentRequest) returns (AgentResponse);
+    rpc RAGAgent (RAGAgentRequest) returns (RAGAgentResponse);
+    
+    // RAG Corpus Management
+    rpc CreateCorpus (CreateCorpusRequest) returns (CreateCorpusResponse);
+    rpc ListCorpusContent (ListCorpusContentRequest) returns (ListCorpusContentResponse);
+    rpc DeleteCorpusDocument (DeleteCorpusDocumentRequest) returns (DeleteCorpusDocumentResponse);
+    rpc AddCorpusDocument (AddCorpusDocumentRequest) returns (AddCorpusDocumentResponse);
+    rpc ListAllCorpora (ListAllCorporaRequest) returns (ListAllCorporaResponse);
+    
+    // Data Access Services
+    rpc GetAssignment (GetAssignmentRequest) returns (GetAssignmentResponse);
+    rpc GetAssignmentResults (GetAssignmentResultsRequest) returns (GetAssignmentResultsResponse);
+    rpc GetReportCard (GetReportCardRequest) returns (GetReportCardResponse);
 }
 
 // --- /context_generator.py ---
@@ -96,7 +109,7 @@ message VariableFilter {
 message AgentRequest {
     string file = 1;
     string fileType = 2;
-    string userId = 3;
+    string teacherId = 3;
     string role = 4;
     string message = 5;
     string createdAt = 6;
@@ -105,13 +118,188 @@ message AgentRequest {
 
 message AgentResponse {
     string message = 1;
-    string user_id = 2;
-    string agent_name = 3;
-    string agent_response = 4;
-    string session_id = 5;
+    string teacherId = 2;
+    string agentName = 3;
+    string agentResponse = 4;
+    string sessionId = 5;
     string createdAt = 6;
     string updatedAt = 7;
-    string response_time = 8;
+    string responseTime = 8;
     string role = 9;
     string feedback = 10;
+}
+
+message RAGAgentRequest {
+    string teacherId = 1;
+    string message = 2;
+    string file = 3;
+    string role = 4;
+    string createdAt = 5;
+    string updatedAt = 6;
+}
+
+message RAGAgentResponse {
+    string message = 1;
+    string teacherId = 2;
+    string agentName = 3;
+    string agentResponse = 4;
+    string sessionId = 5;
+    string createdAt = 6;
+    string updatedAt = 7;
+    string responseTime = 8;
+    string role = 9;
+    string feedback = 10;
+}
+
+// --- RAG Corpus Management Messages ---
+message CreateCorpusRequest {
+    string corpusName = 1;
+}
+
+message CreateCorpusResponse {
+    string status = 1;
+    string message = 2;
+    string corpusName = 3;
+    string corpusId = 4;
+    bool corpusCreated = 5;
+}
+
+message ListCorpusContentRequest {
+    string corpusName = 1;
+}
+
+message ListCorpusContentResponse {
+    string status = 1;
+    string message = 2;
+    string corpusName = 3;
+    repeated CorpusDocument documents = 4;
+    int32 documentCount = 5;
+}
+
+message CorpusDocument {
+    string displayName = 1;
+    string documentId = 2;
+    string createTime = 3;
+    string updateTime = 4;
+}
+
+message DeleteCorpusDocumentRequest {
+    string corpusName = 1;
+    string fileDisplayName = 2;
+}
+
+message DeleteCorpusDocumentResponse {
+    string status = 1;
+    string message = 2;
+    string corpusName = 3;
+    string fileDisplayName = 4;
+    bool documentDeleted = 5;
+}
+
+message AddCorpusDocumentRequest {
+    string corpusName = 1;
+    string fileLink = 2;
+}
+
+message AddCorpusDocumentResponse {
+    string status = 1;
+    string message = 2;
+    string operationName = 3;
+    string fileDisplayName = 4;
+    string sourceUrl = 5;
+    string corpusName = 6;
+    bool documentAdded = 7;
+}
+
+message ListAllCorporaRequest {
+    // Empty request - lists all corpora
+}
+
+message ListAllCorporaResponse {
+    string status = 1;
+    string message = 2;
+    repeated CorpusInfo corpora = 3;
+    int32 corporaCount = 4;
+}
+
+message CorpusInfo {
+    string corpusName = 1;
+    string corpusId = 2;
+    string displayName = 3;
+    string createTime = 4;
+    string updateTime = 5;
+}
+
+// --- Data Access Services Messages ---
+message GetAssignmentRequest {
+    string assignmentId = 1;
+}
+
+message GetAssignmentResponse {
+    string status = 1;
+    string message = 2;
+    AssignmentData assignment = 3;
+}
+
+message AssignmentData {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string teacherId = 4;
+    string classroomId = 5;
+    string dueDate = 6;
+    int32 points = 7;
+    string createdAt = 8;
+    string updatedAt = 9;
+    // Add other assignment fields as needed
+}
+
+message GetAssignmentResultsRequest {
+    string studentId = 1;
+}
+
+message GetAssignmentResultsResponse {
+    string status = 1;
+    string message = 2;
+    repeated AssignmentResultData assignmentResults = 3;
+    int32 resultCount = 4;
+}
+
+message AssignmentResultData {
+    string id = 1;
+    string assignmentId = 2;
+    string studentId = 3;
+    int32 totalPointsAwarded = 4;
+    int32 totalMaxPoints = 5;
+    double percentageScore = 6;
+    string createdAt = 7;
+    string updatedAt = 8;
+    // Add other result fields as needed
+}
+
+message GetReportCardRequest {
+    string studentId = 1;
+}
+
+message GetReportCardResponse {
+    string status = 1;
+    string message = 2;
+    repeated ReportCardData reportCards = 3;
+    int32 reportCardCount = 4;
+}
+
+message ReportCardData {
+    string id = 1;
+    string studentId = 2;
+    string studentName = 3;
+    string subject = 4;
+    string gradeLetter = 5;
+    double score = 6;
+    string className = 7;
+    string instructorName = 8;
+    string term = 9;
+    string remarks = 10;
+    string createdAt = 11;
+    string updatedAt = 12;
+    // Add other report card fields as needed
 }
