@@ -23,6 +23,12 @@ class AssignmentQuestion(BaseModel):
 
 
 class QuestionsResponse(BaseModel):
+    title: str = Field(
+        description="Title of the assignment"
+    )
+    body: str = Field(
+        description="Description of the assignment"
+    )
     questionsRequested: List[AssignmentQuestion] = Field(
         description="List of question requests with subject and count information",
         alias="questions_requested"
