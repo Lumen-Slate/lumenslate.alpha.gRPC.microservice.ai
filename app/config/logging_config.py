@@ -6,7 +6,7 @@ Ensures compatibility with gRPC logging.
 
 import logging
 import sys
-from config.settings import settings
+from app.config.settings import settings
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
 

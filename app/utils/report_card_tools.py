@@ -1,7 +1,7 @@
 import requests
 import json
 from typing import Dict, List, Any
-from config.logging_config import logger
+from app.config.logging_config import logger
 import os
 
 def get_subject_reports_by_student_id(student_id: int) -> Dict[str, Any]:

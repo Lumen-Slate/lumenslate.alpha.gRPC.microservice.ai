@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from config.logging_config import logger
+from app.config.logging_config import logger
 
 # Agent dependencies
 from google.adk.sessions import DatabaseSessionService

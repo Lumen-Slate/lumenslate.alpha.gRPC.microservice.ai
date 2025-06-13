@@ -5,7 +5,7 @@ and selects the appropriate settings based on the environment.
 """
 import os
 from pydantic_settings import BaseSettings
-from config.settings import dev, test, prod
+from app.config.settings import dev, test, prod
 
 class Settings(BaseSettings):
     """
@@ -23,7 +23,6 @@ class Settings(BaseSettings):
         Specifies the environment file to be used.
         """
         env_file = "../.env"
-
 
 ENV = os.getenv("ENV", "dev")
 if ENV == "dev":

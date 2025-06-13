@@ -5,9 +5,9 @@ depending on the value of the ENV environment variable.
 """
 
 import os
-from config.settings.dev import DevSettings
-from config.settings.test import TestSettings
-from config.settings.prod import ProdSettings
+from app.config.settings.dev import DevSettings
+from app.config.settings.test import TestSettings
+from app.config.settings.prod import ProdSettings
 
 ENV = os.getenv("ENV", "dev")
 

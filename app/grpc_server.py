@@ -5,8 +5,8 @@ import signal
 import threading
 import time
 from concurrent import futures
-from config.logging_config import logger
-from config.settings import settings
+from app.config.logging_config import logger
+from app.config.settings import settings
 from app.utils.env_setup import load_and_check_env
 from app.services.grpc_service import AIService
 from app.protos import ai_service_pb2_grpc
@@ -28,22 +28,22 @@ def serve():
         server.add_insecure_port(f"0.0.0.0:{settings.PORT if hasattr(settings, 'PORT') else 8080}")
 
         def shutdown_handler(signum, _):
-            logger.warning(f"🛑 Received shutdown signal: {signum}. Gracefully stopping gRPC server...")
+            logger.warning(f"Received shutdown signal: {signum}. Gracefully stopping gRPC server...")
             all_done = server.stop(grace=5)
             all_done.wait(timeout=5)
-            logger.info("✅ gRPC server shut down.")
+            logger.info("gRPC server shut down.")
             os._exit(0)
 
         signal.signal(signal.SIGINT, shutdown_handler)
         signal.signal(signal.SIGTERM, shutdown_handler)
 
-        logger.info(f"✅ gRPC server starting on 0.0.0.0:{settings.PORT if hasattr(settings, 'PORT') else 8080}")
+        logger.info(f"gRPC server starting on 0.0.0.0:{settings.PORT if hasattr(settings, 'PORT') else 8080}")
         server.start()
-        logger.info("📡 gRPC server is running. Waiting for connections...")
+        logger.info("gRPC server is running. Waiting for connections...")
 
         def liveness_monitor():
             while True:
-                logger.debug("💓 gRPC server heartbeat check")
+                logger.debug("gRPC server heartbeat check")
                 time.sleep(30)
 
         heartbeat_thread = threading.Thread(target=liveness_monitor, daemon=True)
@@ -52,11 +52,11 @@ def serve():
         server.wait_for_termination()
 
     except Exception as e:
-        logger.exception("💥 gRPC Server crashed unexpectedly \nError : %s", str(e))
+        logger.exception("gRPC Server crashed unexpectedly \nError : %s", str(e))
 
 if __name__ == "__main__":
-    logger.info("🚀 Launching gRPC server...")
+    logger.info("Launching gRPC server...")
     try:
         serve()
     except Exception as e:
-        logger.exception("💥 gRPC Server exited unexpectedly:")
+        logger.exception("gRPC Server exited unexpectedly:")

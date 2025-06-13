@@ -1,7 +1,7 @@
 from ..models.pydantic.models import AgentInput
 from google import genai
 from .clean_text import clean_text
-from config.logging_config import logger
+from app.config.logging_config import logger
 from dotenv import load_dotenv
 import os
 import tempfile
