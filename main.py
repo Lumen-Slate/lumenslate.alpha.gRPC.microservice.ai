@@ -118,8 +118,21 @@ async def agent_handler(agent_input: AgentInput):
 
         # Checking if file is present and handle accordingly
         if agent_input.file and agent_input.file.filename:
-            # Passing entire AgentInput to MultipartHandler
+            # Passing entire AgentInput to MultimodalHandler
             grand_query = await MultimodalHandler(agent_input)
+            
+            # Handle unsupported file types
+            if grand_query is None:
+                supported_image_types = "jpg, jpeg, png, webp, heic, heif"
+                supported_audio_types = "wav, mp3, aiff, aac, ogg, flac"
+                error_message = f"Unsupported file type '{agent_input.file.filename}'. Supported file types are:\nImages: {supported_image_types}\nAudio: {supported_audio_types}"
+                
+                return {
+                    "agent_response": error_message,
+                    "user_id": agent_input.user_id,
+                    "session_id": None,
+                    "error": "unsupported_file_type"
+                }
         else:
             # Using original query if no file
             grand_query = agent_input.query.strip()
