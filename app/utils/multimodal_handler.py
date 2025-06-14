@@ -42,7 +42,7 @@ async def AudioHandler(agent_input: AgentInput) -> str:
 async def MultimodalHandler(agent_input: AgentInput) -> str:
 
     if not agent_input.file or not agent_input.file.filename:
-        return agent_input.query.strip()
+        return agent_input.query.strip() if agent_input.query else None
     
     filename = agent_input.file.filename.lower()
     file_extension = None
@@ -58,7 +58,7 @@ async def MultimodalHandler(agent_input: AgentInput) -> str:
     if file_extension in VALID_IMAGE_TYPES:
         image_description = await ImageHandler(agent_input)
 
-        grand_query = f'{"written_query": {agent_input.query.strip()}, "image_description": {image_description}}'
+        grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "image_description": {image_description}}}'
         logger.info(f"Grand query: {grand_query}")
         return grand_query
     
@@ -66,7 +66,7 @@ async def MultimodalHandler(agent_input: AgentInput) -> str:
     elif file_extension in VALID_AUDIO_TYPES:
         audio_description =  await AudioHandler(agent_input)
 
-        grand_query = f'{"written_query": {agent_input.query.strip()}, "audio_description": {audio_description}}'
+        grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "audio_description": {audio_description}}}'
         logger.info(f"Grand query: {grand_query}")
         return grand_query
     

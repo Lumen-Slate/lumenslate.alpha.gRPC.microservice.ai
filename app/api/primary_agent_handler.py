@@ -73,7 +73,7 @@ async def primary_agent_handler(agent_input: AgentInput):
                 }
         else:
             # Using original query if no file
-            grand_query = agent_input.query.strip()
+            grand_query = agent_input.query.strip() if agent_input.query else None
 
         user_message = grand_query
         content = types.Content(role="user", parts=[types.Part(text=grand_query)])
