@@ -23,6 +23,7 @@ from app.agents.root_agent.agent import root_agent
 from google.genai import types
 from app.utils.history_manager import add_to_history
 from app.utils.question_retriever import get_questions_general
+from app.utils.assessment_handler import save_subject_report
 from app.utils.multimodal_handler import MultimodalHandler
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -148,16 +149,34 @@ async def agent_handler(agent_input: AgentInput):
 
                 try:
                     parsed_json = json.loads(agent_message)
-                    if isinstance(parsed_json, dict) and 'questions_requested' in parsed_json:
-                        if any(q.get('type') == 'assignment_generator_general' for q in parsed_json['questions_requested']):
-                            questions_result = get_questions_general(parsed_json)
-                            final_agent_message = questions_result.get('agent_response', agent_message)
+                    if isinstance(parsed_json, dict):
+                        if 'questions_requested' in parsed_json:
+                            if any(q.get('type') == 'assignment_generator_general' for q in parsed_json['questions_requested']):
+                                questions_result = get_questions_general(parsed_json)
+                                final_agent_message = questions_result.get('agent_response', agent_message)
+                                response = {
+                                    "agent_response": final_agent_message,
+                                    "user_id": agent_input.user_id,
+                                    "session_id": SESSION_ID,
+                                    "type": "assignment_generated",
+                                    "data": questions_result.get('data', {})
+                                }
+                                agent_message = final_agent_message
+                            else:
+                                response = {
+                                    "agent_response": agent_message,
+                                    "user_id": agent_input.user_id,
+                                    "session_id": SESSION_ID
+                                }
+                        elif 'assessment_data' in parsed_json:
+                            assessment_result = save_subject_report(parsed_json)
+                            final_agent_message = assessment_result.get('agent_response', agent_message)
                             response = {
                                 "agent_response": final_agent_message,
                                 "user_id": agent_input.user_id,
                                 "session_id": SESSION_ID,
-                                "type": "assignment_generated",
-                                "data": questions_result.get('data', {})
+                                "type": "subject_report_created" if assessment_result.get('status') == 'success' else "subject_report_error",
+                                "data": assessment_result.get('data', {})
                             }
                             agent_message = final_agent_message
                         else:
