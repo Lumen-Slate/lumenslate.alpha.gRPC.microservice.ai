@@ -6,7 +6,6 @@ import threading
 import time
 from concurrent import futures
 from app.config.logging_config import logger
-from app.config.settings import settings
 from app.utils.env_setup import load_and_check_env
 from app.services.grpc_service import AIService
 from app.protos import ai_service_pb2_grpc
@@ -14,6 +13,10 @@ from app.protos import ai_service_pb2_grpc
 def serve():
     load_and_check_env()
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), "protos"))
+
+    # Use Cloud Run-provided PORT or fallback to 8080
+    port = os.getenv("PORT", "8080")
+
     try:
         server = grpc.server(
             futures.ThreadPoolExecutor(max_workers=10),
@@ -24,8 +27,12 @@ def serve():
                 ("grpc.http2.max_pings_without_data", 0),
             ]
         )
-        ai_service_pb2_grpc.add_AIServiceServicer_to_server(AIService(logger=logger), server)
-        server.add_insecure_port(f"0.0.0.0:{settings.PORT if hasattr(settings, 'PORT') else 8080}")
+
+        ai_service_pb2_grpc.add_AIServiceServicer_to_server(
+            AIService(logger=logger), server
+        )
+
+        server.add_insecure_port(f"0.0.0.0:{port}")
 
         def shutdown_handler(signum, _):
             logger.warning(f"Received shutdown signal: {signum}. Gracefully stopping gRPC server...")
@@ -37,13 +44,13 @@ def serve():
         signal.signal(signal.SIGINT, shutdown_handler)
         signal.signal(signal.SIGTERM, shutdown_handler)
 
-        logger.info(f"gRPC server starting on 0.0.0.0:{settings.PORT if hasattr(settings, 'PORT') else 8080}")
+        logger.info(f"🚀 gRPC server starting on 0.0.0.0:{port}")
         server.start()
-        logger.info("gRPC server is running. Waiting for connections...")
+        logger.info("✅ gRPC server is running and ready to accept connections.")
 
         def liveness_monitor():
             while True:
-                logger.debug("gRPC server heartbeat check")
+                logger.debug("💓 gRPC server heartbeat check")
                 time.sleep(30)
 
         heartbeat_thread = threading.Thread(target=liveness_monitor, daemon=True)
@@ -52,11 +59,12 @@ def serve():
         server.wait_for_termination()
 
     except Exception as e:
-        logger.exception("gRPC Server crashed unexpectedly \nError : %s", str(e))
+        logger.exception("❌ gRPC Server crashed unexpectedly \nError : %s", str(e))
+
 
 if __name__ == "__main__":
-    logger.info("Launching gRPC server...")
+    logger.info("🔧 Launching gRPC server...")
     try:
         serve()
     except Exception as e:
-        logger.exception("gRPC Server exited unexpectedly:")
+        logger.exception("❌ gRPC Server exited unexpectedly:")
