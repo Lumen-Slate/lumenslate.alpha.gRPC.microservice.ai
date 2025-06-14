@@ -1,7 +1,3 @@
-"""
-This module initializes and configures the FastAPI application.
-"""
-
 import os
 import json
 from contextlib import asynccontextmanager
@@ -18,14 +14,7 @@ from app.routes.msq_variation_generator import router as msq_variation_generator
 from app.routes.variable_randomizer import router as variable_randomizer_router
 from app.routes.variable_detector import router as variable_detector_router
 from app.routes.question_segmentation import router as question_segmentation_router
-
-# Agent dependencies
-from app.models.pydantic.models import AgentInput
-from google.adk.sessions import DatabaseSessionService
-from google.adk.runners import Runner
-from app.agents.root_agent.agent import root_agent
-from google.genai import types
-from app.utils.utils import add_to_history, get_questions_general
+from app.api.primary_agent_handler import primary_agent_handler_router
 
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -38,9 +27,9 @@ except Exception as e:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("🔄 Application startup")
+    logger.info("Application startup")
     yield
-    logger.info("🔻 Application shutdown")
+    logger.info("Application shutdown")
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -81,96 +70,7 @@ app.include_router(msq_variation_generator_router, prefix="", tags=["MSQ Variati
 app.include_router(variable_detector_router, prefix="", tags=["Variable Detector"])
 app.include_router(variable_randomizer_router, prefix="", tags=["Variable Randomizer"])
 app.include_router(question_segmentation_router, prefix="", tags=["Question Segmentation"])
-
-# ─────────────────────────────────────────────────────────────────────────────
-
-# ✅ Agent endpoint
-db_url = "sqlite:///./app/data/my_agent_data.db"
-session_service = DatabaseSessionService(db_url=db_url)
-APP_NAME = "LUMEN_SLATE"
-
-@app.post("/agent", tags=["Agent"])
-async def agent_handler(agent_input: AgentInput):
-    try:
-        initial_state = {
-            "user_id": agent_input.user_id,
-            "message_history": [],
-        }
-
-        existing_sessions = await session_service.list_sessions(
-            app_name=APP_NAME,
-            user_id=agent_input.user_id,
-        )
-
-        if existing_sessions and len(existing_sessions.sessions) > 0:
-            SESSION_ID = existing_sessions.sessions[0].id
-        else:
-            new_session = await session_service.create_session(
-                app_name=APP_NAME,
-                user_id=agent_input.user_id,
-                state=initial_state,
-            )
-            SESSION_ID = new_session.id
-
-        runner = Runner(
-            agent=root_agent,
-            app_name=APP_NAME,
-            session_service=session_service,
-        )
-
-        user_message = agent_input.query.strip()
-        content = types.Content(role="user", parts=[types.Part(text=agent_input.query)])
-
-        async for event in runner.run_async(user_id=agent_input.user_id, session_id=SESSION_ID, new_message=content):
-            if event.is_final_response() and event.content and event.content.parts:
-                agent_message = event.content.parts[0].text.strip()
-                if not agent_message:
-                    agent_message = "No response generated"
-
-                try:
-                    parsed_json = json.loads(agent_message)
-                    if isinstance(parsed_json, dict) and 'questions_requested' in parsed_json:
-                        if any(q.get('type') == 'assignment_generator_general' for q in parsed_json['questions_requested']):
-                            questions_result = get_questions_general(parsed_json)
-                            final_agent_message = questions_result.get('agent_response', agent_message)
-                            response = {
-                                "agent_response": final_agent_message,
-                                "user_id": agent_input.user_id,
-                                "session_id": SESSION_ID,
-                                "type": "assignment_generated",
-                                "data": questions_result.get('data', {})
-                            }
-                            agent_message = final_agent_message
-                        else:
-                            response = {
-                                "agent_response": agent_message,
-                                "user_id": agent_input.user_id,
-                                "session_id": SESSION_ID
-                            }
-                    else:
-                        response = {
-                            "agent_response": agent_message,
-                            "user_id": agent_input.user_id,
-                            "session_id": SESSION_ID
-                        }
-                except json.JSONDecodeError:
-                    response = {
-                        "agent_response": agent_message,
-                        "user_id": agent_input.user_id,
-                        "session_id": SESSION_ID
-                    }
-
-                # Store message history
-                try:
-                    await add_to_history(user_message, 'user', agent_input.user_id, SESSION_ID, APP_NAME, session_service)
-                    await add_to_history(agent_message, 'agent', agent_input.user_id, SESSION_ID, APP_NAME, session_service)
-                except Exception as e:
-                    logger.warning(f"⚠️ History logging failed: {e}")
-
-                return response
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Agent error: {str(e)}")
+app.include_router(primary_agent_handler_router, prefix="", tags=["Primary Agent Handler"])
 
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -185,9 +85,9 @@ async def root():
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    logger.info(f"📥 {request.method} {request.url}")
+    logger.info(f"{request.method} {request.url}")
     response = await call_next(request)
-    logger.info(f"📤 Status code: {response.status_code}")
+    logger.info(f"Status code: {response.status_code}")
     return response
 
 if __name__ == "__main__":
