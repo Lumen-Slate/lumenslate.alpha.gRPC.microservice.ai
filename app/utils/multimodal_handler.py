@@ -2,21 +2,31 @@ from ..models.pydantic.models import AgentInput
 from google import genai
 from .clean_text import clean_text
 import pytesseract
+from PIL import Image
+import io
 
 VALID_IMAGE_TYPES = {'.jpg', '.jpeg', '.png', '.webp'}
 
 VALID_AUDIO_TYPES = {'.wav', '.mp3', '.aiff', '.aac', '.ogg', '.flac'}
 
 async def ImageHandler(agent_input: AgentInput) -> str:
-    processed_query = "placeholder"
-    return processed_query
+    try:
+        image_bytes = await agent_input.file.read()
+        image = Image.open(io.BytesIO(image_bytes))
+        extracted_text = pytesseract.image_to_string(image)
+        return extracted_text
+    except Exception as e:
+        return f"Error processing image: {str(e)}"
+    finally:
+        if 'image' in locals():
+            image.close()
 
 async def AudioHandler(agent_input: AgentInput) -> str:
     audio_file_type = agent_input.file.content_type
 
     audio_bytes = await agent_input.file.read()
 
-    model = genai.GenerativeModel("gemini-1.5-pro")  # audio input supported in this model only
+    model = genai.GenerativeModel("gemini-2.0-flash")  
 
     response = model.generate_content([
         "Describe in detail what the person is saying in this audio. Include any relevant context or background information.",
