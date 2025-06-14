@@ -1,11 +1,8 @@
 import os
-import json
 from datetime import datetime
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from config.logging_config import logger
 
 # Agent dependencies
-from app.models.pydantic.models import AgentInput
 from google.adk.sessions import DatabaseSessionService
 from google.adk.runners import Runner
 from app.agents.root_agent.agent import root_agent
@@ -15,7 +12,6 @@ from app.utils.multimodal_handler import MultimodalHandler
 
 # ─────────────────────────────────────────────────────────────────────────────
 
-primary_agent_handler_router = APIRouter()
 
 # Agent configuration
 db_url = os.getenv("DATABASE_URL")

@@ -1,14 +1,9 @@
-import os
-import json
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from config.logging_config import logger
 from config.settings import settings
-
-# Routers
-from app.api.primary_agent_handler import primary_agent_handler_router
 
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -54,11 +49,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# ─────────────────────────────────────────────────────────────────────────────
-
-# Register routers
-app.include_router(primary_agent_handler_router, prefix="", tags=["Primary Agent Handler"])
 
 # ─────────────────────────────────────────────────────────────────────────────
 
