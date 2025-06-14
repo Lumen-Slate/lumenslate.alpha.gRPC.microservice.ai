@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package ai_service;
+
+service AIService {
+    rpc GenerateContext (GenerateContextRequest) returns (GenerateContextResponse);
+    rpc DetectVariables (VariableDetectorRequest) returns (VariableDetectorResponse);
+    rpc SegmentQuestion (QuestionSegmentationRequest) returns (QuestionSegmentationResponse);
+    rpc GenerateMCQVariations (MCQRequest) returns (MCQVariation);
+    rpc GenerateMSQVariations (MSQRequest) returns (MSQVariation);
+    rpc FilterAndRandomize (FilterAndRandomizerRequest) returns (FilterAndRandomizerResponse);
+}
+
+// --- /context_generator.py ---
+message GenerateContextRequest {
+    string question = 1;
+    repeated string keywords = 2;
+    string language = 3;
+}
+message GenerateContextResponse {
+    string content = 1;
+}
+
+// --- /variable_detector.py ---
+message VariableDetectorRequest {
+    string question = 1;
+}
+message VariableDetectorResponse {
+    repeated DetectedVariable variables = 1;
+}
+message DetectedVariable {
+    string name = 1;
+    string value = 2;
+    repeated int32 namePositions = 3;
+    repeated int32 valuePositions = 4;
+}
+
+// --- /question_segmentation.py ---
+message QuestionSegmentationRequest {
+    string question = 1;
+}
+message QuestionSegmentationResponse {
+    string segmentedQuestion = 1;
+}
+
+// --- /mcq_variation_generator.py ---
+message MCQRequest {
+    string question = 1;
+    repeated string options = 2;
+    int32 answerIndex = 3;
+}
+message MCQVariation {
+    repeated MCQQuestion variations = 1;
+}
+message MCQQuestion {
+    string question = 1;
+    repeated string options = 2;
+    int32 answerIndex = 3;
+}
+
+// --- /msq_variation_generator.py ---
+message MSQRequest {
+    string question = 1;
+    repeated string options = 2;
+    repeated int32 answerIndices = 3;
+}
+message MSQVariation {
+    repeated MSQQuestion variations = 1;
+}
+message MSQQuestion {
+    string question = 1;
+    repeated string options = 2;
+    repeated int32 answerIndices = 3;
+}
+
+// --- /variable_randomizer.py ---
+message FilterAndRandomizerRequest {
+    string question = 1;
+    string userPrompt = 2;
+}
+message FilterAndRandomizerResponse {
+    repeated RandomizedVariable variables = 1;
+}
+message RandomizedVariable {
+    string name = 1;
+    // value can be int or string, so use string for proto3
+    string value = 2;
+    VariableFilter filters = 3;
+}
+message VariableFilter {
+    repeated int32 range = 1;
+    repeated string options = 2;
+}
