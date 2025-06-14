@@ -1,9 +1,6 @@
 from ..models.pydantic.models import AgentInput
 from google import genai
 from .clean_text import clean_text
-import pytesseract
-from PIL import Image
-import io
 from config.logging_config import logger
 from dotenv import load_dotenv
 import os
@@ -18,16 +15,30 @@ VALID_IMAGE_TYPES = {'.jpg', '.jpeg', '.png', '.webp'}
 VALID_AUDIO_TYPES = {'.wav', '.mp3', '.aiff', '.aac', '.ogg', '.flac'}
 
 async def ImageHandler(agent_input: AgentInput) -> str:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+        audio_bytes = await agent_input.file.read()
+        tmp.write(audio_bytes)
+        tmp_file_path = tmp.name
+
     try:
-        image_bytes = await agent_input.file.read()
-        image = Image.open(io.BytesIO(image_bytes))
-        extracted_text = pytesseract.image_to_string(image)
-        return extracted_text
+        # Now uploading using the file path
+        file = client.files.upload(file=tmp_file_path)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=[
+                'Extract all the text from the image and return the text only.',
+                file
+            ],
+        )
+
+        return clean_text(response.text) if response and hasattr(response, "text") else "Could not generate transcription."
     except Exception as e:
-        return f"Error processing image: {str(e)}"
+        return f"Error during transcription: {str(e)}"
     finally:
-        if 'image' in locals():
-            image.close()
+        # Cleaning up the temporary file
+        import os
+        os.remove(tmp_file_path)
+        logger.info(f"Temporary file {tmp_file_path} removed")
 
 
 async def AudioHandler(agent_input: AgentInput) -> str:

@@ -65,8 +65,8 @@ assessor = LlmAgent(
         INPUT FORMATS YOU MAY RECEIVE:
         1. Plain text: Direct assessment information
         2. JSON with written_query and audio_description: {"written_query": "text", "audio_description": "transcribed audio"}
-        3. JSON with written_query and image_description: {"written_query": "text", "image_description": "OCR text from image"}
-        4. JSON with null written_query: {"written_query": null, "audio_description": "transcribed audio"} or {"written_query": null, "image_description": "OCR text"}
+        3. JSON with written_query and image_description: {"written_query": "text", "image_description": "extracted text from image"}
+        4. JSON with null written_query: {"written_query": null, "audio_description": "transcribed audio"} or {"written_query": null, "image_description": "extracted text from image"}
 
         EXTRACTION GUIDELINES:
         - Parse ALL available information from both written_query and audio/image descriptions

@@ -8,12 +8,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # ---- Set Work Directory ----
 WORKDIR /app
 
-# ---- Install Tesseract OCR ----
-RUN apt-get update && apt-get install -y \
-    tesseract-ocr \
-    libtesseract-dev \
-    libleptonica-dev
-
 # ---- Install Dependencies ----
 COPY requirements.txt .
 RUN pip install --upgrade pip \
