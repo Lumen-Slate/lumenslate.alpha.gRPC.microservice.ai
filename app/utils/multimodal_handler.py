@@ -29,14 +29,14 @@ async def AudioHandler(agent_input: AgentInput) -> str:
     model = genai.GenerativeModel("gemini-2.0-flash")  
 
     response = model.generate_content([
-        "Describe in detail what the person is saying in this audio. Include any relevant context or background information.",
+        "Transcribe the audio into text and return the text only.",
         {
             "mime_type": audio_file_type,
             "data": audio_bytes
         }
     ])
 
-    return clean_text(response.text) if response and hasattr(response, "text") else "Could not generate description."
+    return clean_text(response.text) if response and hasattr(response, "text") else "Could not generate transcription."
 
 async def MultimodalHandler(agent_input: AgentInput) -> str:
 
@@ -55,11 +55,17 @@ async def MultimodalHandler(agent_input: AgentInput) -> str:
 
     # Checking if it's a valid image type
     if file_extension in VALID_IMAGE_TYPES:
-        return await ImageHandler(agent_input)
+        image_description = await ImageHandler(agent_input)
+
+        grand_query = f'{"written_query": {agent_input.query.strip()}, "image_description": {image_description}}'
+        return grand_query
     
     # Checking if it's a valid audio type
     elif file_extension in VALID_AUDIO_TYPES:
-        return await AudioHandler(agent_input)
+        audio_description =  await AudioHandler(agent_input)
+
+        grand_query = f'{"written_query": {agent_input.query.strip()}, "audio_description": {audio_description}}'
+        return grand_query
     
     # File type not supported
     else:
