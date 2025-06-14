@@ -2,6 +2,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from typing import Generator
 
 # Load environment variables from .env file first!
 try:
@@ -43,7 +44,8 @@ from .models import UnalteredHistory, Questions, SubjectReport
 Base.metadata.create_all(bind=engine)
 
 # Dependency to get DB session
-def get_db():
+def get_db() -> Generator:
+    """Yield a database session and ensure it is closed after use."""
     db = SessionLocal()
     try:
         yield db

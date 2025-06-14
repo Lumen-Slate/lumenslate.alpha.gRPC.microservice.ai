@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import os
 import tempfile
 from .auth_helper import get_project_id
+import json
+from typing import Optional
 
 load_dotenv()
 
@@ -181,8 +183,10 @@ async def PDFHandler(agent_input, file_extension='.pdf') -> str:
         return f"Error during PDF text extraction: {str(e)}"
 
 
-async def MultimodalHandler(agent_input) -> str:
-
+async def MultimodalHandler(agent_input) -> Optional[str]:
+    """
+    Handles multimodal input and returns a JSON string with the processed content, or an error message if unsupported.
+    """
     if not agent_input.file or not agent_input.file.filename:
         return agent_input.query.strip() if agent_input.query else None
     
@@ -194,26 +198,35 @@ async def MultimodalHandler(agent_input) -> str:
         file_extension = '.' + filename.split('.')[-1]
     
     if not file_extension:
-        return None  # No file extension found
+        return json.dumps({"error": "No file extension found"})
 
     # Checking if it's a valid image type
     if file_extension in VALID_IMAGE_TYPES:
         image_description = await ImageHandler(agent_input, file_extension)
-        grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "image_description": {image_description}}}'
+        grand_query = json.dumps({
+            "written_query": agent_input.query.strip() if agent_input.query else None,
+            "image_description": image_description
+        })
         return grand_query
     
     # Checking if it's a valid audio type
     elif file_extension in VALID_AUDIO_TYPES:
         audio_description = await AudioHandler(agent_input, file_extension)
-        grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "audio_description": {audio_description}}}'
+        grand_query = json.dumps({
+            "written_query": agent_input.query.strip() if agent_input.query else None,
+            "audio_description": audio_description
+        })
         return grand_query
     
     # Checking if it's a valid text type
     elif file_extension in VALID_TEXT_TYPES:
         pdf_content = await PDFHandler(agent_input, file_extension)
-        grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "pdf_content": {pdf_content}}}'
+        grand_query = json.dumps({
+            "written_query": agent_input.query.strip() if agent_input.query else None,
+            "pdf_content": pdf_content
+        })
         return grand_query
     
     # File type not supported
     else:
-        return None 
+        return json.dumps({"error": f"File type {file_extension} not supported"}) 

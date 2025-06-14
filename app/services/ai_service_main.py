@@ -4,9 +4,9 @@ This provides a single entry point while maintaining modular structure.
 """
 
 from app.protos import ai_service_pb2_grpc
-from app.services.question_generation_service import QuestionGenerationService
-from app.services.agent_service import AgentService
-from app.services.corpus_management_service import CorpusManagementService
+from app.services.independent_agent_service import IndependentAgentService
+from app.services.orchestrated_agent_service import OrchestratedAgentService
+from app.services.rag_corpus_management_service import RAGCorpusManagementService
 from app.services.data_access_service import DataAccessService
 
 
@@ -18,9 +18,9 @@ class AIService(ai_service_pb2_grpc.AIServiceServicer):
     
     def __init__(self, logger=None):
         # Initialize all service modules
-        self.question_service = QuestionGenerationService(logger)
-        self.agent_service = AgentService(logger)
-        self.corpus_service = CorpusManagementService(logger)
+        self.question_service = IndependentAgentService(logger)
+        self.agent_service = OrchestratedAgentService(logger)
+        self.corpus_service = RAGCorpusManagementService(logger)
         self.data_service = DataAccessService(logger)
 
     # ─────────────────────────────────────────────────────────────────────────────
