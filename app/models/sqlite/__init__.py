@@ -15,7 +15,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 # Import models to ensure they're registered with Base
-from .models import UnalteredHistory, Questions, ReportCard
+from .models import UnalteredHistory, Questions, SubjectReport
 
 # Create all tables
 Base.metadata.create_all(bind=engine)

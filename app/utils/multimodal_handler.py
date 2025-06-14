@@ -1,20 +1,32 @@
 from ..models.pydantic.models import AgentInput
+from google import genai
+from .clean_text import clean_text
+import pytesseract
 
-VALID_IMAGE_TYPES = {
-    '.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif'
-}
+VALID_IMAGE_TYPES = {'.jpg', '.jpeg', '.png', '.webp'}
 
-VALID_AUDIO_TYPES = {
-    '.wav', '.mp3', '.aiff', '.aac', '.ogg', '.flac'
-}
+VALID_AUDIO_TYPES = {'.wav', '.mp3', '.aiff', '.aac', '.ogg', '.flac'}
 
 async def ImageHandler(agent_input: AgentInput) -> str:
     processed_query = "placeholder"
     return processed_query
 
 async def AudioHandler(agent_input: AgentInput) -> str:
-    processed_query = "placeholder"
-    return processed_query
+    audio_file_type = agent_input.file.content_type
+
+    audio_bytes = await agent_input.file.read()
+
+    model = genai.GenerativeModel("gemini-1.5-pro")  # audio input supported in this model only
+
+    response = model.generate_content([
+        "Describe in detail what the person is saying in this audio. Include any relevant context or background information.",
+        {
+            "mime_type": audio_file_type,
+            "data": audio_bytes
+        }
+    ])
+
+    return clean_text(response.text) if response and hasattr(response, "text") else "Could not generate description."
 
 async def MultimodalHandler(agent_input: AgentInput) -> str:
 
