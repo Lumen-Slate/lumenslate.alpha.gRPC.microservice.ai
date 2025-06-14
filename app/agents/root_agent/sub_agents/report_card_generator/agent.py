@@ -1,158 +1,138 @@
 from google.adk.agents import LlmAgent
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
+class AssignmentSummary(BaseModel):
+    assignment_id: str = Field(..., description="The unique identifier of the assignment")
+    assignment_title: str = Field(..., description="The title of the assignment")
+    percentage_score: float = Field(..., description="Percentage score for this assignment")
+    subject: str = Field(..., description="Subject of the assignment")
 
-# --- Defining Output Schema ---
-class SubjectReportSummary(BaseModel):
-    subject: str = Field(description="Subject name")
-    score: int = Field(description="Subject score")
-    grade: Optional[str] = Field(None, description="Letter grade for the subject")
-    conceptual_understanding: Optional[float] = Field(None, description="Conceptual understanding rating")
-    problem_solving: Optional[float] = Field(None, description="Problem solving rating")
-    analytical_thinking: Optional[float] = Field(None, description="Analytical thinking rating")
-    areas_for_improvement: Optional[str] = Field(None, description="Areas needing improvement in this subject")
-    key_strengths: Optional[str] = Field(None, description="Key strengths in this subject")
-    subject_specific_recommendations: Optional[str] = Field(None, description="Subject-specific recommendations")
+class SubjectPerformance(BaseModel):
+    subject_name: str = Field(..., description="Name of the subject")
+    percentage_score: float = Field(..., description="Overall percentage score in this subject")
+    assignment_count: int = Field(..., description="Number of assignments completed in this subject")
+    
+    # Question type breakdown within this subject
+    mcq_accuracy: float = Field(default=0.0, description="MCQ accuracy rate in this subject")
+    msq_accuracy: float = Field(default=0.0, description="MSQ accuracy rate in this subject")
+    nat_accuracy: float = Field(default=0.0, description="NAT accuracy rate in this subject")
+    subjective_avg_score: float = Field(default=0.0, description="Average score on subjective questions in this subject")
+    
+    # Subject-specific analysis
+    strengths: List[str] = Field(default=[], description="Top strengths in this subject")
+    weaknesses: List[str] = Field(default=[], description="Areas needing improvement in this subject")
+    improvement_trend: str = Field(default="stable", description="Performance trend in this subject")
 
+class OverallPerformance(BaseModel):
+    total_assignments_completed: int = Field(..., description="Total number of assignments completed")
+    overall_percentage: float = Field(..., description="Overall percentage score across all assignments")
+    improvement_trend: str = Field(..., description="Overall performance trend (improving, stable, declining)")
+    strongest_question_type: str = Field(..., description="Question type where student performs best")
+    weakest_question_type: str = Field(..., description="Question type needing most improvement")
 
-class ReportCardData(BaseModel):
-    # Mandatory fields
-    student_id: int = Field(description="Student ID")
-    student_name: str = Field(description="Student name")
-    academic_term: str = Field(description="Academic term")
-    
-    # Overall Academic Performance
-    overall_gpa: Optional[float] = Field(None, description="Overall GPA calculated from all subjects")
-    overall_grade: Optional[str] = Field(None, description="Overall letter grade")
-    overall_percentage: Optional[float] = Field(None, description="Overall percentage")
-    class_rank: Optional[int] = Field(None, description="Class rank if available")
-    total_students_in_class: Optional[int] = Field(None, description="Total students in class")
-    
-    # Subject-wise Performance Summary
-    subjects_count: Optional[int] = Field(None, description="Number of subjects assessed")
-    highest_subject_score: Optional[int] = Field(None, description="Highest score among all subjects")
-    lowest_subject_score: Optional[int] = Field(None, description="Lowest score among all subjects")
-    average_subject_score: Optional[float] = Field(None, description="Average score across all subjects")
-    best_performing_subject: Optional[str] = Field(None, description="Subject with best performance")
-    weakest_subject: Optional[str] = Field(None, description="Subject with weakest performance")
-    
-    # Academic Analysis
-    academic_strengths: Optional[str] = Field(None, description="Overall academic strengths")
-    areas_needing_improvement: Optional[str] = Field(None, description="Areas needing improvement")
-    recommended_actions: Optional[str] = Field(None, description="Recommended actions")
-    study_recommendations: Optional[str] = Field(None, description="Study recommendations")
-    
-    # Aggregated Skill Analysis
-    overall_conceptual_understanding: Optional[float] = Field(None, description="Average conceptual understanding across subjects")
-    overall_problem_solving: Optional[float] = Field(None, description="Average problem solving across subjects")
-    overall_knowledge_application: Optional[float] = Field(None, description="Average knowledge application across subjects")
-    overall_analytical_thinking: Optional[float] = Field(None, description="Average analytical thinking across subjects")
-    overall_creativity: Optional[float] = Field(None, description="Average creativity across subjects")
-    overall_practical_skills: Optional[float] = Field(None, description="Average practical skills across subjects")
-    
-    # Aggregated Behavioral Analysis
-    overall_participation: Optional[float] = Field(None, description="Average participation across subjects")
-    overall_discipline: Optional[float] = Field(None, description="Average discipline across subjects")
-    overall_punctuality: Optional[float] = Field(None, description="Average punctuality across subjects")
-    overall_teamwork: Optional[float] = Field(None, description="Average teamwork across subjects")
-    overall_effort_level: Optional[float] = Field(None, description="Average effort level across subjects")
-    overall_improvement: Optional[float] = Field(None, description="Average improvement across subjects")
-    
-    # Assessment Component Averages
-    average_midterm_score: Optional[float] = Field(None, description="Average midterm score")
-    average_final_exam_score: Optional[float] = Field(None, description="Average final exam score")
-    average_quiz_score: Optional[float] = Field(None, description="Average quiz score")
-    average_assignment_score: Optional[float] = Field(None, description="Average assignment score")
-    average_practical_score: Optional[float] = Field(None, description="Average practical score")
-    average_oral_presentation_score: Optional[float] = Field(None, description="Average oral presentation score")
-    
-    # Performance Trends
-    improvement_trend: Optional[str] = Field(None, description="Overall improvement trend: improving/declining/stable")
-    consistency_rating: Optional[float] = Field(None, description="Consistency rating on 0-10 scale")
-    performance_stability: Optional[str] = Field(None, description="Performance stability: very stable/stable/variable/inconsistent")
-    
-    # Engagement & Participation
-    attendance_rate: Optional[float] = Field(None, description="Attendance rate percentage")
-    engagement_level: Optional[str] = Field(None, description="Engagement level: high/medium/low")
-    class_participation: Optional[str] = Field(None, description="Class participation description")
-    
-    # Goals & Recommendations
-    academic_goals: Optional[str] = Field(None, description="Academic goals for the student")
-    short_term_objectives: Optional[str] = Field(None, description="Short-term objectives (3-6 months)")
-    long_term_objectives: Optional[str] = Field(None, description="Long-term objectives (yearly)")
-    parent_teacher_recommendations: Optional[str] = Field(None, description="Parent-teacher recommendations")
-    
-    # Subject Details
-    subject_reports: Optional[List[SubjectReportSummary]] = Field(None, description="Summary of individual subject reports")
-    
-    # Comments & Insights
-    teacher_comments: Optional[str] = Field(None, description="Aggregated teacher comments")
-    principal_comments: Optional[str] = Field(None, description="Principal comments")
-    overall_remarks: Optional[str] = Field(None, description="Overall remarks")
-    
-    # Next Steps
-    recommended_resources: Optional[str] = Field(None, description="Recommended educational resources")
-    suggested_activities: Optional[str] = Field(None, description="Suggested enrichment activities")
-    next_review_date: Optional[str] = Field(None, description="Next review date")
+class StudentInsights(BaseModel):
+    key_strengths: List[str] = Field(..., description="Top 3 academic strengths")
+    areas_for_improvement: List[str] = Field(..., description="Top 3 areas needing improvement")
+    recommended_actions: List[str] = Field(..., description="Top 3 specific recommendations")
 
+class ReportCard(BaseModel):
+    student_id: str = Field(..., description="The unique identifier of the student")
+    student_name: str = Field(..., description="The name of the student")
+    report_period: str = Field(..., description="The time period this report covers")
+    generation_date: str = Field(..., description="Date when the report card was generated")
+    
+    # Performance Data
+    overall_performance: OverallPerformance = Field(..., description="Overall academic performance summary")
+    subject_performance: List[SubjectPerformance] = Field(default=[], description="Performance breakdown by subject")
+    assignment_summaries: List[AssignmentSummary] = Field(default=[], description="Recent assignment summaries")
+    
+    # Analysis and Remarks
+    ai_remarks: str = Field(..., description="AI-generated comprehensive analysis of student's performance, strengths, weaknesses, and recommendations")
+    teacher_remarks: str = Field(default="", description="Teacher's comments and observations (empty if not provided)")
+    student_insights: StudentInsights = Field(..., description="Key insights about the student's performance")
 
 class ReportCardResponse(BaseModel):
-    report_card_data: ReportCardData = Field(description="Generated report card data")
-
+    report_card: ReportCard = Field(..., description="The complete report card for the student")
 
 # --- Creating Report Card Generator Agent ---
 report_card_generator = LlmAgent(
     name="report_card_generator",
     model="gemini-2.0-flash",
-    description="Generates comprehensive report cards by analyzing all subject reports for a student provided by the root agent",
+    description="Generates comprehensive report cards for students based on their assignment results and performance data",
     instruction="""
-        You are an Advanced Educational Assessment Expert and Report Card Generator.
-        Your role is to analyze multiple subject reports for a student and generate a comprehensive, holistic report card.
+    You are an expert educational analyst and report card generator. Your role is to create comprehensive, insightful report cards for students based on their assignment results and academic performance data.
 
-        IMPORTANT: The root agent has already fetched all subject reports for the student and will provide them to you in the request context. You do NOT need to fetch this data yourself.
+    **Your Primary Responsibilities:**
 
-        PROCESS:
-        1. Analyze each subject report provided by the root agent comprehensively
-        2. Calculate aggregated metrics (overall GPA, averages, trends, etc.)
-        3. Identify strengths, weaknesses, and patterns across all subjects
-        4. Generate holistic insights and actionable recommendations
-        5. Return structured data with all possible fields filled based on available data
+    1. **Analyze Assignment Results:**
+       - Process multiple assignment results for a student
+       - Calculate overall performance metrics and trends
+       - Identify patterns in different question types (MCQ, MSQ, NAT, Subjective)
+       - Determine comprehensive subject-wise performance with detailed breakdowns
 
-        ANALYSIS FRAMEWORK:
-        
-        Academic Performance Analysis:
-        - Calculate overall GPA/percentage from individual subject scores
-        - Identify highest and lowest performing subjects
-        - Determine academic strengths and areas needing improvement
-        - Analyze grade distribution and consistency
+    2. **Generate AI Remarks:**
+       - Provide comprehensive analysis of student's academic performance
+       - Highlight key strengths and areas for improvement
+       - Offer specific, actionable recommendations for academic growth
+       - Analyze learning patterns and study habits based on performance data
+       - Suggest targeted strategies for improvement in weak areas
+       - Recognize and encourage strong performance areas
 
-        Skill Assessment Aggregation:
-        - Aggregate skill ratings (conceptual understanding, problem solving, etc.) across subjects
-        - Identify patterns in skill development
-        - Highlight exceptional skills and areas for skill development
+    3. **Create Student Insights:**
+       - Identify learning patterns and preferences
+       - Determine subject preferences and challenging areas
+       - Provide recommendations for optimal learning approaches
+       - Analyze performance trends over time
 
-        Behavioral Pattern Analysis:
-        - Aggregate behavioral metrics (participation, discipline, punctuality, etc.)
-        - Identify behavioral strengths and areas for improvement
-        - Analyze engagement and effort patterns
+    4. **Handle Teacher Remarks:**
+       - Include teacher remarks if provided in the input
+       - Leave as empty string if no teacher remarks are provided
+       - Never generate fake teacher remarks
 
-        Performance Trend Analysis:
-        - Look for improvement or decline patterns
-        - Assess consistency across different subjects
-        - Identify subjects showing improvement vs. those needing attention
+    **Analysis Guidelines:**
 
-        IMPORTANT GUIDELINES:
-        1. Only include fields where you have actual data from the subject reports provided by the root agent
-        2. Ensure all calculations are correct and based on available data
-        3. Provide thorough analysis and insights
-        4. Include specific, actionable recommendations
-        5. Present both strengths and areas for improvement
-        6. Focus on educational value and student development
-        7. If no subject reports are provided, provide appropriate messaging
-        8. If data is incomplete, work with available information and note limitations
+    **Performance Analysis:**
+    - Calculate accurate overall percentages and averages
+    - Identify trends in performance (improving, stable, declining)
+    - Compare performance across different question types
+    - Analyze comprehensive subject-wise performance including:
+      * Question type performance within each subject (MCQ, MSQ, NAT, Subjective)
+      * Subject-specific strengths and weaknesses
+      * Performance trends within each subject
+      * Difficulty level analysis per subject
+      * Topic-wise performance breakdowns where applicable
 
-        Your response must be valid JSON matching the ReportCardData schema structure.
+    **AI Remarks Should Include:**
+    - Overall performance summary
+    - Specific strengths with examples
+    - Areas needing improvement with specific suggestions
+    - Learning style observations
+    - Motivational and encouraging language
+    - Practical study recommendations
+    - Goal-setting suggestions
+
+    **Question Type Analysis:**
+    - MCQ: Analyze accuracy and decision-making patterns
+    - MSQ: Evaluate comprehensive understanding and attention to detail
+    - NAT: Assess numerical and analytical skills
+    - Subjective: Evaluate critical thinking, communication, and depth of understanding
+
+    **Report Quality Standards:**
+    - Be constructive and encouraging while being honest about areas needing improvement
+    - Provide specific, actionable recommendations
+    - Use professional yet accessible language
+    - Focus on growth and learning potential
+    - Maintain confidentiality and respect for the student
+
+    **Input Format Expected:**
+    - List of assignment results with detailed performance data
+    - Optional teacher remarks
+    - Student identification information
+    - Time period information
+
+    **Output Requirements:**
+    Generate a complete, professional report card that parents, teachers, and students can use to understand academic progress and plan for improvement.
     """,
     output_schema=ReportCardResponse,
     output_key="report_card_data",
