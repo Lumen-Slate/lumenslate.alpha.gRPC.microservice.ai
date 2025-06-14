@@ -4,6 +4,7 @@ from .clean_text import clean_text
 import pytesseract
 from PIL import Image
 import io
+from config.logging_config import logger
 
 VALID_IMAGE_TYPES = {'.jpg', '.jpeg', '.png', '.webp'}
 
@@ -58,6 +59,7 @@ async def MultimodalHandler(agent_input: AgentInput) -> str:
         image_description = await ImageHandler(agent_input)
 
         grand_query = f'{"written_query": {agent_input.query.strip()}, "image_description": {image_description}}'
+        logger.info(f"Grand query: {grand_query}")
         return grand_query
     
     # Checking if it's a valid audio type
@@ -65,6 +67,7 @@ async def MultimodalHandler(agent_input: AgentInput) -> str:
         audio_description =  await AudioHandler(agent_input)
 
         grand_query = f'{"written_query": {agent_input.query.strip()}, "audio_description": {audio_description}}'
+        logger.info(f"Grand query: {grand_query}")
         return grand_query
     
     # File type not supported
