@@ -18,7 +18,7 @@ async def add_to_history(message: str, role: str, user_id: str, session_id: str,
         db.commit()
 
         # adding the message to the session state using the proper ADK method
-        session = session_service.get_session(
+        session = await session_service.get_session(
             app_name=app_name, user_id=user_id, session_id=session_id
         )
 
@@ -65,7 +65,7 @@ async def add_to_history(message: str, role: str, user_id: str, session_id: str,
                 actions=actions_with_update,
                 timestamp=time.time()
             )
-            session_service.append_event(session, system_event)
+            await session_service.append_event(session, system_event)
 
         else:
             latest_message = {
@@ -86,7 +86,7 @@ async def add_to_history(message: str, role: str, user_id: str, session_id: str,
                 actions=actions_with_update,
                 timestamp=time.time()
             )
-            session_service.append_event(session, system_event)
+            await session_service.append_event(session, system_event)
 
     finally:
         db_gen.close() 

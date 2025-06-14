@@ -43,8 +43,6 @@ from sqlalchemy import Column, Integer, String, DateTime, Text, Float, Enum as S
 from sqlalchemy.orm import declarative_base
 from datetime import datetime, timezone
 
-Base = declarative_base()
-
 class SubjectReport(Base):
     __tablename__ = 'subject_report'
 

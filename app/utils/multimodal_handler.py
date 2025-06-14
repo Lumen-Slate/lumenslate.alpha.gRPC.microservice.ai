@@ -5,6 +5,13 @@ import pytesseract
 from PIL import Image
 import io
 from config.logging_config import logger
+from dotenv import load_dotenv
+import os
+import tempfile
+
+load_dotenv()
+
+client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 VALID_IMAGE_TYPES = {'.jpg', '.jpeg', '.png', '.webp'}
 
@@ -22,22 +29,33 @@ async def ImageHandler(agent_input: AgentInput) -> str:
         if 'image' in locals():
             image.close()
 
+
 async def AudioHandler(agent_input: AgentInput) -> str:
-    audio_file_type = agent_input.file.content_type
+    # Save upload to a temporary file first
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+        audio_bytes = await agent_input.file.read()
+        tmp.write(audio_bytes)
+        tmp_file_path = tmp.name
 
-    audio_bytes = await agent_input.file.read()
+    try:
+        # Now uploading using the file path
+        file = client.files.upload(file=tmp_file_path)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=[
+                'Transcribe the audio into text and return the text only.',
+                file
+            ],
+        )
 
-    model = genai.GenerativeModel("gemini-2.0-flash")  
-
-    response = model.generate_content([
-        "Transcribe the audio into text and return the text only.",
-        {
-            "mime_type": audio_file_type,
-            "data": audio_bytes
-        }
-    ])
-
-    return clean_text(response.text) if response and hasattr(response, "text") else "Could not generate transcription."
+        return clean_text(response.text) if response and hasattr(response, "text") else "Could not generate transcription."
+    except Exception as e:
+        return f"Error during transcription: {str(e)}"
+    finally:
+        # Cleaning up the temporary file
+        import os
+        os.remove(tmp_file_path)
+        logger.info(f"Temporary file {tmp_file_path} removed")
 
 async def MultimodalHandler(agent_input: AgentInput) -> str:
 

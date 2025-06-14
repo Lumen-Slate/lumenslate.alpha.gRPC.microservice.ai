@@ -1,6 +1,6 @@
 import os
 import json
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from config.logging_config import logger
 
 # Agent dependencies
@@ -26,16 +26,20 @@ APP_NAME = "LUMEN_SLATE"
 # ─────────────────────────────────────────────────────────────────────────────
 
 @primary_agent_handler_router.post("/agent", tags=["Primary Agent Handler"])
-async def primary_agent_handler(agent_input: AgentInput):
+async def primary_agent_handler(
+    user_id: str = Form(..., description="The unique identifier for the user."),
+    query: str = Form(None, description="The query or input provided by the user."),
+    file: UploadFile = File(None, description="Optional file upload (image, audio, etc.)")
+):
     try:
         initial_state = {
-            "user_id": agent_input.user_id,
+            "user_id": user_id,
             "message_history": [],
         }
 
         existing_sessions = await session_service.list_sessions(
             app_name=APP_NAME,
-            user_id=agent_input.user_id,
+            user_id=user_id,
         )
 
         if existing_sessions and len(existing_sessions.sessions) > 0:
@@ -43,7 +47,7 @@ async def primary_agent_handler(agent_input: AgentInput):
         else:
             new_session = await session_service.create_session(
                 app_name=APP_NAME,
-                user_id=agent_input.user_id,
+                user_id=user_id,
                 state=initial_state,
             )
             SESSION_ID = new_session.id
@@ -54,31 +58,46 @@ async def primary_agent_handler(agent_input: AgentInput):
             session_service=session_service,
         )
 
+        if not query and not file:
+            return {
+                "error": "No query or file provided",
+                "user_id": user_id,
+                "session_id": SESSION_ID,
+                "status_code": 400
+            }
+
         # Checking if file is present and handle accordingly
-        if agent_input.file and agent_input.file.filename:
-            # Passing entire AgentInput to MultimodalHandler
-            grand_query = await MultimodalHandler(agent_input)
+        if file and file.filename:
+            # Create temporary object for MultimodalHandler compatibility
+            class TempAgentInput:
+                def __init__(self, user_id, query, file):
+                    self.user_id = user_id
+                    self.query = query
+                    self.file = file
+            
+            temp_agent_input = TempAgentInput(user_id, query, file)
+            grand_query = await MultimodalHandler(temp_agent_input)
             
             # Handle unsupported file types
             if grand_query is None:
                 supported_image_types = ".jpg, .jpeg, .png, .webp"
                 supported_audio_types = ".wav, .mp3, .aiff, .aac, .ogg, .flac"
-                error_message = f"Unsupported file type '{agent_input.file.filename}'. Supported file types are:\nImages: {supported_image_types}\nAudio: {supported_audio_types}"
+                error_message = f"Unsupported file type '{file.filename}'. Supported file types are:\nImages: {supported_image_types}\nAudio: {supported_audio_types}"
                 
                 return {
                     "agent_response": error_message,
-                    "user_id": agent_input.user_id,
+                    "user_id": user_id,
                     "session_id": None,
                     "error": "unsupported_file_type"
                 }
         else:
             # Using original query if no file
-            grand_query = agent_input.query.strip() if agent_input.query else None
+            grand_query = query.strip() if query else None
 
         user_message = grand_query
         content = types.Content(role="user", parts=[types.Part(text=grand_query)])
 
-        async for event in runner.run_async(user_id=agent_input.user_id, session_id=SESSION_ID, new_message=content):
+        async for event in runner.run_async(user_id=user_id, session_id=SESSION_ID, new_message=content):
             if event.is_final_response() and event.content and event.content.parts:
                 agent_message = event.content.parts[0].text.strip()
                 if not agent_message:
@@ -93,7 +112,7 @@ async def primary_agent_handler(agent_input: AgentInput):
                                 final_agent_message = questions_result.get('agent_response', agent_message)
                                 response = {
                                     "agent_response": final_agent_message,
-                                    "user_id": agent_input.user_id,
+                                    "user_id": user_id,
                                     "session_id": SESSION_ID,
                                     "type": "assignment_generated",
                                     "data": questions_result.get('data', {})
@@ -102,15 +121,15 @@ async def primary_agent_handler(agent_input: AgentInput):
                             else:
                                 response = {
                                     "agent_response": agent_message,
-                                    "user_id": agent_input.user_id,
+                                    "user_id": user_id,
                                     "session_id": SESSION_ID
                                 }
                         elif 'assessment_data' in parsed_json:
-                            assessment_result = save_subject_report(parsed_json, agent_input.user_id)
+                            assessment_result = save_subject_report(parsed_json, user_id)
                             final_agent_message = assessment_result.get('agent_response', agent_message)
                             response = {
                                 "agent_response": final_agent_message,
-                                "user_id": agent_input.user_id,
+                                "user_id": user_id,
                                 "session_id": SESSION_ID,
                                 "type": "subject_report_created" if assessment_result.get('status') == 'success' else "subject_report_error",
                                 "data": assessment_result.get('data', {})
@@ -119,26 +138,26 @@ async def primary_agent_handler(agent_input: AgentInput):
                         else:
                             response = {
                                 "agent_response": agent_message,
-                                "user_id": agent_input.user_id,
+                                "user_id": user_id,
                                 "session_id": SESSION_ID
                             }
                     else:
                         response = {
                             "agent_response": agent_message,
-                            "user_id": agent_input.user_id,
+                            "user_id": user_id,
                             "session_id": SESSION_ID
                         }
                 except json.JSONDecodeError:
                     response = {
                         "agent_response": agent_message,
-                        "user_id": agent_input.user_id,
+                        "user_id": user_id,
                         "session_id": SESSION_ID
                     }
 
                 # Storing message history
                 try:
-                    await add_to_history(user_message, 'user', agent_input.user_id, SESSION_ID, APP_NAME, session_service)
-                    await add_to_history(agent_message, 'agent', agent_input.user_id, SESSION_ID, APP_NAME, session_service)
+                    await add_to_history(user_message, 'user', user_id, SESSION_ID, APP_NAME, session_service)
+                    await add_to_history(agent_message, 'agent', user_id, SESSION_ID, APP_NAME, session_service)
                 except Exception as e:
                     logger.warning(f"History logging failed: {e}")
 
