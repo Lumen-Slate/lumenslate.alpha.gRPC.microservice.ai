@@ -13,7 +13,6 @@ import time
 # ==== Logging Setup ====
 LOG_PATH = os.path.join(os.path.dirname(__file__), "grpc_server.log")
 log_formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
-
 file_handler = RotatingFileHandler(LOG_PATH, maxBytes=5_000_000, backupCount=3)
 file_handler.setFormatter(log_formatter)
 
@@ -42,22 +41,21 @@ from app.logic.variable_randomizer import extract_and_randomize_logic
 # ==== gRPC Service Implementation ====
 class AIService(ai_service_pb2_grpc.AIServiceServicer):
     def GenerateContext(self, request, context):
-        logger.info("[GenerateContext] Request: %s", request)
         try:
             response_text = generate_context_logic(
                 question=request.question,
                 keywords=list(request.keywords),
                 language=request.language,
             )
+            logger.info("[GenerateContext] Successful")
             return ai_service_pb2.GenerateContextResponse(content=response_text)
         except Exception as e:
-            logger.exception("[GenerateContext] Failed")
+            logger.exception("[GenerateContext] Failed\nQuestion: %s\nKeywords: %s\nLanguage: %s\nError: %s", request.question, request.keywords, request.language, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.GenerateContextResponse()
 
     def DetectVariables(self, request, context):
-        logger.info("[DetectVariables] Request: %s", request)
         try:
             result = detect_variables_logic(request.question)
             variables = [
@@ -69,26 +67,26 @@ class AIService(ai_service_pb2_grpc.AIServiceServicer):
                 )
                 for v in result.variables
             ]
+            logger.info("[DetectVariables] Successful")
             return ai_service_pb2.VariableDetectorResponse(variables=variables)
         except Exception as e:
-            logger.exception("[DetectVariables] Failed")
+            logger.exception("[DetectVariables] Failed\nQuestion: %s\nError: %s", request.question, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.VariableDetectorResponse()
 
     def SegmentQuestion(self, request, context):
-        logger.info("[SegmentQuestion] Request: %s", request)
         try:
             segmented = segment_question_logic(request.question)
+            logger.info("[SegmentQuestion] Successful")
             return ai_service_pb2.QuestionSegmentationResponse(segmentedQuestion=segmented)
         except Exception as e:
-            logger.exception("[SegmentQuestion] Failed")
+            logger.exception("[SegmentQuestion] Failed\nQuestion: %s\nError: %s", request.question, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.QuestionSegmentationResponse()
 
     def GenerateMCQVariations(self, request, context):
-        logger.info("[GenerateMCQVariations] Request: %s", request)
         try:
             result = generate_mcq_variations_logic(
                 question=request.question,
@@ -103,15 +101,15 @@ class AIService(ai_service_pb2_grpc.AIServiceServicer):
                 )
                 for v in result.variations
             ]
+            logger.info("[GenerateMCQVariations] Successful")
             return ai_service_pb2.MCQVariation(variations=variations)
         except Exception as e:
-            logger.exception("[GenerateMCQVariations] Failed")
+            logger.exception("[GenerateMCQVariations] Failed\nQuestion: %s\nOptions: %s\nAnswerIndex: %d\nError: %s", request.question, request.options, request.answerIndex, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.MCQVariation()
 
     def GenerateMSQVariations(self, request, context):
-        logger.info("[GenerateMSQVariations] Request: %s", request)
         try:
             result = generate_msq_variations_logic(
                 question=request.question,
@@ -126,15 +124,15 @@ class AIService(ai_service_pb2_grpc.AIServiceServicer):
                 )
                 for v in result.variations
             ]
+            logger.info("[GenerateMSQVariations] Successful")
             return ai_service_pb2.MSQVariation(variations=variations)
         except Exception as e:
-            logger.exception("[GenerateMSQVariations] Failed")
+            logger.exception("[GenerateMSQVariations] Failed\nQuestion: %s\nOptions: %s\nAnswerIndices: %s\nError: %s", request.question, request.options, request.answerIndices, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.MSQVariation()
 
     def FilterAndRandomize(self, request, context):
-        logger.info("[FilterAndRandomize] Request: %s", request)
         try:
             result = extract_and_randomize_logic(
                 question=request.question,
@@ -154,9 +152,10 @@ class AIService(ai_service_pb2_grpc.AIServiceServicer):
                         filters=filters,
                     )
                 )
+            logger.info("[FilterAndRandomize] Successful")
             return ai_service_pb2.FilterAndRandomizerResponse(variables=variables)
         except Exception as e:
-            logger.exception("[FilterAndRandomize] extract_and_randomize_logic FAILED")
+            logger.exception("[FilterAndRandomize] Failed\nQuestion: %s\nUserPrompt: %s\nError: %s", request.question, request.userPrompt, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.FilterAndRandomizerResponse()
@@ -178,12 +177,12 @@ def serve():
         server.add_insecure_port("0.0.0.0:50051")
 
         # === Shutdown handler ===
-        def shutdown_handler(signum, frame):
+        def shutdown_handler(signum, _):
             logger.warning(f"🛑 Received shutdown signal: {signum}. Gracefully stopping gRPC server...")
             all_done = server.stop(grace=5)
             all_done.wait(timeout=5)
             logger.info("✅ gRPC server shut down.")
-            os._exit(0)  # immediate shutdown, avoid zombie threads
+            os._exit(0)
 
         signal.signal(signal.SIGINT, shutdown_handler)
         signal.signal(signal.SIGTERM, shutdown_handler)
@@ -206,7 +205,7 @@ def serve():
         server.wait_for_termination()
 
     except Exception as e:
-        logger.exception("💥 gRPC Server crashed unexpectedly")
+        logger.exception("💥 gRPC Server crashed unexpectedly \nError : %s", str(e))
 
 if __name__ == "__main__":
     logger.info("🚀 Launching gRPC server...")
