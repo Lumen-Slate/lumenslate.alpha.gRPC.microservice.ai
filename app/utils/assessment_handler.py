@@ -4,12 +4,13 @@ from .subject_handler import get_subject_enum
 from datetime import datetime, timezone
 import json
 
-def save_subject_report(assessment_data):
+def save_subject_report(assessment_data, api_user_id):
     """
     Save assessment data to the SubjectReport table in the database.
     
     Args:
         assessment_data: JSON object containing assessment information from the assessor agent
+        api_user_id: User ID from the API request (for security)
         
     Returns:
         dict: Formatted response with success/error status and data
@@ -31,8 +32,8 @@ def save_subject_report(assessment_data):
                 "agent_response": "Error: No assessment data found in the input."
             }
         
-        # Checking for mandatory fields
-        mandatory_fields = ['user_id', 'student_id', 'student_name', 'subject', 'score']
+        # Checking for mandatory fields (excluding user_id since it comes from API)
+        mandatory_fields = ['student_id', 'student_name', 'subject', 'score']
         missing_fields = []
         
         for field in mandatory_fields:
@@ -64,7 +65,7 @@ def save_subject_report(assessment_data):
         try:
             # Creating SubjectReport object with all available data
             subject_report = SubjectReport(
-                user_id=report_data['user_id'],
+                user_id=api_user_id,  # Using user_id from API request for security
                 student_id=report_data['student_id'],
                 student_name=report_data['student_name'],
                 subject=subject_enum,

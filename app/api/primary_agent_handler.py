@@ -106,7 +106,7 @@ async def primary_agent_handler(agent_input: AgentInput):
                                     "session_id": SESSION_ID
                                 }
                         elif 'assessment_data' in parsed_json:
-                            assessment_result = save_subject_report(parsed_json)
+                            assessment_result = save_subject_report(parsed_json, agent_input.user_id)
                             final_agent_message = assessment_result.get('agent_response', agent_message)
                             response = {
                                 "agent_response": final_agent_message,
