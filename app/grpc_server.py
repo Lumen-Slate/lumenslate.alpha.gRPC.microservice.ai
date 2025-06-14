@@ -7,6 +7,8 @@ import logging
 from dotenv import load_dotenv
 from concurrent import futures
 from logging.handlers import RotatingFileHandler
+import threading
+import time
 
 # ==== Logging Setup ====
 LOG_PATH = os.path.join(os.path.dirname(__file__), "grpc_server.log")
@@ -161,32 +163,50 @@ class AIService(ai_service_pb2_grpc.AIServiceServicer):
 
 # ==== Server Startup ====
 def serve():
-    server = grpc.server(
-        futures.ThreadPoolExecutor(max_workers=10),
-        options=[
-            ('grpc.keepalive_time_ms', 10000),
-            ('grpc.keepalive_timeout_ms', 5000),
-            ('grpc.http2.max_pings_without_data', 0),
-            ('grpc.keepalive_permit_without_calls', 1),
-        ]
-    )
-    ai_service_pb2_grpc.add_AIServiceServicer_to_server(AIService(), server)
-    server.add_insecure_port("0.0.0.0:50051")
-
-    def shutdown_handler(signum, frame):
-        logger.info("🛑 Shutdown signal received. Stopping gRPC server...")
-        server.stop(0)
-        sys.exit(0)
-
-    signal.signal(signal.SIGINT, shutdown_handler)
-    signal.signal(signal.SIGTERM, shutdown_handler)
-
-    logger.info("✅ gRPC server started on 0.0.0.0:50051")
     try:
+        server = grpc.server(
+            futures.ThreadPoolExecutor(max_workers=10),
+            options=[
+                ("grpc.keepalive_time_ms", 60000),
+                ("grpc.keepalive_timeout_ms", 20000),
+                ("grpc.keepalive_permit_without_calls", 1),
+                ("grpc.http2.max_pings_without_data", 0),
+            ]
+        )
+
+        ai_service_pb2_grpc.add_AIServiceServicer_to_server(AIService(), server)
+        server.add_insecure_port("0.0.0.0:50051")
+
+        # === Shutdown handler ===
+        def shutdown_handler(signum, frame):
+            logger.warning(f"🛑 Received shutdown signal: {signum}. Gracefully stopping gRPC server...")
+            all_done = server.stop(grace=5)
+            all_done.wait(timeout=5)
+            logger.info("✅ gRPC server shut down.")
+            os._exit(0)  # immediate shutdown, avoid zombie threads
+
+        signal.signal(signal.SIGINT, shutdown_handler)
+        signal.signal(signal.SIGTERM, shutdown_handler)
+
+        # === Start the server ===
+        logger.info("✅ gRPC server starting on 0.0.0.0:50051")
         server.start()
+        logger.info("📡 gRPC server is running. Waiting for connections...")
+
+        # === Optional heartbeat ===
+        def liveness_monitor():
+            while True:
+                logger.debug("💓 gRPC server heartbeat check")
+                time.sleep(30)
+
+        heartbeat_thread = threading.Thread(target=liveness_monitor, daemon=True)
+        heartbeat_thread.start()
+
+        # === Wait for shutdown ===
         server.wait_for_termination()
+
     except Exception as e:
-        logger.exception("💥 gRPC Server crashed unexpectedly:")
+        logger.exception("💥 gRPC Server crashed unexpectedly")
 
 if __name__ == "__main__":
     logger.info("🚀 Launching gRPC server...")
