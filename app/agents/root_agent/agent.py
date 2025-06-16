@@ -1,6 +1,7 @@
 from google.adk.agents import Agent
-# from app.utils.report_card_tools import get_subject_reports_by_student_id, get_report_cards_by_student_id
-
+from app.utils.get_assignment import get_assignment_by_id
+from app.utils.get_assignment_results import get_assignment_results_by_student_id
+from app.utils.get_report_card import get_report_card_by_student_id
 from .sub_agents.assessor_agent.agent import assessor_agent
 from .sub_agents.assignment_generator_general.agent import assignment_generator_general
 from .sub_agents.assignment_generator_tailored.agent import assignment_generator_tailored
@@ -15,41 +16,57 @@ root_agent = Agent(
 
     DELEGATION STRATEGY:
     - For general assignment requests (no student-specific tailoring): Use assignment_generator_general
-    - For tailored assignment requests (mentions specific student ID): Handle the workflow yourself using tools, then delegate to assignment_generator_tailored
-    - For report card generation requests: Handle the workflow yourself using tools, then delegate to report_card_generator
-    - For assessment-related tasks: Use assessor
+    - For tailored assignment requests (mentions specific student ID): Use tools first, then delegate to assignment_generator_tailored
+    - For report card generation requests: Use tools first, then delegate to report_card_generator
+    - For assessment-related tasks: Use tools first, then delegate to assessor_agent
 
-    TAILORED ASSIGNMENT WORKFLOW:
-    When a request mentions creating assignments "tailored to student [ID]" or similar:
-    1. Extract the student ID from the request
-    2. Use get_report_cards_by_student_id tool to fetch the student's report card data
-    3. Analyze the report card data to understand the student's performance
-    4. Include this analysis context when delegating to assignment_generator_tailored
-    5. Provide the report card data and your analysis in your delegation message
+    CRITICAL WORKFLOW REQUIREMENTS:
 
-    REPORT CARD GENERATION WORKFLOW:
-    When a request asks for report card generation for a student:
-    1. Extract the student ID from the request
-    2. Use get_subject_reports_by_student_id tool to fetch all subject reports for the student
-    3. Include the subject reports data when delegating to report_card_generator
-    4. Provide the subject reports data in your delegation message
+    1. ASSESSOR_AGENT DELEGATION:
+    When delegating to assessor_agent:
+    - FIRST: Call get_assignment_by_id tool with the assignment ID provided by the user
+    - THEN: Delegate to assessor_agent with BOTH the assignment data AND the original user query/request
+    - Format: "Here is the assignment data I fetched: [assignment_data] and the original request: [user_query]"
+
+    2. ASSIGNMENT_GENERATOR_TAILORED DELEGATION:
+    When delegating to assignment_generator_tailored:
+    - FIRST: Call get_report_card_by_student_id tool with the student ID mentioned in the request
+    - THEN: Delegate to assignment_generator_tailored with BOTH the report card data AND the original user query
+    - Format: "Based on the report card data I fetched for student [ID]: [report_card_data]. Original request: [user_query]"
+
+    3. REPORT_CARD_GENERATOR DELEGATION:
+    When delegating to report_card_generator:
+    - FIRST: Call get_assignment_results_by_student_id tool with the student ID mentioned in the request
+    - THEN: Delegate to report_card_generator with BOTH the assignment results data AND the original user query
+    - Format: "Here are the assignment results I fetched for student [ID]: [assignment_results_data]. Original request: [user_query]"
+
+    4. ASSIGNMENT_GENERATOR_GENERAL DELEGATION:
+    For general assignment requests (no student-specific data needed):
+    - Delegate directly to assignment_generator_general without using tools first
+    - Simply pass the user's request as-is
 
     TOOL USAGE GUIDELINES:
-    - Use get_report_cards_by_student_id when you need student performance data for tailored assignments
-    - Use get_subject_reports_by_student_id when you need detailed subject-specific data for report card generation
-    - Always provide the fetched data context to the sub-agent you're delegating to
-    - If tools return no data or errors, inform the sub-agent about the limitation
+    - Always extract relevant IDs (student_id, assignment_id) from user requests before using tools
+    - If the user doesn't provide required IDs, ask them to specify the ID needed
+    - If tools return no data or errors, inform the sub-agent about the limitation in your delegation message
+    - Always provide the complete fetched data context to the sub-agent you're delegating to
 
-    DELEGATION FORMAT:
-    When delegating after using tools, include the context like:
-    "Based on the report card data I fetched for student [ID], [brief analysis]. Here is the original request and the relevant data: [request + data summary]"
+    ERROR HANDLING:
+    - If get_assignment_by_id fails: Still delegate to assessor_agent but mention "Assignment data could not be retrieved"
+    - If get_report_card_by_student_id fails: Still delegate to assignment_generator_tailored but mention "Report card data unavailable"
+    - If get_assignment_results_by_student_id fails: Still delegate to report_card_generator but mention "Assignment results data unavailable"
+
+    DELEGATION FORMAT EXAMPLES:
+    - Assessor: "I fetched the assignment data: [data]. Please assess this student's performance based on: [user_query]"
+    - Tailored Generator: "Based on report card showing [summary]: [data]. Please generate: [user_query]"
+    - Report Card: "Using assignment results data: [data]. Please generate report card as requested: [user_query]"
 
     Sub-agents available:
-    - assessor: For assessment-related tasks
-    - assignment_generator_general: For general assignment generation (no student-specific tailoring)
-    - assignment_generator_tailored: For student-specific tailored assignments (you provide the report card context)
-    - report_card_generator: For comprehensive report card generation (you provide the subject reports context)
+    - assessor_agent: For assessment-related tasks (requires assignment data via get_assignment_by_id)
+    - assignment_generator_general: For general assignment generation (no tools needed)
+    - assignment_generator_tailored: For student-specific tailored assignments (requires report card via get_report_card_by_student_id)
+    - report_card_generator: For comprehensive report card generation (requires assignment results via get_assignment_results_by_student_id)
     """,
-    # tools=[get_assignment_by_id, get_report_card_by_student_id, get_assignment_results_by_student_id],
+    tools=[get_assignment_by_id, get_report_card_by_student_id, get_assignment_results_by_student_id],
     sub_agents=[assessor_agent, assignment_generator_general, assignment_generator_tailored, report_card_generator],
 )

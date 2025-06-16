@@ -12,8 +12,9 @@ class AssignmentQuestion(BaseModel):
     subject: str = Field(
         description="The subject for the questions (e.g., math, english, science, history)"
     )
-    number_of_questions: int = Field(
-        description="Number of questions requested for this subject"
+    numberOfQuestions: int = Field(
+        description="Number of questions requested for this subject",
+        alias="number_of_questions"
     )
     difficulty: str = Field(
         default=None,
@@ -22,8 +23,9 @@ class AssignmentQuestion(BaseModel):
 
 
 class QuestionsResponse(BaseModel):
-    questions_requested: List[AssignmentQuestion] = Field(
-        description="List of question requests with subject and count information"
+    questionsRequested: List[AssignmentQuestion] = Field(
+        description="List of question requests with subject and count information",
+        alias="questions_requested"
     )
 
 
