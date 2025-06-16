@@ -37,6 +37,7 @@ from app.logic.msq_variation_generator import generate_msq_variations_logic
 from app.logic.question_segmentation import segment_question_logic
 from app.logic.variable_detector import detect_variables_logic
 from app.logic.variable_randomizer import extract_and_randomize_logic
+from app.logic.agent_service import agent_logic
 
 # ==== gRPC Service Implementation ====
 class AIService(ai_service_pb2_grpc.AIServiceServicer):
@@ -159,6 +160,42 @@ class AIService(ai_service_pb2_grpc.AIServiceServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.FilterAndRandomizerResponse()
+
+    def Agent(self, request, context):
+        logger.info(f"[Agent] Request: userId={request.userId}, role={request.role}, fileType={request.fileType}, file={bool(request.file)}, message={request.message}, createdAt={request.createdAt}, updatedAt={request.updatedAt}")
+        try:
+            # Here you would implement your agent logic, for now just echoing back
+            # You can replace this with a call to your actual agent logic function
+            response = {
+                "message": "Agent processed the request.",
+                "user_id": request.userId,
+                "agent_name": "root_agent",
+                "agent_response": f"Received: {request.message}",
+                "session_id": "",
+                "createdAt": request.createdAt,
+                "updatedAt": request.updatedAt,
+                "response_time": "0.001s",
+                "role": request.role,
+                "feedback": ""
+            }
+            logger.info(f"[Agent] Response: {response}")
+            return ai_service_pb2.AgentResponse(
+                message=response["message"],
+                user_id=response["user_id"],
+                agent_name=response["agent_name"],
+                agent_response=response["agent_response"],
+                session_id=response["session_id"],
+                createdAt=response["createdAt"],
+                updatedAt=response["updatedAt"],
+                response_time=response["response_time"],
+                role=response["role"],
+                feedback=response["feedback"]
+            )
+        except Exception as e:
+            logger.exception(f"[Agent] Failed\nError: {str(e)}")
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(str(e))
+            return ai_service_pb2.AgentResponse()
 
 # ==== Server Startup ====
 def serve():
