@@ -6,7 +6,7 @@ from typing import Optional
 # --- Defining Output Schema ---
 class SubjectReportData(BaseModel):
     # Mandatory fields (excluding auto-generated ones)
-    student_id: Optional[str] = Field(None, description="Student ID if mentioned")
+    student_id: Optional[int] = Field(None, description="Student ID if mentioned")
     student_name: Optional[str] = Field(None, description="Student name if mentioned")
     subject: Optional[str] = Field(None, description="Subject being assessed (math, science, history, geography, english)")
     score: Optional[int] = Field(None, description="Overall score out of 100 if mentioned")
