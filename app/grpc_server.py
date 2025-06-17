@@ -9,6 +9,7 @@ from concurrent import futures
 from logging.handlers import RotatingFileHandler
 import threading
 import time
+from app.api.primary_agent_handler import primary_agent_handler
 
 # ==== Logging Setup ====
 LOG_PATH = os.path.join(os.path.dirname(__file__), "grpc_server.log")
@@ -164,20 +165,16 @@ class AIService(ai_service_pb2_grpc.AIServiceServicer):
     def Agent(self, request, context):
         logger.info(f"[Agent] Request: userId={request.userId}, role={request.role}, fileType={request.fileType}, file={bool(request.file)}, message={request.message}, createdAt={request.createdAt}, updatedAt={request.updatedAt}")
         try:
-            # Here you would implement your agent logic, for now just echoing back
-            # You can replace this with a call to your actual agent logic function
-            response = {
-                "message": "Agent processed the request.",
-                "user_id": request.userId,
-                "agent_name": "root_agent",
-                "agent_response": f"Received: {request.message}",
-                "session_id": "",
-                "createdAt": request.createdAt,
-                "updatedAt": request.updatedAt,
-                "response_time": "0.001s",
-                "role": request.role,
-                "feedback": ""
-            }
+            import asyncio
+            # Create an event loop if one doesn't exist
+            try:
+                loop = asyncio.get_event_loop()
+            except RuntimeError:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+            
+            # Run the async function
+            response = loop.run_until_complete(primary_agent_handler(request))
             logger.info(f"[Agent] Response: {response}")
             return ai_service_pb2.AgentResponse(
                 message=response["message"],
