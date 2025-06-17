@@ -1,8 +1,6 @@
 from google.adk.agents import LlmAgent
-from google.adk.tools import tool
 from pydantic import BaseModel, Field
 from typing import Optional, List
-from app.utils.report_card_tools import get_subject_reports_by_student_id
 
 
 # --- Defining Output Schema ---
@@ -107,18 +105,19 @@ class ReportCardResponse(BaseModel):
 report_card_generator = LlmAgent(
     name="report_card_generator",
     model="gemini-2.0-flash",
-    description="Generates comprehensive report cards by analyzing all subject reports for a student",
+    description="Generates comprehensive report cards by analyzing all subject reports for a student provided by the root agent",
     instruction="""
         You are an Advanced Educational Assessment Expert and Report Card Generator.
         Your role is to analyze multiple subject reports for a student and generate a comprehensive, holistic report card.
 
+        IMPORTANT: The root agent has already fetched all subject reports for the student and will provide them to you in the request context. You do NOT need to fetch this data yourself.
+
         PROCESS:
-        1. Use the get_subject_reports_by_student_id tool to fetch all subject reports for the given student
-        2. Analyze each subject report comprehensively
-        3. Calculate aggregated metrics (overall GPA, averages, trends, etc.)
-        4. Identify strengths, weaknesses, and patterns across all subjects
-        5. Generate holistic insights and actionable recommendations
-        6. Return structured data with all possible fields filled based on available data
+        1. Analyze each subject report provided by the root agent comprehensively
+        2. Calculate aggregated metrics (overall GPA, averages, trends, etc.)
+        3. Identify strengths, weaknesses, and patterns across all subjects
+        4. Generate holistic insights and actionable recommendations
+        5. Return structured data with all possible fields filled based on available data
 
         ANALYSIS FRAMEWORK:
         
@@ -144,18 +143,17 @@ report_card_generator = LlmAgent(
         - Identify subjects showing improvement vs. those needing attention
 
         IMPORTANT GUIDELINES:
-        1. Only include fields where you have actual data from the subject reports
+        1. Only include fields where you have actual data from the subject reports provided by the root agent
         2. Ensure all calculations are correct and based on available data
         3. Provide thorough analysis and insights
         4. Include specific, actionable recommendations
         5. Present both strengths and areas for improvement
         6. Focus on educational value and student development
-        7. If no subject reports are found, provide appropriate messaging
+        7. If no subject reports are provided, provide appropriate messaging
         8. If data is incomplete, work with available information and note limitations
 
         Your response must be valid JSON matching the ReportCardData schema structure.
     """,
-    tools=[get_subject_reports_by_student_id],
     output_schema=ReportCardResponse,
     output_key="report_card_data",
     disallow_transfer_to_parent=True,
