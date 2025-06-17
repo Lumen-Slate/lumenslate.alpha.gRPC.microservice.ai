@@ -7,17 +7,13 @@ from sqlalchemy.orm import sessionmaker
 try:
     from dotenv import load_dotenv
     load_dotenv()
-    print("🔍 [DEBUG] Environment variables loaded from .env file")
 except ImportError:
-    print("⚠️ [DEBUG] python-dotenv not installed, using system environment variables only")
+    pass
 
 # Main Agent Database Configuration - should use Neon DB in production
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./app/data/my_agent_data.db")
 
-# Debug: Print which database URL is being used
-print(f"🔍 [DEBUG] Main Agent Database initialization - DATABASE_URL: {DATABASE_URL[:60]}...")
 if "postgresql://" in DATABASE_URL:
-    print("✅ [DEBUG] Main Agent attempting PostgreSQL/Neon DB connection...")
     try:
         # Test the connection first
         from sqlalchemy import text
@@ -25,16 +21,12 @@ if "postgresql://" in DATABASE_URL:
         with test_engine.connect() as conn:
             result = conn.execute(text("SELECT 1"))
             result.fetchone()
-        print("✅ [SUCCESS] Neon DB connection successful!")
         engine = test_engine
-    except Exception as e:
-        print(f"❌ [ERROR] Neon DB connection failed: {e}")
-        print("🔄 [FALLBACK] Switching to SQLite...")
+    except Exception:
+        # Fallback to SQLite on connection failure
         DATABASE_URL = "sqlite:///./app/data/my_agent_data.db"
         engine = create_engine(DATABASE_URL)
 else:
-    print("⚠️ [DEBUG] Main Agent using SQLite (development fallback)")
-    print("💡 [INFO] For production, set DATABASE_URL to your Neon DB connection string")
     # Creating SQLAlchemy engine
     engine = create_engine(DATABASE_URL)
 

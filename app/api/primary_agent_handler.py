@@ -114,7 +114,6 @@ async def primary_agent_handler(request):
         async for event in runner.run_async(user_id=request.teacherId, session_id=sessionId, new_message=content):
             if event.is_final_response() and event.content and event.content.parts:
                 agent_message = event.content.parts[0].text.strip()
-                logger.info(f"Agent message: {agent_message}")
                 if not agent_message:
                     agent_message = "No response generated"
 

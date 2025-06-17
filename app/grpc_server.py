@@ -12,14 +12,11 @@ from app.services import AIService, ServiceFactory
 from app.protos import ai_service_pb2_grpc
 
 def serve():
-    logger.info("🔧 Initializing gRPC server...")
-    
     # Load environment variables
     load_and_check_env()
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), "protos"))
 
     # Setup Google Cloud authentication
-    logger.info("🔐 Setting up authentication...")
     auth_success = setup_google_auth()
     
     if not auth_success:
@@ -34,14 +31,6 @@ def serve():
         logger.error("❌ GOOGLE_PROJECT_ID not found. Please set this environment variable.")
         return False
     
-    logger.info(f"✅ Authentication configured - Project: {project_id}, Location: {location}")
-    
-    # Check if we're in deployed environment
-    if is_deployed_environment():
-        logger.info("🌐 Running in deployed environment (using metadata service)")
-    else:
-        logger.info("🏠 Running in local development environment")
-
     # Use Cloud Run-provided PORT or fallback to 50051 for gRPC
     port = os.getenv("PORT", "50051")
 
@@ -67,7 +56,6 @@ def serve():
             health_pb2_grpc.add_HealthServicer_to_server(health_servicer, server)
             # Set service status to serving
             health_servicer.set("", health_pb2.HealthCheckResponse.SERVING)
-            logger.info("✅ Health check service added")
         except ImportError:
             logger.warning("⚠️ grpcio-health-checking not available, health checks disabled")
 
@@ -77,19 +65,16 @@ def serve():
             logger.warning(f"Received shutdown signal: {signum}. Gracefully stopping gRPC server...")
             all_done = server.stop(grace=5)
             all_done.wait(timeout=5)
-            logger.info("gRPC server shut down.")
             os._exit(0)
 
         signal.signal(signal.SIGINT, shutdown_handler)
         signal.signal(signal.SIGTERM, shutdown_handler)
 
-        logger.info(f"🚀 gRPC server starting on 0.0.0.0:{port}")
+        logger.info(f"🚀 gRPC server started on port {port}")
         server.start()
-        logger.info("✅ gRPC server is running and ready to accept connections.")
 
         def liveness_monitor():
             while True:
-                logger.debug("💓 gRPC server heartbeat check")
                 time.sleep(30)
 
         heartbeat_thread = threading.Thread(target=liveness_monitor, daemon=True)
@@ -104,14 +89,12 @@ def serve():
 
 
 if __name__ == "__main__":
-    logger.info("🔧 Launching gRPC server...")
     try:
         success = serve()
         if not success:
             logger.error("❌ Server failed to start properly")
             sys.exit(1)
     except KeyboardInterrupt:
-        logger.info("🛑 Server interrupted by user")
         sys.exit(0)
     except Exception as e:
         logger.exception("❌ gRPC Server exited unexpectedly:")
