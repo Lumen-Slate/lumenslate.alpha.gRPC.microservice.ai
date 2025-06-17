@@ -4,7 +4,7 @@ from app.config.logging_config import logger
 from dotenv import load_dotenv
 import os
 import tempfile
-from auth_helper import get_project_id
+from .auth_helper import get_project_id
 
 load_dotenv()
 
