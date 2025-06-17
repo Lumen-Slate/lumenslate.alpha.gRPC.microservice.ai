@@ -19,7 +19,6 @@ def setup_google_auth() -> bool:
     try:
         # Check if we're in a deployed Google Cloud environment
         if is_deployed_environment():
-            logger.info("Detected deployed environment - using metadata service for authentication")
             # Remove GOOGLE_APPLICATION_CREDENTIALS if set to allow metadata service
             if "GOOGLE_APPLICATION_CREDENTIALS" in os.environ:
                 del os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
@@ -28,7 +27,6 @@ def setup_google_auth() -> bool:
         # Check for local service account file
         service_account_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
         if service_account_path and os.path.exists(service_account_path):
-            logger.info(f"Using service account file: {service_account_path}")
             return True
             
         # Try to find service-account.json in common locations
@@ -41,7 +39,6 @@ def setup_google_auth() -> bool:
         
         for path in common_paths:
             if os.path.exists(path):
-                logger.info(f"Found service account file at: {path}")
                 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = path
                 return True
                 

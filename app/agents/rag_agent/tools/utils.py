@@ -27,8 +27,6 @@ def get_corpus_resource_name(corpus_name: str) -> str:
     Returns:
         str: The full resource name of the corpus
     """
-    logger.info(f"Getting resource name for corpus: {corpus_name}")
-
     # If it's already a full resource name with the projects/locations/ragCorpora format
     if re.match(r"^projects/[^/]+/locations/[^/]+/ragCorpora/[^/]+$", corpus_name):
         return corpus_name
