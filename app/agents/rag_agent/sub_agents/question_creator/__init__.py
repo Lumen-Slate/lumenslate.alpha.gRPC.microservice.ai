@@ -1,28 +1,36 @@
 import os
 import vertexai
 from dotenv import load_dotenv
+from app.utils.auth_helper import setup_google_auth, get_project_id
 
 # Load env vars
 load_dotenv()
 
-# Get config from environment
-PROJECT_ID = os.getenv("GOOGLE_PROJECT_ID")
-LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION")
+# Setup authentication first
+auth_success = setup_google_auth()
 
-# Let ADC handle credentials loading (via GOOGLE_APPLICATION_CREDENTIALS)
+# Get config from environment
+PROJECT_ID = get_project_id() or os.getenv("GOOGLE_PROJECT_ID")
+LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
+
+# Initialize Vertex AI
 try:
-    if PROJECT_ID and LOCATION:
-        print(f"Initializing Vertex AI with ADC - project={PROJECT_ID}, location={LOCATION}")
+    if PROJECT_ID and LOCATION and auth_success:
+        print(f"Initializing Vertex AI - project={PROJECT_ID}, location={LOCATION}")
         vertexai.init(project=PROJECT_ID, location=LOCATION)
-        print("✅ Vertex AI initialized using ADC")
+        print("✅ Vertex AI initialized successfully")
     else:
-        print(
-            f"❌ Missing config. PROJECT_ID={PROJECT_ID}, LOCATION={LOCATION}. "
-            "Vertex AI may not work properly."
-        )
+        missing_items = []
+        if not PROJECT_ID:
+            missing_items.append("PROJECT_ID")
+        if not LOCATION:
+            missing_items.append("LOCATION")
+        if not auth_success:
+            missing_items.append("authentication")
+        print(f"❌ Missing: {', '.join(missing_items)}. Vertex AI may not work properly.")
 except Exception as e:
     print(f"❌ Failed to initialize Vertex AI: {str(e)}")
-    print("Please verify GOOGLE_APPLICATION_CREDENTIALS and GCP setup.")
+    print("For deployed environments, ensure the service has proper IAM permissions.")
 
 # Import agent after successful init
 from . import agent
