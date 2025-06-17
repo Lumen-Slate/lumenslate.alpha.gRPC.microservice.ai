@@ -1,12 +1,8 @@
 name: Deploy Python gRPC Microservice to Cloud Run
 
-# 🚫 Temporarily disabled automatic trigger
-# on:
-#   push:
-#     branches: [main]
-
-# ✅ You can still run this manually from the GitHub Actions UI
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
