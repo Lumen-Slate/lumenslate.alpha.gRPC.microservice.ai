@@ -29,7 +29,7 @@ if "GOOGLE_API_KEY" not in os.environ:
     os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter your Google AI API key: ")
 
 # ==== Ensure imports work ====
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "grpc_generated"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "protos"))
 
 from app.protos import ai_service_pb2, ai_service_pb2_grpc
 from app.logic.context_generator import generate_context_logic
