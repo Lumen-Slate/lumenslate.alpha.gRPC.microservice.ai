@@ -8,7 +8,7 @@ from concurrent import futures
 from app.config.logging_config import logger
 from app.utils.env_setup import load_and_check_env
 from app.utils.auth_helper import setup_google_auth, get_project_id, is_deployed_environment
-from app.services.grpc_service import AIService
+from app.services import AIService, ServiceFactory
 from app.protos import ai_service_pb2_grpc
 
 def serve():
@@ -57,7 +57,7 @@ def serve():
         )
 
         ai_service_pb2_grpc.add_AIServiceServicer_to_server(
-            AIService(logger=logger), server
+            ServiceFactory.create_ai_service(logger), server
         )
 
         # Add health check service
