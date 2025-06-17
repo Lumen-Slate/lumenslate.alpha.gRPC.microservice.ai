@@ -4,6 +4,7 @@ from app.config.logging_config import logger
 from dotenv import load_dotenv
 import os
 import tempfile
+from auth_helper import get_project_id
 
 load_dotenv()
 
@@ -15,7 +16,7 @@ if USE_VERTEXAI:
     from vertexai.generative_models import GenerativeModel, Part
     
     # Initialize Vertex AI
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+    project_id = get_project_id()
     location = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
     vertexai.init(project=project_id, location=location)
     
