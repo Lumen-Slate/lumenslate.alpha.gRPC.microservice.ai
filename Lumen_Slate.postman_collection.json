@@ -147,6 +147,69 @@
 			]
 		},
 		{
+			"name": "MAIN Agent",
+			"item": [
+				{
+					"name": "main agent chat",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "teacherId",
+									"value": "3333359",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "message",
+									"value": "Generate 5 MCQ questions on calculus for undergraduate level",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "fileType",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "createdAt",
+									"value": "2025-06-23T18:00:00Z",
+									"type": "text"
+								},
+								{
+									"key": "updatedAt",
+									"value": "2025-06-23T18:00:00Z",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/ai/agent",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ai",
+								"agent"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "RAG Agent",
 			"item": [
 				{
@@ -344,92 +407,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Text Response Example",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"teacherId\": \"3333359\",\n    \"message\": \"hi\",\n    \"file\": \"\",\n    \"role\": \"user\",\n    \"createdAt\": \"2025-06-23T18:00:00Z\",\n    \"updatedAt\": \"2025-06-23T18:00:00Z\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BaseUrl}}/ai/rag-agent",
-									"host": [
-										"{{BaseUrl}}"
-									],
-									"path": [
-										"ai",
-										"rag-agent"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"message\": \"Hi there! How can I help you today? Just looking for a friendly chat, or is there anything you'd like to know about LumenSlate or the RAG agent system? I'm happy to answer any questions! 😊\",\n    \"teacherId\": \"3333359\",\n    \"agentName\": \"rag_agent\",\n    \"data\": null,\n    \"sessionId\": \"28cbf96e-bff7-4603-94c1-c4ceb2f1140a\",\n    \"createdAt\": \"2025-06-23T18:33:26.484437\",\n    \"updatedAt\": \"2025-06-23T18:33:26.484437\",\n    \"responseTime\": \"3.887601\",\n    \"role\": \"agent\",\n    \"feedback\": \"\"\n}"
-						},
-						{
-							"name": "Question Generation Example",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"teacherId\": \"3333359\",\n    \"message\": \"give me 2 easy mcq questions and 3 hard subjective questions from linear algebra (gate curriculum)\",\n    \"file\": \"\",\n    \"role\": \"user\",\n    \"createdAt\": \"2025-06-23T18:00:00Z\",\n    \"updatedAt\": \"2025-06-23T18:00:00Z\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BaseUrl}}/ai/rag-agent",
-									"host": [
-										"{{BaseUrl}}"
-									],
-									"path": [
-										"ai",
-										"rag-agent"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"message\": \"\",\n    \"teacherId\": \"3333359\",\n    \"agentName\": \"rag_agent\",\n    \"data\": {\n        \"mcqs\": [],\n        \"msqs\": [],\n        \"nats\": [],\n        \"subjectives\": [],\n        \"questions\": {\n            \"mcqs\": [\n                {\n                    \"answerIndex\": 2,\n                    \"difficulty\": \"easy\",\n                    \"options\": [\n                        \"Its determinant is non-zero\",\n                        \"It has an inverse\",\n                        \"Its determinant is zero\",\n                        \"It is a diagonal matrix\"\n                    ],\n                    \"points\": 1,\n                    \"question\": \"What is the defining characteristic of a Singular Matrix?\",\n                    \"subject\": \"linear algebra\"\n                }\n            ],\n            \"subjectives\": [\n                {\n                    \"difficulty\": \"hard\",\n                    \"gradingCriteria\": [\n                        \"Correctly states the necessary condition for diagonalization (n distinct eigenvalues).\",\n                        \"Explains that D is a diagonal matrix with eigenvalues as its diagonal elements.\"\n                    ],\n                    \"idealAnswer\": null,\n                    \"points\": 5,\n                    \"question\": \"Explain the process of diagonalizing a matrix A. What are the necessary conditions for a matrix to be diagonalizable?\",\n                    \"subject\": \"linear algebra\"\n                }\n            ]\n        }\n    },\n    \"sessionId\": \"8ab5ab06-487f-4707-868e-747b4157f0a0\",\n    \"createdAt\": \"2025-06-23T18:10:40.079041\",\n    \"updatedAt\": \"2025-06-23T18:10:40.079041\",\n    \"responseTime\": \"29.30686\",\n    \"role\": \"agent\",\n    \"feedback\": \"\"\n}"
-						}
-					]
+					"response": []
 				}
 			]
 		},
