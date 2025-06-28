@@ -71,18 +71,16 @@ class BaseService:
             pass
 
     def _log_success(self, operation_name, additional_info=None):
-        """Common success logging"""
-        if additional_info:
-            self.logger.info(f"[{operation_name}] Successful - {additional_info}")
-        else:
-            self.logger.info(f"[{operation_name}] Successful")
+        """Common success logging - only for errors or warnings in production"""
+        # Reduced logging for production - only log significant events
+        pass
 
     def _safe_log_request(self, operation_name, request_data):
-        """Safely log request without exposing sensitive data"""
-        safe_data = self._mask_sensitive_data(request_data)
-        self.logger.info(f"[{operation_name}] Request: {safe_data}")
+        """Safely log request without exposing sensitive data - reduced for production"""
+        # Only log in development or when debugging specific issues
+        pass
 
     def _safe_log_response(self, operation_name, response_data):
-        """Safely log response without exposing sensitive data"""
-        safe_data = self._mask_sensitive_data(response_data)
-        self.logger.info(f"[{operation_name}] Response: {safe_data}")
+        """Safely log response without exposing sensitive data - reduced for production"""
+        # Only log in development or when debugging specific issues  
+        pass

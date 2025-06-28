@@ -39,7 +39,6 @@ async def ImageHandler(agent_input) -> str:
         # Cleaning up the temporary file
         import os
         os.remove(tmp_file_path)
-        logger.info(f"Temporary file {tmp_file_path} removed")
 
 
 async def AudioHandler(agent_input) -> str:
@@ -67,7 +66,6 @@ async def AudioHandler(agent_input) -> str:
         # Cleaning up the temporary file
         import os
         os.remove(tmp_file_path)
-        logger.info(f"Temporary file {tmp_file_path} removed")
 
 
 async def PDFHandler(agent_input) -> str:
@@ -95,7 +93,6 @@ async def PDFHandler(agent_input) -> str:
         # Cleaning up the temporary file
         import os
         os.remove(tmp_file_path)
-        logger.info(f"Temporary file {tmp_file_path} removed")
 
 
 async def MultimodalHandler(agent_input) -> str:
@@ -116,25 +113,19 @@ async def MultimodalHandler(agent_input) -> str:
     # Checking if it's a valid image type
     if file_extension in VALID_IMAGE_TYPES:
         image_description = await ImageHandler(agent_input)
-
         grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "image_description": {image_description}}}'
-        logger.info(f"Grand query: {grand_query}")
         return grand_query
     
     # Checking if it's a valid audio type
     elif file_extension in VALID_AUDIO_TYPES:
         audio_description =  await AudioHandler(agent_input)
-
         grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "audio_description": {audio_description}}}'
-        logger.info(f"Grand query: {grand_query}")
         return grand_query
     
     # Checking if it's a valid text type
     elif file_extension in VALID_TEXT_TYPES:
         pdf_content = await PDFHandler(agent_input)
-
         grand_query = f'{{"written_query": {agent_input.query.strip() if agent_input.query else None}, "pdf_content": {pdf_content}}}'
-        logger.info(f"Grand query: {grand_query}")
         return grand_query
     
     # File type not supported

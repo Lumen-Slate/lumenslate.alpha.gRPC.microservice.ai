@@ -41,10 +41,7 @@ async def add_to_history(message: str, role: str, teacherId: str, sessionId: str
             summary = create_summary(older_message_history)
 
             if not summary:
-                logging.warning("No summary created for older_message_history.")
                 summary = "No summary available for messages prior to the latest ones."
-
-            logging.info(f"Created summary of older_message_history: {summary}")
 
             summary_message = {
                 "role": "prior_messages_summary",  
@@ -64,8 +61,6 @@ async def add_to_history(message: str, role: str, teacherId: str, sessionId: str
 
             final_message_history.append(latest_message)
 
-            logging.info(f"Adding message to history: {final_message_history}")
-
             # Updating session state using the ADK event system
             state_changes = {"message_history": final_message_history}
             actions_with_update = EventActions(state_delta=state_changes)
@@ -84,8 +79,6 @@ async def add_to_history(message: str, role: str, teacherId: str, sessionId: str
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
             message_history.append(latest_message)
-
-            logging.info(f"Adding message to history:\n{latest_message}")
 
             # Updating session state using the proper ADK event system
             state_changes = {"message_history": message_history}
@@ -109,7 +102,7 @@ async def add_to_history(message: str, role: str, teacherId: str, sessionId: str
     except Exception as e:
         if db_session:
             db_session.rollback()
-        print(f"Error adding to history: {e}")
+        logger.error(f"Error adding to history: {e}")
         raise e
     finally:
         if db_session:
