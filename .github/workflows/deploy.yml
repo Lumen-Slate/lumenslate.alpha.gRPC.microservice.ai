@@ -21,6 +21,23 @@ jobs:
           create_credentials_file: true
           cleanup_credentials: true
 
+      - name: Verify Required Secrets
+        run: |
+          echo "Verifying required secrets and environment variables..."
+          if [ -z "${{ secrets.GOOGLE_PROJECT_ID }}" ]; then
+            echo "❌ GOOGLE_PROJECT_ID secret is missing"
+            exit 1
+          fi
+          if [ -z "${{ secrets.GOOGLE_API_KEY }}" ]; then
+            echo "❌ GOOGLE_API_KEY secret is missing"
+            exit 1
+          fi
+          if [ -z "${{ secrets.CLOUD_RUN_SERVICE }}" ]; then
+            echo "❌ CLOUD_RUN_SERVICE secret is missing"
+            exit 1
+          fi
+          echo "✅ Required secrets verified"
+
       - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v1
 
@@ -38,7 +55,15 @@ jobs:
           env_vars: |
             GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
             DATABASE_URL=${{ secrets.DATABASE_URL }}
+            GOOGLE_PROJECT_ID=${{ secrets.GOOGLE_PROJECT_ID }}
+            GOOGLE_CLOUD_LOCATION=${{ secrets.GOOGLE_CLOUD_LOCATION }}
+            GIN_BACKEND_URL=${{ secrets.GIN_BACKEND_URL }}
           flags: |
             --port=8080
             --use-http2
             --allow-unauthenticated
+            --service-account=${{ secrets.CLOUD_RUN_SA_EMAIL }}
+            --memory=2Gi
+            --cpu=2
+            --timeout=3600
+            --max-instances=10
