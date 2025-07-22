@@ -1,3 +1,14 @@
+import logging
+
+logging.getLogger('google_adk').setLevel(logging.WARNING)
+logging.getLogger('pymongo').setLevel(logging.WARNING)
+logging.getLogger('google_genai').setLevel(logging.WARNING)
+logging.getLogger('httpx').setLevel(logging.WARNING)
+logging.getLogger('httpcore').setLevel(logging.WARNING)
+logging.getLogger('tzlocal').setLevel(logging.WARNING)
+logging.getLogger('urllib3').setLevel(logging.WARNING)
+logging.getLogger('asyncio').setLevel(logging.WARNING)
+
 import os
 import sys
 import grpc
