@@ -51,7 +51,7 @@ class QuestionCreatorResponse(BaseModel):
 
 question_creator = LlmAgent(
     name="question_creator",
-    model="gemini-2.5-flash-preview-04-17",
+    model="gemini-2.5-flash-lite",
     description="Educational Question Generator using pre-retrieved curriculum content. Creates questions based on provided RAG information.",
     instruction=question_creator_prompt,
     output_schema=QuestionCreatorResponse,

@@ -54,7 +54,7 @@ class AssessorResponse(BaseModel):
 
 assessor_agent = LlmAgent(
     name="assessor_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash-lite",
     description="Assesses student answers for assignments across MCQ, MSQ, NAT, and subjective question types",
     instruction=assessor_agent_prompt,
     output_schema=AssessorResponse,
