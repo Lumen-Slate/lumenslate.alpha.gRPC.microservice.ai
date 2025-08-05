@@ -32,7 +32,7 @@ class QuestionSegmentationResponse(BaseModel):
 
 
 # Initialize the LLM
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.75)
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=0.75)
 
 # Create a prompt template
 prompt_template = PromptTemplate.from_template(
@@ -42,7 +42,7 @@ prompt_template = PromptTemplate.from_template(
 
 def segment_question_logic(question: str) -> str:
     """
-    Segments the given question into smaller parts using the Gemini-2.0-Flash model.
+    Segments the given question into smaller parts using the gemini-2.5-flash-lite model.
 
     Args:
         question (str): The question to segment.

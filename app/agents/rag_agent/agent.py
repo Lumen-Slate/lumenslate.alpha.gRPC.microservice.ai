@@ -7,7 +7,7 @@ from .rag_agent_prompt import rag_agent_prompt
 
 rag_agent = Agent(
     name="rag_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash-lite",
     description="Retrieves information from RAG corpus and delegates tasks to appropriate agents",
     tools=[rag_query],
     instruction=rag_agent_prompt,

@@ -1,6 +1,6 @@
 # 📘 LumenSlate AI Microservice
 
-An AI microservice designed for intelligent educational applications. It supports session-based interactions, assignment generation, and multiple AI-powered endpoints using Gemini-2.0-Flash.
+An AI microservice designed for intelligent educational applications. It supports session-based interactions, assignment generation, and multiple AI-powered endpoints using gemini-2.5-flash-lite.
 
 ---
 
@@ -9,7 +9,7 @@ An AI microservice designed for intelligent educational applications. It support
 - 🧠 Root Agent using `google.generativeai` for contextual AI conversations
 - 🗂️ Session storage via SQLite
 - 📚 Pre-seeded database with 150+ MCQs across English, Math, Science, History & Geography
-- 🛠️ Context generation, question segmentation, and variable detection via Gemini-2.0-Flash
+- 🛠️ Context generation, question segmentation, and variable detection via gemini-2.5-flash-lite
 - 🔐 Firebase Authentication middleware
 - 📁 Structured project layout for scalability
 - 📜 Environment-based config for `dev`, `test`, `prod`

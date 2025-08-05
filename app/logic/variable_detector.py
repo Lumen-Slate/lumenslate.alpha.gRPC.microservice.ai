@@ -42,7 +42,7 @@ class VariableDetectorResponse(BaseModel):
 
 
 # Initialize the LLM with structured output
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.75)
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=0.75)
 structured_llm = llm.with_structured_output(VariableDetectorResponse)
 
 # Create a prompt template

@@ -37,7 +37,7 @@ class QuestionsResponse(BaseModel):
 
 assignment_generator_tailored = LlmAgent(
     name="assignment_generator_tailored",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash-lite",
     description="Analyzes teacher requests and generates tailored assignment question specifications based on student report card data provided by the root agent",
     instruction=assignment_generator_tailored_prompt,
     output_schema=QuestionsResponse,

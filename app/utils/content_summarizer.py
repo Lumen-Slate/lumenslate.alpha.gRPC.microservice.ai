@@ -19,6 +19,6 @@ def create_summary(messages):
     The summary should be in a single paragraph and should not exceed 100 words.
     """
     response = client.models.generate_content(
-        model='gemini-2.0-flash', contents=input
+        model='gemini-2.5-flash-lite', contents=input
     )
     return response.text.strip() if response and response.text else None 

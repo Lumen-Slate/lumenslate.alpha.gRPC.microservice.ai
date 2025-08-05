@@ -21,7 +21,7 @@ class ContextRequest(BaseModel):
 
 
 # Initialize the LLM
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite")
 
 # Create a prompt template
 prompt_template = PromptTemplate.from_template(

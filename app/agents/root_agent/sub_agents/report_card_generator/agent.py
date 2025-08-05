@@ -59,7 +59,7 @@ class ReportCardResponse(BaseModel):
 # --- Creating Report Card Generator Agent ---
 report_card_generator = LlmAgent(
     name="report_card_generator",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash-lite",
     description="Generates comprehensive report cards for students based on their assignment results and performance data",
     instruction=report_card_generator_prompt,
     output_schema=ReportCardResponse,

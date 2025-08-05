@@ -21,7 +21,7 @@ if USE_VERTEXAI:
     vertexai.init(project=project_id, location=location)
     
     # Create Vertex AI model
-    model = GenerativeModel('gemini-2.0-flash')
+    model = GenerativeModel('gemini-2.5-flash-lite')
     client = None  # Not using genai client for Vertex AI
 else:
     # Use Google AI Studio client
@@ -78,7 +78,7 @@ async def ImageHandler(agent_input, file_extension='.jpg') -> str:
             try:
                 file = client.files.upload(file=tmp_file_path)
                 response = client.models.generate_content(
-                    model='gemini-2.0-flash',
+                    model='gemini-2.5-flash-lite',
                     contents=[
                         'Extract all the text from the image and return the text only.',
                         file
@@ -122,7 +122,7 @@ async def AudioHandler(agent_input, file_extension='.wav') -> str:
             try:
                 file = client.files.upload(file=tmp_file_path)
                 response = client.models.generate_content(
-                    model='gemini-2.0-flash',
+                    model='gemini-2.5-flash-lite',
                     contents=[
                         'Transcribe the audio into text and return the text only.',
                         file
@@ -165,7 +165,7 @@ async def PDFHandler(agent_input, file_extension='.pdf') -> str:
             try:
                 file = client.files.upload(file=tmp_file_path)
                 response = client.models.generate_content(
-                    model='gemini-2.0-flash',
+                    model='gemini-2.5-flash-lite',
                     contents=[
                         'Extract all the text content from the PDF document and return the text only.',
                         file
