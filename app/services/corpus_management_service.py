@@ -11,7 +11,7 @@ from app.services.base_service import BaseService
 from app.config.logging_config import logger
 
 # GIN Backend configuration for corpus management
-GIN_BACKEND_URL = os.getenv("GIN_BACKEND_URL", "https://lumenslate-backend-756147067348.asia-south1.run.app")
+GIN_BACKEND_URL = os.getenv("GIN_BACKEND_URL")
 
 
 class CorpusManagementService(BaseService):

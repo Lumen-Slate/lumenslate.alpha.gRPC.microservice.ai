@@ -11,7 +11,7 @@ from .root_agent_prompt import root_agent_prompt
 
 root_agent = Agent(
     name="root_agent",
-    model="gemini-2.5-flash-lite",
+    model="gemini-2.5-flash",
     description="Manager agent that orchestrates workflows and manages data fetching for sub-agents",
     instruction=root_agent_prompt,
     tools=[get_assignment_by_id, get_report_card_by_student_id, get_assignment_results_by_student_id],
