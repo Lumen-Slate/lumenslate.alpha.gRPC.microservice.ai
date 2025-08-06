@@ -58,6 +58,7 @@ jobs:
             GOOGLE_PROJECT_ID=${{ secrets.GOOGLE_PROJECT_ID }}
             GOOGLE_CLOUD_LOCATION=${{ secrets.GOOGLE_CLOUD_LOCATION }}
             GIN_BACKEND_URL=${{ secrets.GIN_BACKEND_URL }}
+            MONGO_URI=${{ secrets.MONGO_URI }}
           flags: |
             --port=8080
             --use-http2
