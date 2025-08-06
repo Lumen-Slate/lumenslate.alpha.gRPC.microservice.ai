@@ -151,8 +151,8 @@ class DataAccessService(BaseService):
             
             if response.status_code == 200:
                 response_data = response.json()
-                if response_data.get("agent_report_cards"):
-                    report_cards_data = response_data["agent_report_cards"]
+                if response_data.get("report_cards"):
+                    report_cards_data = response_data["report_cards"]
                     
                     # Convert to protobuf format
                     report_cards = []

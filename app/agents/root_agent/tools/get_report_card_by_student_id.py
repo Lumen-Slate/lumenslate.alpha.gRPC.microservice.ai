@@ -23,7 +23,7 @@ def get_report_card_by_student_id(student_id: str) -> Optional[List[Dict[str, An
         # Connect to MongoDB
         client = pymongo.MongoClient(mongo_uri)
         db = client["lumen_slate"]
-        collection = db["agent_report_cards"]
+        collection = db["report_cards"]
         
         # Query agent report cards by student ID, sorted by creation date (newest first)
         cursor = collection.find({"reportCard.studentId": student_id}).sort("createdAt", -1)
