@@ -31,7 +31,7 @@ def serve():
     auth_success = setup_google_auth()
     
     if not auth_success:
-        logger.error("❌ Authentication setup failed. Server cannot start.")
+        logger.error("[ERROR] Authentication setup failed. Server cannot start.")
         return False
     
     # Verify required environment variables
@@ -39,7 +39,7 @@ def serve():
     location = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
     
     if not project_id:
-        logger.error("❌ GOOGLE_PROJECT_ID not found. Please set this environment variable.")
+        logger.error("[ERROR] GOOGLE_PROJECT_ID not found. Please set this environment variable.")
         return False
     
     # Use Cloud Run-provided PORT or fallback to 50051 for gRPC
@@ -68,7 +68,7 @@ def serve():
             # Set service status to serving
             health_servicer.set("", health_pb2.HealthCheckResponse.SERVING)
         except ImportError:
-            logger.warning("⚠️ grpcio-health-checking not available, health checks disabled")
+            logger.warning("[WARNING] grpcio-health-checking not available, health checks disabled")
 
         server.add_insecure_port(f"0.0.0.0:{port}")
 
@@ -81,7 +81,7 @@ def serve():
         signal.signal(signal.SIGINT, shutdown_handler)
         signal.signal(signal.SIGTERM, shutdown_handler)
 
-        logger.info(f"🚀 gRPC server started on port {port}")
+        logger.info(f"[SUCCESS] gRPC server started on port {port}")
         server.start()
 
         def liveness_monitor():
@@ -95,7 +95,7 @@ def serve():
         return True
 
     except Exception as e:
-        logger.exception("❌ gRPC Server crashed unexpectedly \nError : %s", str(e))
+        logger.exception("[ERROR] gRPC Server crashed unexpectedly \nError : %s", str(e))
         return False
 
 
@@ -103,10 +103,10 @@ if __name__ == "__main__":
     try:
         success = serve()
         if not success:
-            logger.error("❌ Server failed to start properly")
+            logger.error("[ERROR] Server failed to start properly")
             sys.exit(1)
     except KeyboardInterrupt:
         sys.exit(0)
     except Exception as e:
-        logger.exception("❌ gRPC Server exited unexpectedly:")
+        logger.exception("[ERROR] gRPC Server exited unexpectedly:")
         sys.exit(1)

@@ -31,8 +31,8 @@ rag_agent_prompt="""
 
     ## Example Delegation for Question Generation:
 
-    User: "Generate 3 math questions about calculus"
-    
+    User: "Generate/Provide/Make/Fetch/Construct/Create/Produce/Give (Any Other possible synonyms not mentioned here can also be applied) 3 math questions about calculus"
+
     1. Query RAG: `rag_query(corpus_name="teacher123_corpus", query="calculus derivatives integrals")`
     2. Get results from corpus
     3. Delegate to question_creator with:

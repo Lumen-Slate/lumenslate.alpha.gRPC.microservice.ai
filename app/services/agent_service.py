@@ -74,7 +74,6 @@ class AgentService(BaseService):
         safe_request_data = {
             "teacherId": request.teacherId,
             "role": request.role,
-            "file": bool(request.file),
             "message": request.message[:100] + "..." if len(request.message) > 100 else request.message,  # Truncate long messages
             "createdAt": request.createdAt,
             "updatedAt": request.updatedAt

@@ -132,10 +132,9 @@ message AgentResponse {
 message RAGAgentRequest {
     string teacherId = 1;
     string message = 2;
-    string file = 3;
-    string role = 4;
-    string createdAt = 5;
-    string updatedAt = 6;
+    string role = 3;
+    string createdAt = 4;
+    string updatedAt = 5;
 }
 
 message RAGAgentResponse {
