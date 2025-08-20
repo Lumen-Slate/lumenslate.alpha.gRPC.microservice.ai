@@ -14,8 +14,13 @@ LOG_FORMAT = "%(asctime)s - %(levelname)s - %(name)s - %(message)s"
 for handler in logging.root.handlers[:]:
     logging.root.removeHandler(handler)
 
+
+# Fallback to INFO if LOG_LEVEL is empty or invalid
+level_name = getattr(settings, "LOG_LEVEL", "INFO") or "INFO"
+level = getattr(logging, level_name, logging.INFO)
+
 logging.basicConfig(
-    level=getattr(logging, settings.LOG_LEVEL),
+    level=level,
     format=LOG_FORMAT,
     handlers=[
         logging.StreamHandler(sys.stdout),
@@ -26,6 +31,6 @@ logging.basicConfig(
 logger = logging.getLogger(settings.APP_NAME)
 
 # Ensure gRPC logs are also handled by our logger
-logging.getLogger('grpc').setLevel(getattr(logging, settings.LOG_LEVEL))
+logging.getLogger('grpc').setLevel(level)
 logging.getLogger('grpc').addHandler(logging.StreamHandler(sys.stdout))
 logging.getLogger('grpc').addHandler(logging.FileHandler("ai_microservice.log", mode='a'))
