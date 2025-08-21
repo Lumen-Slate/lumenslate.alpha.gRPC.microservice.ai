@@ -22,14 +22,14 @@ APP_NAME = "LUMEN_SLATE_RAG"
 
 # ─────────────────────────────────────────────────────────────────────────────
 
-def create_agent_response(message="", teacherId="", agentName="", agentResponse="", 
+def create_agent_response(message="", corpusName="", agentName="", agentResponse="", 
                          sessionId="", createdAt="", updatedAt="", responseTime="", 
                          role="agent", feedback=""):
     """Helper function to create a complete agent response with all required fields"""
     current_time = datetime.now().isoformat()
     return {
         "message": str(message) if message else "",
-        "teacherId": str(teacherId) if teacherId else "",
+        "corpusName": str(corpusName) if corpusName else "",
         "agentName": str(agentName) if agentName else "",
         "agentResponse": str(agentResponse) if agentResponse else "",
         "sessionId": str(sessionId) if sessionId else "",
@@ -44,19 +44,19 @@ async def rag_agent_handler(request):
     start_time = datetime.now()
     
     try:
-        # Validate inputs: teacherId and message are both mandatory
-        if not request.teacherId:
+        # Validate inputs: corpusName and message are both mandatory
+        if not request.corpusName:
             return create_agent_response(
-                message="Error: teacherId is mandatory.",
+                message="Error: corpusName is mandatory.",
                 agentName="rag_agent",
-                agentResponse="Error: teacherId is mandatory.",
+                agentResponse="Error: corpusName is mandatory.",
                 role="agent"
             )
         
         if not request.message:
             return create_agent_response(
                 message="Error: message is mandatory.",
-                teacherId=request.teacherId,
+                corpusName=request.corpusName,
                 agentName="rag_agent",
                 agentResponse="Error: message is mandatory.",
                 role="agent"
@@ -66,13 +66,13 @@ async def rag_agent_handler(request):
         # before the request reaches this handler
 
         initial_state = {
-            "user_id": request.teacherId,
+            "user_id": request.corpusName,
             "message_history": [],
         }
 
         existing_sessions = await session_service.list_sessions(
             app_name=APP_NAME,
-            user_id=request.teacherId,
+            user_id=request.corpusName,
         )
 
         if existing_sessions and len(existing_sessions.sessions) > 0:
@@ -80,7 +80,7 @@ async def rag_agent_handler(request):
         else:
             new_session = await session_service.create_session(
                 app_name=APP_NAME,
-                user_id=request.teacherId,
+                user_id=request.corpusName,
                 state=initial_state,
             )
             SESSION_ID = new_session.id
@@ -93,10 +93,10 @@ async def rag_agent_handler(request):
 
         # Use only the message
         user_message = request.message.strip()
-        grand_query = f'{{"corpusName": "{request.teacherId}", "message": "{user_message}"}}'
+        grand_query = f'{{"corpusName": "{request.corpusName}", "message": "{user_message}"}}'
         content = types.Content(role="user", parts=[types.Part(text=grand_query)])
 
-        async for event in runner.run_async(user_id=request.teacherId, session_id=SESSION_ID, new_message=content):
+        async for event in runner.run_async(user_id=request.corpusName, session_id=SESSION_ID, new_message=content):
             if event.is_final_response() and event.content and event.content.parts:
                 agent_message = event.content.parts[0].text.strip()
                 if not agent_message:
@@ -107,7 +107,7 @@ async def rag_agent_handler(request):
 
                 response = create_agent_response(
                     message="Agent response",
-                    teacherId=request.teacherId,
+                    corpusName=request.corpusName,
                     agentName="rag_agent",
                     agentResponse=agent_message,  
                     sessionId=SESSION_ID,
@@ -123,7 +123,7 @@ async def rag_agent_handler(request):
         # If no final response was generated
         return create_agent_response(
             message="No response generated",
-            teacherId=request.teacherId,
+            corpusName=request.corpusName,
             agentName="rag_agent",
             agentResponse="No response was generated from the agent",
             sessionId=SESSION_ID,
@@ -134,7 +134,7 @@ async def rag_agent_handler(request):
         logger.exception(f"Agent error: {str(e)}")
         return create_agent_response(
             message=f"Agent error: {str(e)}",
-            teacherId=getattr(request, 'teacherId', ''),
+            corpusName=getattr(request, 'corpusName', ''),
             agentName="rag_agent",
             agentResponse=f"An error occurred: {str(e)}",
             sessionId=getattr(locals(), 'SESSION_ID', ''),

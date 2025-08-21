@@ -19,6 +19,7 @@ def rag_query(
     query: str,
     tool_context: ToolContext,
 ) -> dict:
+    logging.debug(f"Entered rag_query with corpus_name='{corpus_name}', query='{query}'")
     """
     Query a Vertex AI RAG corpus with a user question and return relevant information.
 
@@ -32,9 +33,10 @@ def rag_query(
         dict: The query results and status
     """
     try:
-
+        logging.info(f"Querying corpus '{corpus_name}' with query: '{query}'")
         # Check if the corpus exists
         if not check_corpus_exists(corpus_name, tool_context):
+            logging.warning(f"Corpus '{corpus_name}' does not exist.")
             return {
                 "status": "error",
                 "message": f"Corpus '{corpus_name}' does not exist. Please create it first using the create_corpus tool.",
@@ -44,15 +46,17 @@ def rag_query(
 
         # Get the corpus resource name
         corpus_resource_name = get_corpus_resource_name(corpus_name)
+        logging.debug(f"Using corpus_resource_name: {corpus_resource_name}")
 
         # Configure retrieval parameters
         rag_retrieval_config = rag.RagRetrievalConfig(
             top_k=DEFAULT_TOP_K,
             filter=rag.Filter(vector_distance_threshold=DEFAULT_DISTANCE_THRESHOLD),
         )
+        logging.debug(f"RAG retrieval config: top_k={DEFAULT_TOP_K}, distance_threshold={DEFAULT_DISTANCE_THRESHOLD}")
 
         # Perform the query
-        print("Performing retrieval query...")
+        logging.info("Performing retrieval query...")
         response = rag.retrieval_query(
             rag_resources=[
                 rag.RagResource(
@@ -62,10 +66,12 @@ def rag_query(
             text=query,
             rag_retrieval_config=rag_retrieval_config,
         )
+        logging.debug(f"Raw response: {response}")
 
         # Process the response into a more usable format
         results = []
         if hasattr(response, "contexts") and response.contexts:
+            logging.info(f"Found {len(response.contexts.contexts)} contexts in response.")
             for ctx_group in response.contexts.contexts:
                 result = {
                     "source_uri": (
@@ -83,6 +89,7 @@ def rag_query(
 
         # If we didn't find any results
         if not results:
+            logging.warning(f"No results found in corpus '{corpus_name}' for query: '{query}'")
             return {
                 "status": "warning",
                 "message": f"No results found in corpus '{corpus_name}' for query: '{query}'",
@@ -92,6 +99,7 @@ def rag_query(
                 "results_count": 0,
             }
 
+        logging.info(f"Successfully queried corpus '{corpus_name}' with {len(results)} results.")
         return {
             "status": "success",
             "message": f"Successfully queried corpus '{corpus_name}'",
@@ -103,7 +111,7 @@ def rag_query(
 
     except Exception as e:
         error_msg = f"Error querying corpus: {str(e)}"
-        logging.error(error_msg)
+        logging.error(error_msg, exc_info=True)
         return {
             "status": "error",
             "message": error_msg,
