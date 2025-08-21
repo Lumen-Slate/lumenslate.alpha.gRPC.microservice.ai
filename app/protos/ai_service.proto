@@ -130,7 +130,7 @@ message AgentResponse {
 }
 
 message RAGAgentRequest {
-    string teacherId = 1;
+    string corpusName = 1;
     string message = 2;
     string role = 3;
     string createdAt = 4;
@@ -139,7 +139,7 @@ message RAGAgentRequest {
 
 message RAGAgentResponse {
     string message = 1;
-    string teacherId = 2;
+    string corpusName = 2;
     string agentName = 3;
     string agentResponse = 4;
     string sessionId = 5;

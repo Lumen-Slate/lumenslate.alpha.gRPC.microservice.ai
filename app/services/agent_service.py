@@ -72,7 +72,7 @@ class AgentService(BaseService):
         """Handle RAG (Retrieval-Augmented Generation) agent requests"""
         # Safely log request without exposing sensitive data
         safe_request_data = {
-            "teacherId": request.teacherId,
+            "corpusName": request.corpusName,
             "role": request.role,
             "message": request.message[:100] + "..." if len(request.message) > 100 else request.message,  # Truncate long messages
             "createdAt": request.createdAt,
@@ -91,7 +91,7 @@ class AgentService(BaseService):
                 # Safely log response without exposing sensitive data
                 safe_response_data = {
                     "message": response["message"][:100] + "..." if len(response["message"]) > 100 else response["message"],
-                    "teacherId": response["teacherId"],
+                    "corpusName": response["corpusName"],
                     "agentName": response["agentName"],
                     "sessionId": response["sessionId"],
                     "responseTime": response["responseTime"],
@@ -101,7 +101,7 @@ class AgentService(BaseService):
                 
                 return ai_service_pb2.RAGAgentResponse(
                     message=response["message"],
-                    teacherId=response["teacherId"],
+                    corpusName=response["corpusName"],
                     agentName=response["agentName"],
                     agentResponse=response["agentResponse"],
                     sessionId=response["sessionId"],
