@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from typing import List, Union
 from .assessor_agent_prompt import assessor_agent_prompt
 
+
 class MCQResult(BaseModel):
     questionId: str = Field(..., description="The unique identifier of the MCQ question", alias="question_id")
     studentAnswer: int = Field(..., description="The student's selected answer index", alias="student_answer")
@@ -10,6 +11,7 @@ class MCQResult(BaseModel):
     pointsAwarded: int = Field(..., description="Points awarded for this question", alias="points_awarded")
     maxPoints: int = Field(..., description="Maximum points possible for this question", alias="max_points")
     isCorrect: bool = Field(..., description="Whether the answer is correct", alias="is_correct")
+
 
 class MSQResult(BaseModel):
     questionId: str = Field(..., description="The unique identifier of the MSQ question", alias="question_id")
@@ -19,6 +21,7 @@ class MSQResult(BaseModel):
     maxPoints: int = Field(..., description="Maximum points possible for this question", alias="max_points")
     isCorrect: bool = Field(..., description="Whether the answer is correct", alias="is_correct")
 
+
 class NATResult(BaseModel):
     questionId: str = Field(..., description="The unique identifier of the NAT question", alias="question_id")
     studentAnswer: Union[int, float] = Field(..., description="The student's numerical answer", alias="student_answer")
@@ -26,6 +29,7 @@ class NATResult(BaseModel):
     pointsAwarded: int = Field(..., description="Points awarded for this question", alias="points_awarded")
     maxPoints: int = Field(..., description="Maximum points possible for this question", alias="max_points")
     isCorrect: bool = Field(..., description="Whether the answer is correct", alias="is_correct")
+
 
 class SubjectiveGrading(BaseModel):
     questionId: str = Field(..., description="The unique identifier of the subjective question", alias="question_id")
@@ -38,6 +42,7 @@ class SubjectiveGrading(BaseModel):
     criteriaMet: List[str] = Field(..., description="List of criteria that were met by the student", alias="criteria_met")
     criteriaMissed: List[str] = Field(..., description="List of criteria that were missed by the student", alias="criteria_missed")
 
+
 class AssessmentResult(BaseModel):
     assignmentId: str = Field(..., description="The unique identifier of the assignment", alias="assignment_id")
     studentId: str = Field(..., description="The unique identifier of the student", alias="student_id")
@@ -49,8 +54,10 @@ class AssessmentResult(BaseModel):
     natResults: List[NATResult] = Field(default=[], description="Results for NAT questions", alias="nat_results")
     subjectiveResults: List[SubjectiveGrading] = Field(default=[], description="Results for subjective questions", alias="subjective_results")
 
+
 class AssessorResponse(BaseModel):
     assessmentResult: AssessmentResult = Field(..., description="The complete assessment result for the student", alias="assessment_result")
+
 
 assessor_agent = LlmAgent(
     name="assessor_agent",

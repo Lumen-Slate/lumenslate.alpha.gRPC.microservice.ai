@@ -87,6 +87,8 @@ def rag_query(
                 }
                 results.append(result)
 
+        print(f"Retrieved {len(results)} results for query: {query}")
+
         # If we didn't find any results
         if not results:
             logging.warning(f"No results found in corpus '{corpus_name}' for query: '{query}'")
