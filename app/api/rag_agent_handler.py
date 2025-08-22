@@ -22,9 +22,10 @@ APP_NAME = "LUMEN_SLATE_RAG"
 
 # ─────────────────────────────────────────────────────────────────────────────
 
-def create_agent_response(message="", corpusName="", agentName="", agentResponse="", 
-                         sessionId="", createdAt="", updatedAt="", responseTime="", 
-                         role="agent", feedback=""):
+
+def create_agent_response(message="", corpusName="", agentName="", agentResponse="",
+                          sessionId="", createdAt="", updatedAt="", responseTime="",
+                          role="agent", feedback=""):
     """Helper function to create a complete agent response with all required fields"""
     current_time = datetime.now().isoformat()
     return {
@@ -40,9 +41,24 @@ def create_agent_response(message="", corpusName="", agentName="", agentResponse
         "feedback": str(feedback) if feedback else ""
     }
 
+
+def call_agent(query, runner, user_id, session_id):
+    content = types.Content(role='user', parts=[types.Part(text=query)])
+    events = runner.run(user_id=user_id, session_id=session_id, new_message=content)
+
+    for event in events:
+        # Optionally log/debug events here
+        # print(f"\nDEBUG EVENT: {event}\n")
+        if event.is_final_response() and event.content and event.content.parts:
+            final_answer = event.content.parts[0].text.strip()
+            # print("\n🟢 FINAL ANSWER\n", final_answer, "\n")
+            return final_answer
+    return "No response generated"
+
+
 async def rag_agent_handler(request):
     start_time = datetime.now()
-    
+
     try:
         # Validate inputs: corpusName and message are both mandatory
         if not request.corpusName:
@@ -52,7 +68,7 @@ async def rag_agent_handler(request):
                 agentResponse="Error: corpusName is mandatory.",
                 role="agent"
             )
-        
+
         if not request.message:
             return create_agent_response(
                 message="Error: message is mandatory.",
@@ -61,9 +77,6 @@ async def rag_agent_handler(request):
                 agentResponse="Error: message is mandatory.",
                 role="agent"
             )
-
-        # Note: Corpus creation/verification is now handled by the gin backend
-        # before the request reaches this handler
 
         initial_state = {
             "user_id": request.corpusName,
@@ -91,44 +104,40 @@ async def rag_agent_handler(request):
             session_service=session_service,
         )
 
-        # Use only the message
         user_message = request.message.strip()
         grand_query = f'{{"corpusName": "{request.corpusName}", "message": "{user_message}"}}'
-        content = types.Content(role="user", parts=[types.Part(text=grand_query)])
 
-        async for event in runner.run_async(user_id=request.corpusName, session_id=SESSION_ID, new_message=content):
-            if event.is_final_response() and event.content and event.content.parts:
-                agent_message = event.content.parts[0].text.strip()
-                if not agent_message:
-                    agent_message = "No response generated"
+        agent_message = call_agent(grand_query, runner, request.corpusName, SESSION_ID)
+        if not agent_message:
+            agent_message = "No response generated"
 
-                end_time = datetime.now()
-                response_time = str((end_time - start_time).total_seconds())
+        end_time = datetime.now()
+        response_time = str((end_time - start_time).total_seconds())
 
-                response = create_agent_response(
-                    message="Agent response",
-                    corpusName=request.corpusName,
-                    agentName="rag_agent",
-                    agentResponse=agent_message,  
-                    sessionId=SESSION_ID,
-                    responseTime=response_time,
-                    role="agent"
-                )
-
-                # Note: History is managed by InMemorySessionService
-                # No additional database storage needed
-
-                return response
-
-        # If no final response was generated
-        return create_agent_response(
-            message="No response generated",
+        response = create_agent_response(
+            message="Agent response",
             corpusName=request.corpusName,
             agentName="rag_agent",
-            agentResponse="No response was generated from the agent",
+            agentResponse=agent_message,
             sessionId=SESSION_ID,
+            responseTime=response_time,
             role="agent"
         )
+
+        # Note: History is managed by InMemorySessionService
+        # No additional database storage needed
+
+        return response
+
+        # If no final response was generated
+        # return create_agent_response(
+        #     message="No response generated",
+        #     teacherId=request.teacherId,
+        #     agentName="rag_agent",
+        #     agentResponse="No response was generated from the agent",
+        #     sessionId=SESSION_ID,
+        #     role="agent"
+        # )
 
     except Exception as e:
         logger.exception(f"Agent error: {str(e)}")
