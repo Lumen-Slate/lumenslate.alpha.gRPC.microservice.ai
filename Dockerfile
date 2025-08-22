@@ -22,6 +22,6 @@ RUN pip install --upgrade pip \
 # ---- Copy Project ----
 COPY . .
 
-ENV PORT=8080
+ENV PORT=50051
 
 CMD ["python3", "-m", "app.grpc_server"]
