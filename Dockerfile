@@ -24,4 +24,6 @@ COPY . .
 
 ENV PORT=50051
 
+EXPOSE 50051
+
 CMD ["python3", "-m", "app.grpc_server"]
