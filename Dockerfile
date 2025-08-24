@@ -5,6 +5,12 @@ FROM python:3.12-alpine
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+# ---- Set Timezone ----
+ENV TZ=Asia/Kolkata
+RUN apk add --no-cache tzdata \
+    && cp /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone
+
 # ---- Set Work Directory ----
 WORKDIR /app
 
@@ -16,6 +22,8 @@ RUN pip install --upgrade pip \
 # ---- Copy Project ----
 COPY . .
 
-ENV PORT=8080
+ENV PORT=50051
+
+EXPOSE 50051
 
 CMD ["python3", "-m", "app.grpc_server"]
