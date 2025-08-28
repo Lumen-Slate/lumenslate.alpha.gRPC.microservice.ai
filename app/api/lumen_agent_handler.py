@@ -7,7 +7,7 @@ from app.config.logging_config import logger
 # Agent dependencies
 from google.adk.sessions import DatabaseSessionService
 from google.adk.runners import Runner
-from app.agents.root_agent.agent import root_agent
+from app.agents.lumen_agent.agent import lumen_agent
 from google.genai import types
 from app.utils.history_manager import add_to_history
 from app.utils.multimodal_handler import MultimodalHandler
@@ -59,8 +59,11 @@ def _detect_file_type_from_content(file_bytes):
 
 
 # Agent configuration
-db_url = 'sqlite:///app/data/sqlite.db'
-session_service = DatabaseSessionService(db_url=db_url)
+session_service = DatabaseSessionService(
+    db_url=os.getenv("MICROSERVICE_DATABASE"),
+    connect_args={"ssl": {"ca": os.getenv("MICROSERVICE_DATABASE_CA")}}
+)
+
 APP_NAME = "LUMEN_SLATE"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -99,7 +102,7 @@ def call_agent(query, runner, user_id, session_id):
     return "No response generated"
 
 
-async def primary_agent_handler(request):
+async def lumen_agent_handler(request):
     start_time = datetime.now()
 
     try:
@@ -124,7 +127,7 @@ async def primary_agent_handler(request):
             sessionId = new_session.id
 
         runner = Runner(
-            agent=root_agent,
+            agent=lumen_agent,
             app_name=APP_NAME,
             session_service=session_service,
         )
@@ -223,11 +226,11 @@ async def primary_agent_handler(request):
         )
 
         # Storing message history
-        try:
-            await add_to_history(user_message, 'user', request.teacherId, sessionId, APP_NAME, session_service)
-            await add_to_history(agent_message, 'agent', request.teacherId, sessionId, APP_NAME, session_service)
-        except Exception as e:
-            logger.warning(f"History logging failed: {e}")
+        # try:
+        #     await add_to_history(user_message, 'user', request.teacherId, sessionId, APP_NAME, session_service)
+        #     await add_to_history(agent_message, 'agent', request.teacherId, sessionId, APP_NAME, session_service)
+        # except Exception as e:
+        #     logger.warning(f"History logging failed: {e}")
 
         return response
 
