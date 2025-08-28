@@ -5,7 +5,7 @@ Handles context generation, variable detection, question segmentation, and varia
 
 import grpc
 from app.protos import ai_service_pb2
-from app.services.base_service import BaseService
+from app.utils.base_service import BaseService
 from app.logic.context_generator import generate_context_logic
 from app.logic.variable_detector import detect_variables_logic
 from app.logic.question_segmentation import segment_question_logic
@@ -14,7 +14,7 @@ from app.logic.msq_variation_generator import generate_msq_variations_logic
 from app.logic.variable_randomizer import extract_and_randomize_logic
 
 
-class QuestionGenerationService(BaseService):
+class QuestionFineControlServices(BaseService):
     """Service for handling question generation and processing"""
 
     def GenerateContext(self, request, context):
@@ -28,8 +28,8 @@ class QuestionGenerationService(BaseService):
             self._log_success("GenerateContext")
             return ai_service_pb2.GenerateContextResponse(content=response_text)
         except Exception as e:
-            self.logger.exception("[GenerateContext] Failed\nQuestion: %s\nKeywords: %s\nLanguage: %s\nError: %s", 
-                                request.question, request.keywords, request.language, str(e))
+            self.logger.exception("[GenerateContext] Failed\nQuestion: %s\nKeywords: %s\nLanguage: %s\nError: %s",
+                                  request.question, request.keywords, request.language, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.GenerateContextResponse()
@@ -86,8 +86,8 @@ class QuestionGenerationService(BaseService):
             self._log_success("GenerateMCQVariations")
             return ai_service_pb2.MCQVariation(variations=variations)
         except Exception as e:
-            self.logger.exception("[GenerateMCQVariations] Failed\nQuestion: %s\nOptions: %s\nAnswerIndex: %d\nError: %s", 
-                                request.question, request.options, request.answerIndex, str(e))
+            self.logger.exception("[GenerateMCQVariations] Failed\nQuestion: %s\nOptions: %s\nAnswerIndex: %d\nError: %s",
+                                  request.question, request.options, request.answerIndex, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.MCQVariation()
@@ -111,8 +111,8 @@ class QuestionGenerationService(BaseService):
             self._log_success("GenerateMSQVariations")
             return ai_service_pb2.MSQVariation(variations=variations)
         except Exception as e:
-            self.logger.exception("[GenerateMSQVariations] Failed\nQuestion: %s\nOptions: %s\nAnswerIndices: %s\nError: %s", 
-                                request.question, request.options, request.answerIndices, str(e))
+            self.logger.exception("[GenerateMSQVariations] Failed\nQuestion: %s\nOptions: %s\nAnswerIndices: %s\nError: %s",
+                                  request.question, request.options, request.answerIndices, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.MSQVariation()
@@ -141,8 +141,8 @@ class QuestionGenerationService(BaseService):
             self._log_success("FilterAndRandomize")
             return ai_service_pb2.FilterAndRandomizerResponse(variables=variables)
         except Exception as e:
-            self.logger.exception("[FilterAndRandomize] Failed\nQuestion: %s\nUserPrompt: %s\nError: %s", 
-                                request.question, request.userPrompt, str(e))
+            self.logger.exception("[FilterAndRandomize] Failed\nQuestion: %s\nUserPrompt: %s\nError: %s",
+                                  request.question, request.userPrompt, str(e))
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
             return ai_service_pb2.FilterAndRandomizerResponse()

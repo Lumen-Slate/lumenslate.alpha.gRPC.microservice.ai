@@ -7,14 +7,14 @@ import os
 import grpc
 import requests
 from app.protos import ai_service_pb2
-from app.services.base_service import BaseService
+from app.utils.base_service import BaseService
 from app.config.logging_config import logger
 
 # GIN Backend configuration for corpus management
 GIN_BACKEND_URL = os.getenv("GIN_BACKEND_URL")
 
 
-class CorpusManagementService(BaseService):
+class CorpusManagementServices(BaseService):
     """Service for handling RAG corpus management operations"""
 
     def CreateCorpus(self, request, context):
@@ -23,14 +23,14 @@ class CorpusManagementService(BaseService):
             corpus_payload = {
                 "corpusName": request.corpusName
             }
-            
+
             response = requests.post(
                 f"{GIN_BACKEND_URL}/ai/rag-agent/create-corpus",
                 json=corpus_payload,
                 headers={"Content-Type": "application/json"},
                 timeout=30
             )
-            
+
             if response.status_code == 200:
                 response_data = response.json()
                 return ai_service_pb2.CreateCorpusResponse(
@@ -58,7 +58,7 @@ class CorpusManagementService(BaseService):
                     corpusId="",
                     corpusCreated=False
                 )
-                
+
         except requests.exceptions.RequestException as e:
             logger.error(f"Error calling GIN backend for corpus creation: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
@@ -88,17 +88,17 @@ class CorpusManagementService(BaseService):
             corpus_payload = {
                 "corpusName": request.corpusName
             }
-            
+
             response = requests.post(
                 f"{GIN_BACKEND_URL}/ai/rag-agent/list-corpus-content",
                 json=corpus_payload,
                 headers={"Content-Type": "application/json"},
                 timeout=30
             )
-            
+
             if response.status_code == 200:
                 response_data = response.json()
-                
+
                 # Convert documents to protobuf format
                 documents = []
                 for doc in response_data.get("documents", []):
@@ -109,7 +109,7 @@ class CorpusManagementService(BaseService):
                         updateTime=doc.get("updateTime", "")
                     )
                     documents.append(pb_doc)
-                
+
                 return ai_service_pb2.ListCorpusContentResponse(
                     status="success",
                     message=response_data.get("message", ""),
@@ -127,7 +127,7 @@ class CorpusManagementService(BaseService):
                     documents=[],
                     documentCount=0
                 )
-                
+
         except Exception as e:
             logger.error(f"Error in ListCorpusContent: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
@@ -147,14 +147,14 @@ class CorpusManagementService(BaseService):
                 "corpusName": request.corpusName,
                 "fileDisplayName": request.fileDisplayName
             }
-            
+
             response = requests.post(
                 f"{GIN_BACKEND_URL}/ai/rag-agent/delete-corpus-document",
                 json=payload,
                 headers={"Content-Type": "application/json"},
                 timeout=30
             )
-            
+
             if response.status_code == 200:
                 response_data = response.json()
                 return ai_service_pb2.DeleteCorpusDocumentResponse(
@@ -174,7 +174,7 @@ class CorpusManagementService(BaseService):
                     fileDisplayName=request.fileDisplayName,
                     documentDeleted=False
                 )
-                
+
         except Exception as e:
             logger.error(f"Error in DeleteCorpusDocument: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
@@ -194,14 +194,14 @@ class CorpusManagementService(BaseService):
                 "corpusName": request.corpusName,
                 "fileLink": request.fileLink
             }
-            
+
             response = requests.post(
                 f"{GIN_BACKEND_URL}/ai/rag-agent/add-corpus-document",
                 json=payload,
                 headers={"Content-Type": "application/json"},
                 timeout=60  # Longer timeout for document upload
             )
-            
+
             if response.status_code == 200:
                 response_data = response.json()
                 return ai_service_pb2.AddCorpusDocumentResponse(
@@ -225,7 +225,7 @@ class CorpusManagementService(BaseService):
                     corpusName=request.corpusName,
                     documentAdded=False
                 )
-                
+
         except Exception as e:
             logger.error(f"Error in AddCorpusDocument: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
@@ -248,10 +248,10 @@ class CorpusManagementService(BaseService):
                 headers={"Content-Type": "application/json"},
                 timeout=30
             )
-            
+
             if response.status_code == 200:
                 response_data = response.json()
-                
+
                 # Convert corpora to protobuf format
                 corpora = []
                 for corpus in response_data.get("corpora", []):
@@ -263,7 +263,7 @@ class CorpusManagementService(BaseService):
                         updateTime=corpus.get("updateTime", "")
                     )
                     corpora.append(pb_corpus)
-                
+
                 return ai_service_pb2.ListAllCorporaResponse(
                     status="success",
                     message=response_data.get("message", ""),
@@ -279,7 +279,7 @@ class CorpusManagementService(BaseService):
                     corpora=[],
                     corporaCount=0
                 )
-                
+
         except Exception as e:
             logger.error(f"Error in ListAllCorpora: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)

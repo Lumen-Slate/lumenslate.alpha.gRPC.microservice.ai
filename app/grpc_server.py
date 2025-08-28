@@ -1,3 +1,15 @@
+from app.protos import ai_service_pb2_grpc
+from app.services import ServiceFactory
+from app.utils.auth_helper import setup_google_auth, get_project_id, is_deployed_environment
+from app.utils.env_setup import load_and_check_env
+from app.config.logging_config import logger
+from concurrent import futures
+import time
+import threading
+import signal
+import grpc
+import sys
+import os
 import logging
 
 logging.getLogger('google_adk').setLevel(logging.WARNING)
@@ -9,18 +21,6 @@ logging.getLogger('tzlocal').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
 logging.getLogger('asyncio').setLevel(logging.WARNING)
 
-import os
-import sys
-import grpc
-import signal
-import threading
-import time
-from concurrent import futures
-from app.config.logging_config import logger
-from app.utils.env_setup import load_and_check_env
-from app.utils.auth_helper import setup_google_auth, get_project_id, is_deployed_environment
-from app.services import AIService, ServiceFactory
-from app.protos import ai_service_pb2_grpc
 
 def serve():
     # Load environment variables
@@ -29,19 +29,19 @@ def serve():
 
     # Setup Google Cloud authentication
     auth_success = setup_google_auth()
-    
+
     if not auth_success:
         logger.error("[ERROR] Authentication setup failed. Server cannot start.")
         return False
-    
+
     # Verify required environment variables
     project_id = get_project_id()
     location = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
-    
+
     if not project_id:
         logger.error("[ERROR] GOOGLE_PROJECT_ID not found. Please set this environment variable.")
         return False
-    
+
     # Use Cloud Run-provided PORT or fallback to 50051 for gRPC
     port = os.getenv("PORT", "50051")
 

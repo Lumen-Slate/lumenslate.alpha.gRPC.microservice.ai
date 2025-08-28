@@ -7,14 +7,14 @@ import os
 import grpc
 import requests
 from app.protos import ai_service_pb2
-from app.services.base_service import BaseService
+from app.utils.base_service import BaseService
 from app.config.logging_config import logger
 
 # GIN Backend configuration for data access
 GIN_BACKEND_URL = os.getenv("GIN_BACKEND_URL")
 
 
-class DataAccessService(BaseService):
+class DataAccessServices(BaseService):
     """Service for handling data access operations"""
 
     def GetAssignment(self, request, context):
@@ -24,12 +24,12 @@ class DataAccessService(BaseService):
                 f"{GIN_BACKEND_URL}/assignments/{request.assignmentId}",
                 timeout=30
             )
-            
+
             if response.status_code == 200:
                 response_data = response.json()
                 if response_data.get("success") and response_data.get("data"):
                     assignment = response_data["data"]
-                    
+
                     # Convert to protobuf format
                     assignment_data = ai_service_pb2.AssignmentData(
                         id=assignment.get("id", ""),
@@ -42,7 +42,7 @@ class DataAccessService(BaseService):
                         createdAt=assignment.get("createdAt", ""),
                         updatedAt=assignment.get("updatedAt", "")
                     )
-                    
+
                     return ai_service_pb2.GetAssignmentResponse(
                         status="success",
                         message="Assignment found",
@@ -68,7 +68,7 @@ class DataAccessService(BaseService):
                     message=f"Error fetching assignment: {response.text}",
                     assignment=ai_service_pb2.AssignmentData()
                 )
-                
+
         except Exception as e:
             logger.error(f"Error in GetAssignment: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
@@ -86,12 +86,12 @@ class DataAccessService(BaseService):
                 f"{GIN_BACKEND_URL}/api/assignment-results?studentId={request.studentId}",
                 timeout=30
             )
-            
+
             if response.status_code == 200:
                 response_data = response.json()
                 if response_data.get("success") and response_data.get("data"):
                     results = response_data["data"]
-                    
+
                     # Convert to protobuf format
                     assignment_results = []
                     for result in results:
@@ -106,7 +106,7 @@ class DataAccessService(BaseService):
                             updatedAt=result.get("updatedAt", "")
                         )
                         assignment_results.append(result_data)
-                    
+
                     return ai_service_pb2.GetAssignmentResultsResponse(
                         status="success",
                         message="Assignment results found",
@@ -129,7 +129,7 @@ class DataAccessService(BaseService):
                     assignmentResults=[],
                     resultCount=0
                 )
-                
+
         except Exception as e:
             logger.error(f"Error in GetAssignmentResults: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
@@ -148,12 +148,12 @@ class DataAccessService(BaseService):
                 f"{GIN_BACKEND_URL}/api/agent-report-cards/student/{request.studentId}",
                 timeout=30
             )
-            
+
             if response.status_code == 200:
                 response_data = response.json()
                 if response_data.get("report_cards"):
                     report_cards_data = response_data["report_cards"]
-                    
+
                     # Convert to protobuf format
                     report_cards = []
                     for card in report_cards_data:
@@ -172,7 +172,7 @@ class DataAccessService(BaseService):
                             updatedAt=card.get("updatedAt", "")
                         )
                         report_cards.append(report_card)
-                    
+
                     return ai_service_pb2.GetReportCardResponse(
                         status="success",
                         message="Report cards found",
@@ -195,7 +195,7 @@ class DataAccessService(BaseService):
                     reportCards=[],
                     reportCardCount=0
                 )
-                
+
         except Exception as e:
             logger.error(f"Error in GetReportCard: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)

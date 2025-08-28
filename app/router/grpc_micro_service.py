@@ -4,24 +4,24 @@ This provides a single entry point while maintaining modular structure.
 """
 
 from app.protos import ai_service_pb2_grpc
-from app.services.question_generation_service import QuestionGenerationService
-from app.services.agent_service import AgentService
-from app.services.corpus_management_service import CorpusManagementService
-from app.services.data_access_service import DataAccessService
+from app.services.question_fine_control_services import QuestionFineControlServices
+from app.services.agentic_services import AgenticServices
+from app.services.corpus_management_services import CorpusManagementServices
+from app.services.data_access_services import DataAccessServices
 
 
-class AIService(ai_service_pb2_grpc.AIServiceServicer):
+class GRPCAIMicroService(ai_service_pb2_grpc.AIServiceServicer):
     """
     Main AI Service that delegates to specialized service modules.
     This approach provides better organization and scalability.
     """
-    
+
     def __init__(self, logger=None):
         # Initialize all service modules
-        self.question_service = QuestionGenerationService(logger)
-        self.agent_service = AgentService(logger)
-        self.corpus_service = CorpusManagementService(logger)
-        self.data_service = DataAccessService(logger)
+        self.question_service = QuestionFineControlServices(logger)
+        self.agent_service = AgenticServices(logger)
+        self.corpus_service = CorpusManagementServices(logger)
+        self.data_service = DataAccessServices(logger)
 
     # ─────────────────────────────────────────────────────────────────────────────
     # Question Generation Services

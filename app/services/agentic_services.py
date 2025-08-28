@@ -6,12 +6,12 @@ Handles primary agent and RAG agent interactions.
 import grpc
 import asyncio
 from app.protos import ai_service_pb2
-from app.services.base_service import BaseService
+from app.utils.base_service import BaseService
 from app.api.primary_agent_handler import primary_agent_handler
 from app.api.rag_agent_handler import rag_agent_handler
 
 
-class AgentService(BaseService):
+class AgenticServices(BaseService):
     """Service for handling AI agent interactions"""
 
     def Agent(self, request, context):
@@ -27,15 +27,15 @@ class AgentService(BaseService):
             "updatedAt": request.updatedAt
         }
         self._safe_log_request("Agent", safe_request_data)
-        
+
         try:
             # Run the async handler in sync context
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            
+
             try:
                 response = loop.run_until_complete(primary_agent_handler(request))
-                
+
                 # Safely log response without exposing sensitive data
                 safe_response_data = {
                     "message": response["message"][:100] + "..." if len(response["message"]) > 100 else response["message"],
@@ -46,7 +46,7 @@ class AgentService(BaseService):
                     "role": response["role"]
                 }
                 self._safe_log_response("Agent", safe_response_data)
-                
+
                 return ai_service_pb2.AgentResponse(
                     message=response["message"],
                     teacherId=response["teacherId"],
@@ -61,7 +61,7 @@ class AgentService(BaseService):
                 )
             finally:
                 loop.close()
-                
+
         except Exception as e:
             self.logger.exception(f"[Agent] Failed\nError: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
@@ -79,15 +79,15 @@ class AgentService(BaseService):
             "updatedAt": request.updatedAt
         }
         self._safe_log_request("RAGAgent", safe_request_data)
-        
+
         try:
             # Run the async handler in sync context
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            
+
             try:
                 response = loop.run_until_complete(rag_agent_handler(request))
-                
+
                 # Safely log response without exposing sensitive data
                 safe_response_data = {
                     "message": response["message"][:100] + "..." if len(response["message"]) > 100 else response["message"],
@@ -98,7 +98,7 @@ class AgentService(BaseService):
                     "role": response["role"]
                 }
                 self._safe_log_response("RAGAgent", safe_response_data)
-                
+
                 return ai_service_pb2.RAGAgentResponse(
                     message=response["message"],
                     corpusName=response["corpusName"],
@@ -113,7 +113,7 @@ class AgentService(BaseService):
                 )
             finally:
                 loop.close()
-                
+
         except Exception as e:
             self.logger.exception(f"[RAGAgent] Failed\nError: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
