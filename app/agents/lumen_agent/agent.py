@@ -9,7 +9,7 @@ from .sub_agents.report_card_generator.agent import report_card_generator
 from .sub_agents.general_chat_agent.agent import general_chat_agent
 from .root_agent_prompt import root_agent_prompt
 
-root_agent = Agent(
+lumen_agent = Agent(
     name="root_agent",
     model="gemini-2.5-flash",
     description="Manager agent that orchestrates workflows and manages data fetching for sub-agents",

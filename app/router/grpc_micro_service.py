@@ -57,7 +57,7 @@ class GRPCAIMicroService(ai_service_pb2_grpc.AIServiceServicer):
 
     def Agent(self, request, context):
         """Handle primary AI agent requests"""
-        return self.agent_service.Agent(request, context)
+        return self.agent_service.LumenAgent(request, context)
 
     def RAGAgent(self, request, context):
         """Handle RAG (Retrieval-Augmented Generation) agent requests"""

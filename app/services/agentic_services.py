@@ -7,14 +7,14 @@ import grpc
 import asyncio
 from app.protos import ai_service_pb2
 from app.utils.base_service import BaseService
-from app.api.primary_agent_handler import primary_agent_handler
+from app.api.lumen_agent_handler import lumen_agent_handler
 from app.api.rag_agent_handler import rag_agent_handler
 
 
 class AgenticServices(BaseService):
     """Service for handling AI agent interactions"""
 
-    def Agent(self, request, context):
+    def LumenAgent(self, request, context):
         """Handle primary AI agent requests"""
         # Safely log request without exposing sensitive data
         safe_request_data = {
@@ -34,7 +34,7 @@ class AgenticServices(BaseService):
             asyncio.set_event_loop(loop)
 
             try:
-                response = loop.run_until_complete(primary_agent_handler(request))
+                response = loop.run_until_complete(lumen_agent_handler(request))
 
                 # Safely log response without exposing sensitive data
                 safe_response_data = {

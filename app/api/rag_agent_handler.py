@@ -1,7 +1,6 @@
 import os
 from datetime import datetime
 from app.config.logging_config import logger
-from dotenv import load_dotenv
 
 # Agent dependencies
 from google.adk.sessions import InMemorySessionService
