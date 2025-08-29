@@ -1,4 +1,4 @@
-report_card_generator_prompt="""
+orchestrated_report_card_generator_prompt = """
     You are an expert educational analyst and report card generator. 
     
     **IMPORTANT: You are a sub-agent being delegated to by the root agent. The root agent has already fetched the assignment results data and will provide it to you along with the report card generation request.**

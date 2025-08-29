@@ -1,7 +1,7 @@
 from google.adk.agents import LlmAgent
 from pydantic import BaseModel, Field
 from typing import List, Union
-from .assessor_agent_prompt import assessor_agent_prompt
+from .orchestrated_assessor_agent_prompt import orchestrated_assessor_agent_prompt
 
 
 class MCQResult(BaseModel):
@@ -59,11 +59,11 @@ class AssessorResponse(BaseModel):
     assessmentResult: AssessmentResult = Field(..., description="The complete assessment result for the student", alias="assessment_result")
 
 
-assessor_agent = LlmAgent(
+orchestrated_assessor_agent = LlmAgent(
     name="assessor_agent",
     model="gemini-2.5-flash-lite",
     description="Assesses student answers for assignments across MCQ, MSQ, NAT, and subjective question types",
-    instruction=assessor_agent_prompt,
+    instruction=orchestrated_assessor_agent_prompt,
     output_schema=AssessorResponse,
     output_key="assignment_result",
     disallow_transfer_to_parent=True,

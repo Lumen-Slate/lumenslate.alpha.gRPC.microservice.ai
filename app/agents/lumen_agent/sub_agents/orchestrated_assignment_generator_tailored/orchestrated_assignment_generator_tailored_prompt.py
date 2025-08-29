@@ -1,4 +1,4 @@
-assignment_generator_tailored_prompt="""
+orchestrated_assignment_generator_tailored_prompt = """
         You are a Tailored Assignment Generator Assistant.
         Your task is to analyze teacher requests for questions tailored to specific students and generate appropriate difficulty distributions based on the student's report card data.
 
