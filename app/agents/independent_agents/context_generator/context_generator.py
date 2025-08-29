@@ -1,4 +1,4 @@
-from app.prompts.context_generator_prompt import CONTEXT_GENEATOR_PROMPT
+from .context_generator_prompt import CONTEXT_GENEATOR_PROMPT
 from pydantic import BaseModel
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
@@ -14,6 +14,7 @@ if "GOOGLE_API_KEY" not in os.environ:
     os.environ["GOOGLE_API_KEY"] = getpass.getpass(
         "You have not entered the GOOGLE_API_KEY in .env file. Enter your Google AI API key: ")
 
+
 class ContextRequest(BaseModel):
     question: str
     keywords: list[str] = []
@@ -27,7 +28,8 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite")
 prompt_template = PromptTemplate.from_template(
     template=CONTEXT_GENEATOR_PROMPT)
 
-def generate_context_logic(question: str, keywords: list[str], language: str = "English") -> str:
+
+def generate_context_agent(question: str, keywords: list[str], language: str = "English") -> str:
     keywords_str = ",".join(keywords) if keywords else ""
     language = language if language else "English"
     formatted_prompt = prompt_template.format(

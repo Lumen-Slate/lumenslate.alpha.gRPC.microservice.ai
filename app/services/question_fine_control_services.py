@@ -6,12 +6,12 @@ Handles context generation, variable detection, question segmentation, and varia
 import grpc
 from app.protos import ai_service_pb2
 from app.utils.base_service import BaseService
-from app.logic.context_generator import generate_context_logic
-from app.logic.variable_detector import detect_variables_logic
-from app.logic.question_segmentation import segment_question_logic
-from app.logic.mcq_variation_generator import generate_mcq_variations_logic
-from app.logic.msq_variation_generator import generate_msq_variations_logic
-from app.logic.variable_randomizer import extract_and_randomize_logic
+from app.agents.independent_agents.context_generator.context_generator import generate_context_agent
+from app.agents.independent_agents.variable_detector.variable_detector import detect_variables_agent
+from app.agents.independent_agents.question_segment_generator.question_segmentation import segment_question_agent
+from app.agents.independent_agents.mcq_variation_generator.mcq_variation_generator import generate_mcq_variations_agent
+from app.agents.independent_agents.msq_variation_generator.msq_variation_generator import generate_msq_variations_agent
+from app.agents.independent_agents.variable_randomizer.variable_randomizer import variable_randomize_agent
 
 
 class QuestionFineControlServices(BaseService):
@@ -20,7 +20,7 @@ class QuestionFineControlServices(BaseService):
     def GenerateContext(self, request, context):
         """Generate contextual passage for a question"""
         try:
-            response_text = generate_context_logic(
+            response_text = generate_context_agent(
                 question=request.question,
                 keywords=list(request.keywords),
                 language=request.language,
@@ -37,7 +37,7 @@ class QuestionFineControlServices(BaseService):
     def DetectVariables(self, request, context):
         """Detect variables in a question"""
         try:
-            result = detect_variables_logic(request.question)
+            result = detect_variables_agent(request.question)
             variables = [
                 ai_service_pb2.DetectedVariable(
                     name=v.name,
@@ -58,7 +58,7 @@ class QuestionFineControlServices(BaseService):
     def SegmentQuestion(self, request, context):
         """Break a question into smaller parts"""
         try:
-            segmented = segment_question_logic(request.question)
+            segmented = segment_question_agent(request.question)
             self._log_success("SegmentQuestion")
             return ai_service_pb2.QuestionSegmentationResponse(segmentedQuestion=segmented)
         except Exception as e:
@@ -70,7 +70,7 @@ class QuestionFineControlServices(BaseService):
     def GenerateMCQVariations(self, request, context):
         """Create MCQ variations"""
         try:
-            result = generate_mcq_variations_logic(
+            result = generate_mcq_variations_agent(
                 question=request.question,
                 options=list(request.options),
                 answerIndex=request.answerIndex,
@@ -95,7 +95,7 @@ class QuestionFineControlServices(BaseService):
     def GenerateMSQVariations(self, request, context):
         """Create MSQ variations"""
         try:
-            result = generate_msq_variations_logic(
+            result = generate_msq_variations_agent(
                 question=request.question,
                 options=list(request.options),
                 answerIndices=list(request.answerIndices),
@@ -120,7 +120,7 @@ class QuestionFineControlServices(BaseService):
     def FilterAndRandomize(self, request, context):
         """Extract and randomize variable filters"""
         try:
-            result = extract_and_randomize_logic(
+            result = variable_randomize_agent(
                 question=request.question,
                 user_prompt=request.userPrompt,
             )

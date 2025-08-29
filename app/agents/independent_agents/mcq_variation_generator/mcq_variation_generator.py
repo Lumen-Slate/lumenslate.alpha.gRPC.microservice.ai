@@ -1,4 +1,4 @@
-from app.prompts.mcq_variation_generator_prompt import MCQ_VARIATION_GENERATOR_PROMPT
+from .mcq_variation_generator_prompt import MCQ_VARIATION_GENERATOR_PROMPT
 from pydantic import BaseModel, Field
 from typing import List
 from langchain_core.messages import HumanMessage
@@ -53,7 +53,7 @@ prompt_template = PromptTemplate.from_template(
     template=MCQ_VARIATION_GENERATOR_PROMPT)
 
 
-def generate_mcq_variations_logic(question: str, options: List[str], answerIndex: int) -> MCQVariation:
+def generate_mcq_variations_agent(question: str, options: List[str], answerIndex: int) -> MCQVariation:
     """
     Core logic for generating MCQ variations.
 

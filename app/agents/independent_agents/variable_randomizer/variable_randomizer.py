@@ -5,7 +5,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 import random
 
-from app.prompts.variable_randomizer_prompt import VARIABLE_RANDOMIZER_PROMPT
+from .variable_randomizer_prompt import VARIABLE_RANDOMIZER_PROMPT
 
 
 # Define the request model
@@ -50,7 +50,7 @@ prompt_template = PromptTemplate.from_template(
     template=VARIABLE_RANDOMIZER_PROMPT)
 
 
-def extract_and_randomize_logic(question: str, user_prompt: str) -> FilterAndRandomizerResponse:
+def variable_randomize_agent(question: str, user_prompt: str) -> FilterAndRandomizerResponse:
     """
     Core logic for extracting filters and randomizing variables.
 

@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
-from app.prompts.question_segmentation_prompt import QUESTION_SEGMENTATION_PROMPT
+from .question_segmentation_prompt import QUESTION_SEGMENTATION_PROMPT
 from dotenv import load_dotenv
 import os
 
@@ -40,7 +40,7 @@ prompt_template = PromptTemplate.from_template(
 )
 
 
-def segment_question_logic(question: str) -> str:
+def segment_question_agent(question: str) -> str:
     """
     Segments the given question into smaller parts using the gemini-2.5-flash-lite model.
 

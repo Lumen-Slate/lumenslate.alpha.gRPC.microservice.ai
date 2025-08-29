@@ -1,4 +1,4 @@
-from app.prompts.variable_detector_prompt import VARIABLE_DETECTOR_PROMPT
+from .variable_detector_prompt import VARIABLE_DETECTOR_PROMPT
 from pydantic import BaseModel, Field
 from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -50,7 +50,7 @@ prompt_template = PromptTemplate.from_template(
     template=VARIABLE_DETECTOR_PROMPT)
 
 
-def detect_variables_logic(question: str) -> VariableDetectorResponse:
+def detect_variables_agent(question: str) -> VariableDetectorResponse:
     """
     Core logic for detecting variables in a question.
 
