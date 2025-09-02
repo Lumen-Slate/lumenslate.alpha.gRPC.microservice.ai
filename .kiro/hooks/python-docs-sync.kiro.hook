@@ -1,0 +1,23 @@
+{
+  "enabled": true,
+  "name": "Python Documentation Sync",
+  "description": "Monitors all Python source files, configuration files, and key project files for changes and triggers documentation updates in README.md when modifications are detected.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "app/**/*.py",
+      "*.py",
+      "requirements.txt",
+      "Dockerfile",
+      "docker-compose.yml",
+      "service.yaml",
+      "Makefile",
+      "app/protos/*.proto"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Source code or configuration files have been modified in this Python-based AI microservice. Please review the changes and update the README.md file to reflect any new features, API changes, setup instructions, or architectural modifications. Focus on keeping the documentation accurate and helpful for developers working with this gRPC-based educational AI service that uses Google Generative AI and SQLAlchemy."
+  }
+}
