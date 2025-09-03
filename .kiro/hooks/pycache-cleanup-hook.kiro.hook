@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Python Cache Cleaner",
+  "description": "Automatically removes __pycache__ folders when Python source files are modified in the microservice",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "app/**/*.py",
+      "*.py"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A Python file has been modified in the microservice. Please search for and delete all __pycache__ folders within the project directory to ensure old bytecode files don't interfere with the updated code. Focus on the app/ directory and any subdirectories that may contain __pycache__ folders."
+  }
+}
