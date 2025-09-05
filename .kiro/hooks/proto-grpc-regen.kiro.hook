@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Proto gRPC Regeneration",
+  "description": "Automatically regenerates Python gRPC code (_pb2.py and _pb2_grpc.py files) whenever .proto files are created, saved, or modified in the /app/protos directory",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "app/protos/*.proto"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A .proto file has been modified in /app/protos. Please run the protocol buffer compiler (protoc) to regenerate the Python gRPC code. Use the command: `python -m grpc_tools.protoc --proto_path=app/protos --python_out=app/protos --grpc_python_out=app/protos app/protos/*.proto` to generate the updated _pb2.py and _pb2_grpc.py files in the same directory as their .proto sources."
+  }
+}
