@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Requirements Dependency Sync",
+  "description": "Automatically manages virtual environment and dependencies when requirements.txt is updated in the microservice",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "requirements.txt"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "The requirements.txt file has been updated. Please:\n\n1. Check if a virtual environment exists, and create one if needed using `python -m venv venv`\n2. Activate the virtual environment (use `venv\\Scripts\\activate` on Windows or `source venv/bin/activate` on Unix)\n3. Install the updated dependencies using `pip install -r requirements.txt`\n4. Generate a requirements.lock file by running `pip freeze > requirements.lock` to ensure reproducible builds\n5. Verify the installation was successful\n\nThis ensures the microservice always runs with consistent and reproducible dependencies after requirements.txt changes."
+  }
+}
