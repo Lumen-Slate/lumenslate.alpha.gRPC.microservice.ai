@@ -3,9 +3,9 @@ import base64
 import io
 from datetime import datetime
 from app.config.logging_config import logger
+from app.config.session_config import session_service_manager
 
 # Agent dependencies
-from google.adk.sessions import DatabaseSessionService
 from google.adk.runners import Runner
 from app.agents.lumen_agent.agent import lumen_agent
 from google.genai import types
@@ -59,10 +59,7 @@ def _detect_file_type_from_content(file_bytes):
 
 
 # Agent configuration
-session_service = DatabaseSessionService(
-    db_url=os.getenv("MICROSERVICE_DATABASE"),
-    connect_args={"ssl": {"ca": os.getenv("MICROSERVICE_DATABASE_CA")}}
-)
+session_service = session_service_manager.get_database_service()
 
 APP_NAME = "LUMEN_SLATE"
 

@@ -55,7 +55,7 @@ class GRPCAIMicroService(ai_service_pb2_grpc.AIServiceServicer):
     # Agent Services
     # ─────────────────────────────────────────────────────────────────────────────
 
-    def Agent(self, request, context):
+    def LumenAgent(self, request, context):
         """Handle primary AI agent requests"""
         return self.agent_service.LumenAgent(request, context)
 

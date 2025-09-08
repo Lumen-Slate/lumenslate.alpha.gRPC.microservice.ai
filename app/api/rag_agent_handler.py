@@ -1,9 +1,9 @@
 import os
 from datetime import datetime
 from app.config.logging_config import logger
+from app.config.session_config import session_service_manager
 
 # Agent dependencies
-from google.adk.sessions import InMemorySessionService
 from google.adk.runners import Runner
 from app.agents.rag_agent.agent import rag_agent
 from google.genai import types
@@ -16,7 +16,7 @@ from google.genai import types
 # Agent configuration
 # default_db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "sqlite.db")
 # db_url = os.getenv("RAG_DATABASE_URL", f"sqlite:///{default_db_path}")
-session_service = InMemorySessionService()
+session_service = session_service_manager.get_database_service()
 APP_NAME = "LUMEN_SLATE_RAG"
 
 # ─────────────────────────────────────────────────────────────────────────────
