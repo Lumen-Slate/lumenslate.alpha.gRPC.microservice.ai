@@ -121,49 +121,49 @@ class AgenticServices(BaseService):
             context.set_details(str(e))
             return ai_service_pb2.RAGAgentResponse()
 
-    def AssignmentGeneratorAgent(self, request, context):
-        """Handle assignment generator agent requests"""
-        safe_request_data = {
-            "teacherId": getattr(request, "teacherId", None),
-            "role": getattr(request, "role", None),
-            "message": getattr(request, "message", "")[:100] + "..." if len(getattr(request, "message", "")) > 100 else getattr(request, "message", ""),
-            "createdAt": getattr(request, "createdAt", None),
-            "updatedAt": getattr(request, "updatedAt", None)
-        }
-        self._safe_log_request("AssignmentGeneratorAgent", safe_request_data)
+    # def AssignmentGeneratorAgent(self, request, context):
+    #     """Handle assignment generator agent requests"""
+    #     safe_request_data = {
+    #         "teacherId": getattr(request, "teacherId", None),
+    #         "role": getattr(request, "role", None),
+    #         "message": getattr(request, "message", "")[:100] + "..." if len(getattr(request, "message", "")) > 100 else getattr(request, "message", ""),
+    #         "createdAt": getattr(request, "createdAt", None),
+    #         "updatedAt": getattr(request, "updatedAt", None)
+    #     }
+    #     self._safe_log_request("AssignmentGeneratorAgent", safe_request_data)
 
-        try:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            try:
-                response = loop.run_until_complete(assignment_generator_general.run(request))
+    #     try:
+    #         loop = asyncio.new_event_loop()
+    #         asyncio.set_event_loop(loop)
+    #         try:
+    #             response = loop.run_until_complete(assignment_generator_general.run(request))
 
-                safe_response_data = {
-                    "message": response.get("message", "")[:100] + "..." if len(response.get("message", "")) > 100 else response.get("message", ""),
-                    "teacherId": response.get("teacherId"),
-                    "agentName": response.get("agentName"),
-                    "sessionId": response.get("sessionId"),
-                    "responseTime": response.get("responseTime"),
-                    "role": response.get("role")
-                }
-                self._safe_log_response("AssignmentGeneratorAgent", safe_response_data)
+    #             safe_response_data = {
+    #                 "message": response.get("message", "")[:100] + "..." if len(response.get("message", "")) > 100 else response.get("message", ""),
+    #                 "teacherId": response.get("teacherId"),
+    #                 "agentName": response.get("agentName"),
+    #                 "sessionId": response.get("sessionId"),
+    #                 "responseTime": response.get("responseTime"),
+    #                 "role": response.get("role")
+    #             }
+    #             self._safe_log_response("AssignmentGeneratorAgent", safe_response_data)
 
-                return ai_service_pb2.AgentResponse(
-                    message=response.get("message", ""),
-                    teacherId=response.get("teacherId", ""),
-                    agentName=response.get("agentName", ""),
-                    agentResponse=response.get("agentResponse", ""),
-                    sessionId=response.get("sessionId", ""),
-                    createdAt=response.get("createdAt", ""),
-                    updatedAt=response.get("updatedAt", ""),
-                    responseTime=response.get("responseTime", ""),
-                    role=response.get("role", ""),
-                    feedback=response.get("feedback", "")
-                )
-            finally:
-                loop.close()
-        except Exception as e:
-            self.logger.exception(f"[AssignmentGeneratorAgent] Failed\nError: {str(e)}")
-            context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details(str(e))
-            return ai_service_pb2.AgentResponse()
+    #             return ai_service_pb2.AgentResponse(
+    #                 message=response.get("message", ""),
+    #                 teacherId=response.get("teacherId", ""),
+    #                 agentName=response.get("agentName", ""),
+    #                 agentResponse=response.get("agentResponse", ""),
+    #                 sessionId=response.get("sessionId", ""),
+    #                 createdAt=response.get("createdAt", ""),
+    #                 updatedAt=response.get("updatedAt", ""),
+    #                 responseTime=response.get("responseTime", ""),
+    #                 role=response.get("role", ""),
+    #                 feedback=response.get("feedback", "")
+    #             )
+    #         finally:
+    #             loop.close()
+    #     except Exception as e:
+    #         self.logger.exception(f"[AssignmentGeneratorAgent] Failed\nError: {str(e)}")
+    #         context.set_code(grpc.StatusCode.INTERNAL)
+    #         context.set_details(str(e))
+    #         return ai_service_pb2.AgentResponse()
