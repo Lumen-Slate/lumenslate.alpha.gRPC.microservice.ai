@@ -5,7 +5,7 @@ import warnings
 
 from . import ai_service_pb2 as ai__service__pb2
 
-GRPC_GENERATED_VERSION = '1.73.0'
+GRPC_GENERATED_VERSION = '1.73.1'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -35,85 +35,85 @@ class AIServiceStub(object):
             channel: A grpc.Channel.
         """
         self.GenerateContext = channel.unary_unary(
-                '/ai_service.AIService/GenerateContext',
-                request_serializer=ai__service__pb2.GenerateContextRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.GenerateContextResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/GenerateContext',
+            request_serializer=ai__service__pb2.GenerateContextRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.GenerateContextResponse.FromString,
+            _registered_method=True)
         self.DetectVariables = channel.unary_unary(
-                '/ai_service.AIService/DetectVariables',
-                request_serializer=ai__service__pb2.VariableDetectorRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.VariableDetectorResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/DetectVariables',
+            request_serializer=ai__service__pb2.VariableDetectorRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.VariableDetectorResponse.FromString,
+            _registered_method=True)
         self.SegmentQuestion = channel.unary_unary(
-                '/ai_service.AIService/SegmentQuestion',
-                request_serializer=ai__service__pb2.QuestionSegmentationRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.QuestionSegmentationResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/SegmentQuestion',
+            request_serializer=ai__service__pb2.QuestionSegmentationRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.QuestionSegmentationResponse.FromString,
+            _registered_method=True)
         self.GenerateMCQVariations = channel.unary_unary(
-                '/ai_service.AIService/GenerateMCQVariations',
-                request_serializer=ai__service__pb2.MCQRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.MCQVariation.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/GenerateMCQVariations',
+            request_serializer=ai__service__pb2.MCQRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.MCQVariation.FromString,
+            _registered_method=True)
         self.GenerateMSQVariations = channel.unary_unary(
-                '/ai_service.AIService/GenerateMSQVariations',
-                request_serializer=ai__service__pb2.MSQRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.MSQVariation.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/GenerateMSQVariations',
+            request_serializer=ai__service__pb2.MSQRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.MSQVariation.FromString,
+            _registered_method=True)
         self.FilterAndRandomize = channel.unary_unary(
-                '/ai_service.AIService/FilterAndRandomize',
-                request_serializer=ai__service__pb2.FilterAndRandomizerRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.FilterAndRandomizerResponse.FromString,
-                _registered_method=True)
-        self.Agent = channel.unary_unary(
-                '/ai_service.AIService/Agent',
-                request_serializer=ai__service__pb2.AgentRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.AgentResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/FilterAndRandomize',
+            request_serializer=ai__service__pb2.FilterAndRandomizerRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.FilterAndRandomizerResponse.FromString,
+            _registered_method=True)
+        self.LumenAgent = channel.unary_unary(
+            '/ai_service.AIService/LumenAgent',
+            request_serializer=ai__service__pb2.AgentRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.AgentResponse.FromString,
+            _registered_method=True)
         self.RAGAgent = channel.unary_unary(
-                '/ai_service.AIService/RAGAgent',
-                request_serializer=ai__service__pb2.RAGAgentRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.RAGAgentResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/RAGAgent',
+            request_serializer=ai__service__pb2.RAGAgentRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.RAGAgentResponse.FromString,
+            _registered_method=True)
         self.CreateCorpus = channel.unary_unary(
-                '/ai_service.AIService/CreateCorpus',
-                request_serializer=ai__service__pb2.CreateCorpusRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.CreateCorpusResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/CreateCorpus',
+            request_serializer=ai__service__pb2.CreateCorpusRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.CreateCorpusResponse.FromString,
+            _registered_method=True)
         self.ListCorpusContent = channel.unary_unary(
-                '/ai_service.AIService/ListCorpusContent',
-                request_serializer=ai__service__pb2.ListCorpusContentRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.ListCorpusContentResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/ListCorpusContent',
+            request_serializer=ai__service__pb2.ListCorpusContentRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.ListCorpusContentResponse.FromString,
+            _registered_method=True)
         self.DeleteCorpusDocument = channel.unary_unary(
-                '/ai_service.AIService/DeleteCorpusDocument',
-                request_serializer=ai__service__pb2.DeleteCorpusDocumentRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.DeleteCorpusDocumentResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/DeleteCorpusDocument',
+            request_serializer=ai__service__pb2.DeleteCorpusDocumentRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.DeleteCorpusDocumentResponse.FromString,
+            _registered_method=True)
         self.AddCorpusDocument = channel.unary_unary(
-                '/ai_service.AIService/AddCorpusDocument',
-                request_serializer=ai__service__pb2.AddCorpusDocumentRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.AddCorpusDocumentResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/AddCorpusDocument',
+            request_serializer=ai__service__pb2.AddCorpusDocumentRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.AddCorpusDocumentResponse.FromString,
+            _registered_method=True)
         self.ListAllCorpora = channel.unary_unary(
-                '/ai_service.AIService/ListAllCorpora',
-                request_serializer=ai__service__pb2.ListAllCorporaRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.ListAllCorporaResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/ListAllCorpora',
+            request_serializer=ai__service__pb2.ListAllCorporaRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.ListAllCorporaResponse.FromString,
+            _registered_method=True)
         self.GetAssignment = channel.unary_unary(
-                '/ai_service.AIService/GetAssignment',
-                request_serializer=ai__service__pb2.GetAssignmentRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.GetAssignmentResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/GetAssignment',
+            request_serializer=ai__service__pb2.GetAssignmentRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.GetAssignmentResponse.FromString,
+            _registered_method=True)
         self.GetAssignmentResults = channel.unary_unary(
-                '/ai_service.AIService/GetAssignmentResults',
-                request_serializer=ai__service__pb2.GetAssignmentResultsRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.GetAssignmentResultsResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/GetAssignmentResults',
+            request_serializer=ai__service__pb2.GetAssignmentResultsRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.GetAssignmentResultsResponse.FromString,
+            _registered_method=True)
         self.GetReportCard = channel.unary_unary(
-                '/ai_service.AIService/GetReportCard',
-                request_serializer=ai__service__pb2.GetReportCardRequest.SerializeToString,
-                response_deserializer=ai__service__pb2.GetReportCardResponse.FromString,
-                _registered_method=True)
+            '/ai_service.AIService/GetReportCard',
+            request_serializer=ai__service__pb2.GetReportCardRequest.SerializeToString,
+            response_deserializer=ai__service__pb2.GetReportCardResponse.FromString,
+            _registered_method=True)
 
 
 class AIServiceServicer(object):
@@ -155,7 +155,7 @@ class AIServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Agent(self, request, context):
+    def LumenAgent(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -220,108 +220,109 @@ class AIServiceServicer(object):
 
 def add_AIServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GenerateContext': grpc.unary_unary_rpc_method_handler(
-                    servicer.GenerateContext,
-                    request_deserializer=ai__service__pb2.GenerateContextRequest.FromString,
-                    response_serializer=ai__service__pb2.GenerateContextResponse.SerializeToString,
-            ),
-            'DetectVariables': grpc.unary_unary_rpc_method_handler(
-                    servicer.DetectVariables,
-                    request_deserializer=ai__service__pb2.VariableDetectorRequest.FromString,
-                    response_serializer=ai__service__pb2.VariableDetectorResponse.SerializeToString,
-            ),
-            'SegmentQuestion': grpc.unary_unary_rpc_method_handler(
-                    servicer.SegmentQuestion,
-                    request_deserializer=ai__service__pb2.QuestionSegmentationRequest.FromString,
-                    response_serializer=ai__service__pb2.QuestionSegmentationResponse.SerializeToString,
-            ),
-            'GenerateMCQVariations': grpc.unary_unary_rpc_method_handler(
-                    servicer.GenerateMCQVariations,
-                    request_deserializer=ai__service__pb2.MCQRequest.FromString,
-                    response_serializer=ai__service__pb2.MCQVariation.SerializeToString,
-            ),
-            'GenerateMSQVariations': grpc.unary_unary_rpc_method_handler(
-                    servicer.GenerateMSQVariations,
-                    request_deserializer=ai__service__pb2.MSQRequest.FromString,
-                    response_serializer=ai__service__pb2.MSQVariation.SerializeToString,
-            ),
-            'FilterAndRandomize': grpc.unary_unary_rpc_method_handler(
-                    servicer.FilterAndRandomize,
-                    request_deserializer=ai__service__pb2.FilterAndRandomizerRequest.FromString,
-                    response_serializer=ai__service__pb2.FilterAndRandomizerResponse.SerializeToString,
-            ),
-            'Agent': grpc.unary_unary_rpc_method_handler(
-                    servicer.Agent,
-                    request_deserializer=ai__service__pb2.AgentRequest.FromString,
-                    response_serializer=ai__service__pb2.AgentResponse.SerializeToString,
-            ),
-            'RAGAgent': grpc.unary_unary_rpc_method_handler(
-                    servicer.RAGAgent,
-                    request_deserializer=ai__service__pb2.RAGAgentRequest.FromString,
-                    response_serializer=ai__service__pb2.RAGAgentResponse.SerializeToString,
-            ),
-            'CreateCorpus': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateCorpus,
-                    request_deserializer=ai__service__pb2.CreateCorpusRequest.FromString,
-                    response_serializer=ai__service__pb2.CreateCorpusResponse.SerializeToString,
-            ),
-            'ListCorpusContent': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListCorpusContent,
-                    request_deserializer=ai__service__pb2.ListCorpusContentRequest.FromString,
-                    response_serializer=ai__service__pb2.ListCorpusContentResponse.SerializeToString,
-            ),
-            'DeleteCorpusDocument': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteCorpusDocument,
-                    request_deserializer=ai__service__pb2.DeleteCorpusDocumentRequest.FromString,
-                    response_serializer=ai__service__pb2.DeleteCorpusDocumentResponse.SerializeToString,
-            ),
-            'AddCorpusDocument': grpc.unary_unary_rpc_method_handler(
-                    servicer.AddCorpusDocument,
-                    request_deserializer=ai__service__pb2.AddCorpusDocumentRequest.FromString,
-                    response_serializer=ai__service__pb2.AddCorpusDocumentResponse.SerializeToString,
-            ),
-            'ListAllCorpora': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListAllCorpora,
-                    request_deserializer=ai__service__pb2.ListAllCorporaRequest.FromString,
-                    response_serializer=ai__service__pb2.ListAllCorporaResponse.SerializeToString,
-            ),
-            'GetAssignment': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAssignment,
-                    request_deserializer=ai__service__pb2.GetAssignmentRequest.FromString,
-                    response_serializer=ai__service__pb2.GetAssignmentResponse.SerializeToString,
-            ),
-            'GetAssignmentResults': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAssignmentResults,
-                    request_deserializer=ai__service__pb2.GetAssignmentResultsRequest.FromString,
-                    response_serializer=ai__service__pb2.GetAssignmentResultsResponse.SerializeToString,
-            ),
-            'GetReportCard': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetReportCard,
-                    request_deserializer=ai__service__pb2.GetReportCardRequest.FromString,
-                    response_serializer=ai__service__pb2.GetReportCardResponse.SerializeToString,
-            ),
+        'GenerateContext': grpc.unary_unary_rpc_method_handler(
+            servicer.GenerateContext,
+            request_deserializer=ai__service__pb2.GenerateContextRequest.FromString,
+            response_serializer=ai__service__pb2.GenerateContextResponse.SerializeToString,
+        ),
+        'DetectVariables': grpc.unary_unary_rpc_method_handler(
+            servicer.DetectVariables,
+            request_deserializer=ai__service__pb2.VariableDetectorRequest.FromString,
+            response_serializer=ai__service__pb2.VariableDetectorResponse.SerializeToString,
+        ),
+        'SegmentQuestion': grpc.unary_unary_rpc_method_handler(
+            servicer.SegmentQuestion,
+            request_deserializer=ai__service__pb2.QuestionSegmentationRequest.FromString,
+            response_serializer=ai__service__pb2.QuestionSegmentationResponse.SerializeToString,
+        ),
+        'GenerateMCQVariations': grpc.unary_unary_rpc_method_handler(
+            servicer.GenerateMCQVariations,
+            request_deserializer=ai__service__pb2.MCQRequest.FromString,
+            response_serializer=ai__service__pb2.MCQVariation.SerializeToString,
+        ),
+        'GenerateMSQVariations': grpc.unary_unary_rpc_method_handler(
+            servicer.GenerateMSQVariations,
+            request_deserializer=ai__service__pb2.MSQRequest.FromString,
+            response_serializer=ai__service__pb2.MSQVariation.SerializeToString,
+        ),
+        'FilterAndRandomize': grpc.unary_unary_rpc_method_handler(
+            servicer.FilterAndRandomize,
+            request_deserializer=ai__service__pb2.FilterAndRandomizerRequest.FromString,
+            response_serializer=ai__service__pb2.FilterAndRandomizerResponse.SerializeToString,
+        ),
+        'LumenAgent': grpc.unary_unary_rpc_method_handler(
+            servicer.LumenAgent,
+            request_deserializer=ai__service__pb2.AgentRequest.FromString,
+            response_serializer=ai__service__pb2.AgentResponse.SerializeToString,
+        ),
+        'RAGAgent': grpc.unary_unary_rpc_method_handler(
+            servicer.RAGAgent,
+            request_deserializer=ai__service__pb2.RAGAgentRequest.FromString,
+            response_serializer=ai__service__pb2.RAGAgentResponse.SerializeToString,
+        ),
+        'CreateCorpus': grpc.unary_unary_rpc_method_handler(
+            servicer.CreateCorpus,
+            request_deserializer=ai__service__pb2.CreateCorpusRequest.FromString,
+            response_serializer=ai__service__pb2.CreateCorpusResponse.SerializeToString,
+        ),
+        'ListCorpusContent': grpc.unary_unary_rpc_method_handler(
+            servicer.ListCorpusContent,
+            request_deserializer=ai__service__pb2.ListCorpusContentRequest.FromString,
+            response_serializer=ai__service__pb2.ListCorpusContentResponse.SerializeToString,
+        ),
+        'DeleteCorpusDocument': grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteCorpusDocument,
+            request_deserializer=ai__service__pb2.DeleteCorpusDocumentRequest.FromString,
+            response_serializer=ai__service__pb2.DeleteCorpusDocumentResponse.SerializeToString,
+        ),
+        'AddCorpusDocument': grpc.unary_unary_rpc_method_handler(
+            servicer.AddCorpusDocument,
+            request_deserializer=ai__service__pb2.AddCorpusDocumentRequest.FromString,
+            response_serializer=ai__service__pb2.AddCorpusDocumentResponse.SerializeToString,
+        ),
+        'ListAllCorpora': grpc.unary_unary_rpc_method_handler(
+            servicer.ListAllCorpora,
+            request_deserializer=ai__service__pb2.ListAllCorporaRequest.FromString,
+            response_serializer=ai__service__pb2.ListAllCorporaResponse.SerializeToString,
+        ),
+        'GetAssignment': grpc.unary_unary_rpc_method_handler(
+            servicer.GetAssignment,
+            request_deserializer=ai__service__pb2.GetAssignmentRequest.FromString,
+            response_serializer=ai__service__pb2.GetAssignmentResponse.SerializeToString,
+        ),
+        'GetAssignmentResults': grpc.unary_unary_rpc_method_handler(
+            servicer.GetAssignmentResults,
+            request_deserializer=ai__service__pb2.GetAssignmentResultsRequest.FromString,
+            response_serializer=ai__service__pb2.GetAssignmentResultsResponse.SerializeToString,
+        ),
+        'GetReportCard': grpc.unary_unary_rpc_method_handler(
+            servicer.GetReportCard,
+            request_deserializer=ai__service__pb2.GetReportCardRequest.FromString,
+            response_serializer=ai__service__pb2.GetReportCardResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'ai_service.AIService', rpc_method_handlers)
+        'ai_service.AIService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
     server.add_registered_method_handlers('ai_service.AIService', rpc_method_handlers)
 
-
  # This class is part of an EXPERIMENTAL API.
+
+
 class AIService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def GenerateContext(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                        target,
+                        options=(),
+                        channel_credentials=None,
+                        call_credentials=None,
+                        insecure=False,
+                        compression=None,
+                        wait_for_ready=None,
+                        timeout=None,
+                        metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -340,15 +341,15 @@ class AIService(object):
 
     @staticmethod
     def DetectVariables(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                        target,
+                        options=(),
+                        channel_credentials=None,
+                        call_credentials=None,
+                        insecure=False,
+                        compression=None,
+                        wait_for_ready=None,
+                        timeout=None,
+                        metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -367,15 +368,15 @@ class AIService(object):
 
     @staticmethod
     def SegmentQuestion(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                        target,
+                        options=(),
+                        channel_credentials=None,
+                        call_credentials=None,
+                        insecure=False,
+                        compression=None,
+                        wait_for_ready=None,
+                        timeout=None,
+                        metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -394,15 +395,15 @@ class AIService(object):
 
     @staticmethod
     def GenerateMCQVariations(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                              target,
+                              options=(),
+                              channel_credentials=None,
+                              call_credentials=None,
+                              insecure=False,
+                              compression=None,
+                              wait_for_ready=None,
+                              timeout=None,
+                              metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -421,15 +422,15 @@ class AIService(object):
 
     @staticmethod
     def GenerateMSQVariations(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                              target,
+                              options=(),
+                              channel_credentials=None,
+                              call_credentials=None,
+                              insecure=False,
+                              compression=None,
+                              wait_for_ready=None,
+                              timeout=None,
+                              metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -448,15 +449,15 @@ class AIService(object):
 
     @staticmethod
     def FilterAndRandomize(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                           target,
+                           options=(),
+                           channel_credentials=None,
+                           call_credentials=None,
+                           insecure=False,
+                           compression=None,
+                           wait_for_ready=None,
+                           timeout=None,
+                           metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -474,20 +475,20 @@ class AIService(object):
             _registered_method=True)
 
     @staticmethod
-    def Agent(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def LumenAgent(request,
+                   target,
+                   options=(),
+                   channel_credentials=None,
+                   call_credentials=None,
+                   insecure=False,
+                   compression=None,
+                   wait_for_ready=None,
+                   timeout=None,
+                   metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/ai_service.AIService/Agent',
+            '/ai_service.AIService/LumenAgent',
             ai__service__pb2.AgentRequest.SerializeToString,
             ai__service__pb2.AgentResponse.FromString,
             options,
@@ -502,15 +503,15 @@ class AIService(object):
 
     @staticmethod
     def RAGAgent(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                 target,
+                 options=(),
+                 channel_credentials=None,
+                 call_credentials=None,
+                 insecure=False,
+                 compression=None,
+                 wait_for_ready=None,
+                 timeout=None,
+                 metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -529,15 +530,15 @@ class AIService(object):
 
     @staticmethod
     def CreateCorpus(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                     target,
+                     options=(),
+                     channel_credentials=None,
+                     call_credentials=None,
+                     insecure=False,
+                     compression=None,
+                     wait_for_ready=None,
+                     timeout=None,
+                     metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -556,15 +557,15 @@ class AIService(object):
 
     @staticmethod
     def ListCorpusContent(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                          target,
+                          options=(),
+                          channel_credentials=None,
+                          call_credentials=None,
+                          insecure=False,
+                          compression=None,
+                          wait_for_ready=None,
+                          timeout=None,
+                          metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -583,15 +584,15 @@ class AIService(object):
 
     @staticmethod
     def DeleteCorpusDocument(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                             target,
+                             options=(),
+                             channel_credentials=None,
+                             call_credentials=None,
+                             insecure=False,
+                             compression=None,
+                             wait_for_ready=None,
+                             timeout=None,
+                             metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -610,15 +611,15 @@ class AIService(object):
 
     @staticmethod
     def AddCorpusDocument(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                          target,
+                          options=(),
+                          channel_credentials=None,
+                          call_credentials=None,
+                          insecure=False,
+                          compression=None,
+                          wait_for_ready=None,
+                          timeout=None,
+                          metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -637,15 +638,15 @@ class AIService(object):
 
     @staticmethod
     def ListAllCorpora(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                       target,
+                       options=(),
+                       channel_credentials=None,
+                       call_credentials=None,
+                       insecure=False,
+                       compression=None,
+                       wait_for_ready=None,
+                       timeout=None,
+                       metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -664,15 +665,15 @@ class AIService(object):
 
     @staticmethod
     def GetAssignment(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                      target,
+                      options=(),
+                      channel_credentials=None,
+                      call_credentials=None,
+                      insecure=False,
+                      compression=None,
+                      wait_for_ready=None,
+                      timeout=None,
+                      metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -691,15 +692,15 @@ class AIService(object):
 
     @staticmethod
     def GetAssignmentResults(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                             target,
+                             options=(),
+                             channel_credentials=None,
+                             call_credentials=None,
+                             insecure=False,
+                             compression=None,
+                             wait_for_ready=None,
+                             timeout=None,
+                             metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
@@ -718,15 +719,15 @@ class AIService(object):
 
     @staticmethod
     def GetReportCard(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                      target,
+                      options=(),
+                      channel_credentials=None,
+                      call_credentials=None,
+                      insecure=False,
+                      compression=None,
+                      wait_for_ready=None,
+                      timeout=None,
+                      metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
