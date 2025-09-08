@@ -9,7 +9,7 @@ service AIService {
     rpc GenerateMCQVariations (MCQRequest) returns (MCQVariation);
     rpc GenerateMSQVariations (MSQRequest) returns (MSQVariation);
     rpc FilterAndRandomize (FilterAndRandomizerRequest) returns (FilterAndRandomizerResponse);
-    rpc Agent (AgentRequest) returns (AgentResponse);
+    rpc LumenAgent (AgentRequest) returns (AgentResponse);
     rpc RAGAgent (RAGAgentRequest) returns (RAGAgentResponse);
     
     // RAG Corpus Management

@@ -129,3 +129,5 @@ Thumbs.db
 pvenv
 
 service-account.json
+
+*.pem
