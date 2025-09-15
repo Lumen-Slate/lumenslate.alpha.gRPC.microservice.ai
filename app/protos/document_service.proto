@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+package document;
+
+// Document Service for user document storage and management
+service DocumentService {
+  // Upload a document with streaming support for large files
+  rpc UploadDocument(stream UploadDocumentRequest) returns (UploadDocumentResponse);
+  
+  // Download a document with streaming support for large files
+  rpc DownloadDocument(DownloadDocumentRequest) returns (stream DownloadDocumentResponse);
+  
+  // Delete a document and update usage statistics
+  rpc DeleteDocument(DeleteDocumentRequest) returns (DeleteDocumentResponse);
+  
+  // List documents with filtering and pagination
+  rpc ListDocuments(ListDocumentsRequest) returns (ListDocumentsResponse);
+  
+  // Generate presigned URL for document access
+  rpc GetDocumentUrl(GetDocumentUrlRequest) returns (GetDocumentUrlResponse);
+  
+  // Get user storage usage statistics
+  rpc GetUsageStats(GetUsageStatsRequest) returns (GetUsageStatsResponse);
+}
+
+// Upload Document Messages
+message UploadDocumentRequest {
+  oneof data {
+    DocumentMetadata metadata = 1;
+    bytes chunk = 2;
+  }
+}
+
+message DocumentMetadata {
+  string user_id = 1;
+  string category = 2;
+  string filename = 3;
+  string mime_type = 4;
+  int64 size = 5;
+}
+
+message UploadDocumentResponse {
+  string document_id = 1;
+  string path = 2;
+  int64 size = 3;
+  string status = 4;
+  string message = 5;
+}
+
+// Download Document Messages
+message DownloadDocumentRequest {
+  string user_id = 1;
+  string document_id = 2;
+}
+
+message DownloadDocumentResponse {
+  oneof data {
+    DocumentInfo info = 1;
+    bytes chunk = 2;
+  }
+}
+
+message DocumentInfo {
+  string document_id = 1;
+  string filename = 2;
+  string mime_type = 3;
+  int64 size = 4;
+  string created_at = 5;
+}
+
+// Delete Document Messages
+message DeleteDocumentRequest {
+  string user_id = 1;
+  string document_id = 2;
+}
+
+message DeleteDocumentResponse {
+  bool success = 1;
+  string message = 2;
+  UsageStats updated_usage = 3;
+}
+
+// List Documents Messages
+message ListDocumentsRequest {
+  string user_id = 1;
+  optional string category = 2;
+  optional string date_filter = 3;
+  int32 page_size = 4;
+  string page_token = 5;
+}
+
+message ListDocumentsResponse {
+  repeated DocumentSummary documents = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message DocumentSummary {
+  string document_id = 1;
+  string filename = 2;
+  string category = 3;
+  int64 size = 4;
+  string mime_type = 5;
+  string created_at = 6;
+  string updated_at = 7;
+  string status = 8;
+}
+
+// Get Document URL Messages
+message GetDocumentUrlRequest {
+  string user_id = 1;
+  string document_id = 2;
+  optional int32 expiry_minutes = 3; // Default: 30 minutes
+}
+
+message GetDocumentUrlResponse {
+  string presigned_url = 1;
+  string expires_at = 2;
+  DocumentSummary document_info = 3;
+}
+
+// Usage Statistics Messages
+message GetUsageStatsRequest {
+  string user_id = 1;
+}
+
+message GetUsageStatsResponse {
+  UsageStats usage = 1;
+  QuotaInfo quota = 2;
+}
+
+message UsageStats {
+  string user_id = 1;
+  int32 file_count = 2;
+  int64 total_bytes = 3;
+  string last_updated = 4;
+}
+
+message QuotaInfo {
+  int64 quota_limit = 1;
+  int64 quota_used = 2;
+  int64 quota_remaining = 3;
+  double quota_percentage = 4;
+}
+
+// Error Details for structured error responses
+message ErrorDetails {
+  string error_code = 1;
+  string error_message = 2;
+  map<string, string> details = 3;
+}
+
+// Validation Error for file upload validation
+message ValidationError {
+  string field = 1;
+  string message = 2;
+  string rejected_value = 3;
+}

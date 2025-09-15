@@ -1,0 +1,1 @@
+# gRPC Protocol Buffer definitions for LumenSlate services

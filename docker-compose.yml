@@ -1,6 +1,28 @@
 version: '3.8'
 
 services:
+  minio:
+    image: minio/minio:latest
+    container_name: lumenslate-minio
+    ports:
+      - "9000:9000"        # MinIO API
+      - "9001:9001"        # MinIO Console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - lumenslate-network
+    restart: unless-stopped
+
   ai-microservice:
     build:
       context: .
@@ -8,6 +30,7 @@ services:
     container_name: ai-microservice
     ports:
       - "50051:50051"   # gRPC port
+      - "9100:9100"     # Metrics port
     environment:
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
       DATABASE_URL: ${DATABASE_URL}
@@ -20,6 +43,19 @@ services:
       ENV: ${ENV}
       DB_PATH: ${DB_PATH}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # MinIO Configuration
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-minio:9000}
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      MINIO_SECURE: ${MINIO_SECURE:-false}
+      MINIO_REGION: ${MINIO_REGION:-us-east-1}
+      MINIO_BUCKET: ${MINIO_BUCKET:-documents}
+      # Document Service Configuration
+      MICROSERVICE_DATABASE: ${MICROSERVICE_DATABASE}
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-minio}
+      STORAGE_MAX_FILE_SIZE: ${STORAGE_MAX_FILE_SIZE:-50MB}
+      DEFAULT_USER_QUOTA: ${DEFAULT_USER_QUOTA:-1073741824}
+      METRICS_PORT: ${METRICS_PORT:-9100}
     volumes:
       - ./app/data:/app/data   # Optional: persist data
       - ./service-account.json:/app/service-account.json
@@ -38,8 +74,15 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+    depends_on:
+      minio:
+        condition: service_healthy
     networks:
       - lumenslate-network
+
+volumes:
+  minio_data:
+    driver: local
 
 networks:
   lumenslate-network:

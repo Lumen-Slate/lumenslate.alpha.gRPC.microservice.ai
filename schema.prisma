@@ -1,0 +1,47 @@
+// Prisma schema for User Document Storage Service
+// This schema defines the Document and UserUsage models for TiDB integration
+
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("MICROSERVICE_DATABASE")
+  relationMode = "prisma"
+}
+
+// Document model for storing document metadata
+model Document {
+  id        String   @id @default(uuid())
+  status    Status   @default(PENDING)
+  userId    String   @map("user_id")
+  category  String
+  filename  String
+  path      String   @unique
+  size      BigInt
+  mimeType  String   @map("mime_type")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  @@map("rag_document")
+  @@index([userId, category])
+  @@index([createdAt])
+}
+
+// UserUsage model for tracking per-user storage statistics
+model UserUsage {
+  userId     String   @id @map("user_id")
+  fileCount  Int      @default(0) @map("file_count")
+  totalBytes BigInt   @default(0) @map("total_bytes")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  
+  @@map("user_usage")
+}
+
+// Status enum for document processing states
+enum Status {
+  PENDING
+  COMPLETED
+  FAILED
+}

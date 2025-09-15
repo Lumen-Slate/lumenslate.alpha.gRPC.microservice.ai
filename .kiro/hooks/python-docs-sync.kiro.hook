@@ -1,0 +1,25 @@
+{
+  "enabled": true,
+  "name": "Python Documentation Sync",
+  "description": "Monitors Python source files, configuration files, and key project files for changes and automatically updates documentation in README.md and related documentation files to keep them in sync with code changes.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "app/**/*.py",
+      "*.py",
+      "requirements.txt",
+      "Dockerfile",
+      "docker-compose.yml",
+      "schema.prisma",
+      "service.yaml",
+      "Makefile",
+      "app/protos/*.proto",
+      "*.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Python source files or configuration have been modified. Please review the changes and update the documentation accordingly. Focus on:\n\n1. Update README.md if core functionality, setup instructions, or architecture has changed\n2. Update any relevant documentation files (*.md) to reflect code changes\n3. Ensure API documentation matches any gRPC service changes in .proto files\n4. Update setup/deployment instructions if requirements.txt, Dockerfile, or service.yaml changed\n5. Keep documentation consistent with the current codebase structure and functionality\n\nPlease analyze the changed files and provide updated documentation that accurately reflects the current state of the LumenSlate AI microservice."
+  }
+}
