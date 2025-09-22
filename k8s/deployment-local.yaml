@@ -1,0 +1,50 @@
+# deployment-local.yaml
+# Deployment and Service for local development
+# Uses local Docker image, references local ConfigMap and Secret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lumenslate-backend-local
+  labels:
+    app: lumenslate-backend
+    environment: local
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lumenslate-backend
+      environment: local
+  template:
+    metadata:
+      labels:
+        app: lumenslate-backend
+        environment: local
+    spec:
+      containers:
+        - name: lumenslate-backend
+          image: lumenslate-backend:local # Local Docker image
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: lumenslate-config-local
+            - secretRef:
+                name: lumenslate-secret-local
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lumenslate-backend-local
+  labels:
+    app: lumenslate-backend
+    environment: local
+spec:
+  type: ClusterIP
+  selector:
+    app: lumenslate-backend
+    environment: local
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

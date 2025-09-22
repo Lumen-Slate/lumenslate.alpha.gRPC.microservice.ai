@@ -1,0 +1,15 @@
+# configmap-prod.yaml
+# ConfigMap for production (non-sensitive environment variables)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lumenslate-config-prod
+  namespace: default
+  labels:
+    app: lumenslate-backend
+    environment: prod
+data:
+  # Add your non-sensitive environment variables here
+  APP_ENV: "production"
+  LOG_LEVEL: "info"
+  # ... add more as needed

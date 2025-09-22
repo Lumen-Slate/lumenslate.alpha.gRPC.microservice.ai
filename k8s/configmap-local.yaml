@@ -1,0 +1,15 @@
+# configmap-local.yaml
+# ConfigMap for local development (non-sensitive environment variables)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lumenslate-config-local
+  namespace: default
+  labels:
+    app: lumenslate-backend
+    environment: local
+data:
+  # Add your non-sensitive environment variables here
+  APP_ENV: "local"
+  LOG_LEVEL: "debug"
+  # ... add more as needed

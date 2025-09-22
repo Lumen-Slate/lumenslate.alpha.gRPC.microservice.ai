@@ -131,3 +131,7 @@ pvenv
 service-account.json
 
 *.pem
+
+# Ignore Kubernetes secret manifests
+k8s/secret-local.yaml
+k8s/secret-prod.yaml
